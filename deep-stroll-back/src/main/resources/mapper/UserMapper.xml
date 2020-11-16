@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ap.deepstroll.mapper.UserMapper">
+
+    <resultMap id="UserMap" type="ap.deepstroll.entity.UserEntity">
+        <result property="id" column="id"/>
+        <result property="telephone" column="telephone"/>
+        <result property="password" column="password"/>
+        <result property="nickname" column="nickname"/>
+        <result property="gender" column="gender"/>
+        <result property="eMail" column="e_mail"/>
+        <result property="sign" column="sign"/>
+        <result property="avatar" column="avatar"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTIme" column="update_time"/>
+    </resultMap>
+
+    <insert id="insertUser" parameterType="ap.deepstroll.entity.UserEntity">
+        INSERT INTO
+        user(
+            telephone,
+            password,
+            nickname,
+            gender,
+            e_mail,
+            sign,
+            avatar
+        )
+        VALUES(
+            #{telephone},
+            #{password},
+            #{nickname},
+            #{gender},
+            #{eMail},
+            #{sign},
+            #{avatar}
+        )
+    </insert>
+
+</mapper>
