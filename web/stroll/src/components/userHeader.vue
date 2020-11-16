@@ -65,6 +65,7 @@
   .input_search .el-input__inner:focus{
     background:#FFFFFF;
   }
+
 </style>
 <style scoped>
   nav{
@@ -77,7 +78,9 @@
     align-items: center;
     padding:16px 5vw;
     height: 62px;
-    background-color: rgba(36,41,46,0.1);
+    /*background-color: rgba(36,41,46,0.1);*/
+    background-color: #e4e7ed;
+    z-index: 1;
   }
   .logo{
     font-size: 28px;

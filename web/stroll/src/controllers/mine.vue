@@ -1,5 +1,5 @@
 <template>
-  <div id = "mine">
+  <div id = "myPage">
 
 <!--    左侧分类选择菜单-->
    <div id="articleTags">

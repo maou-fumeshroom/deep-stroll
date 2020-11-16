@@ -1,5 +1,5 @@
 <template lang="pug">
- div
+ div(id="deepStroll")
   user-header(v-show="$route.meta.keepAlive")
     <!--template(slot="logo"): router-link(to="/")-->
 
@@ -72,6 +72,16 @@ export default {
 }
 </script>
 
+<style>
+  html,body{
+    height: 100%;
+  }
+
+  #deepStroll{
+    height: 100%;
+  }
+</style>
+
 <style scoped>
   .app-header-container{
     top: 0;
@@ -84,7 +94,8 @@ export default {
   }
   .app-main-container {
     margin: 0 auto;
-    padding: 70px 0;
+    padding-top: 70px;
     min-height: 100vh;
+    height: 100%;
   }
 </style>
