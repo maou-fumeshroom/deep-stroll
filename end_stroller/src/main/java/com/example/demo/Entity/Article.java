@@ -1,4 +1,4 @@
 package com.example.demo.Entity;
 
-public class Article {
+public class Article implements Work{
 }
