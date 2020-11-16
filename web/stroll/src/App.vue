@@ -76,6 +76,7 @@ export default {
   .app-header-container{
     top: 0;
     width:100%;
+    height: 100%;
     background-color: #fff;
     position: fixed;
     z-index: 9;
