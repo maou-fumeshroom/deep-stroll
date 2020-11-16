@@ -15,7 +15,7 @@ public class AdminDao {
     /**
      * 获取管理员列表
      */
-    public List getAdminList(int page){
+    public List getAdminList(Integer page){
         return null;
     }
 
@@ -32,4 +32,6 @@ public class AdminDao {
     public boolean changeAdminState(){
         return false;
     }
+
+
 }

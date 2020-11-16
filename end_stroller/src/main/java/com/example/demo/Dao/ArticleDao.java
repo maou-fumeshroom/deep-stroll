@@ -16,7 +16,7 @@ public class ArticleDao {
     }
 
     /** 修改文章状态**/
-    public boolean ChangeArticleStatus(int id){
+    public boolean ChangeArticleStatus(Integer id){
         return false;
     }
 
@@ -33,7 +33,7 @@ public class ArticleDao {
      * @param id
      * @return
      */
-    public Drawing getArticleById(int id){
+    public Drawing getArticleById(Integer id){
         return null;
     }
 
@@ -56,7 +56,14 @@ public class ArticleDao {
     /**
      * 根据指定的点赞数获取热门文章
      */
-    public List getHotArticle(int likeNum){
+    public List getHotArticle(Integer likeNum){
         return null;
+    }
+
+    /**
+     * 修改分类
+     */
+    public boolean changeArticleClassify(Integer id){
+        return false;
     }
 }

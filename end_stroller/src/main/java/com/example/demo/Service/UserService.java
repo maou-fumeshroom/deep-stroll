@@ -33,7 +33,23 @@ public class UserService {
         return null;
     }
 
+    /**
+     * 获取全部用户信息
+     * @param req
+     * @return
+     */
+    public Result getAllUserInfo(Map req){
+        return null;
+    }
 
+    /**
+     * 冻结用户
+     * @param req
+     * @return
+     */
+    public Result changeUserState(Map req){
+        return null;
+    }
 
 
 }

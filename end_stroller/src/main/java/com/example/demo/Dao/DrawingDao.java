@@ -18,7 +18,7 @@ public class DrawingDao {
     /**
      * 修改手绘状态
      **/
-    public boolean ChangeDrawingStatus(int id){
+    public boolean ChangeDrawingStatus(Integer id){
         return false;
     }
 
@@ -32,7 +32,7 @@ public class DrawingDao {
     /**
      * 获取id对应的手绘信息
      */
-    public Drawing getDrawingById(int id){
+    public Drawing getDrawingById(Integer id){
         return null;
     }
 
@@ -55,5 +55,12 @@ public class DrawingDao {
      */
     public List getHotDrawing(int likeNum){
         return null;
+    }
+
+    /**
+     * 修改分类
+     */
+    public boolean changeDrawingClassify(Integer id){
+        return false;
     }
 }

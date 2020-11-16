@@ -2,19 +2,19 @@ package com.example.demo.Entity;
 
 import java.util.Date;
 
-public class ClassifyArticle {
-    Integer classify_article_id;
+public class ClassifyDrawing {
+    Integer classify_drawing_id;
     String name;
     Integer state = 0;
     Date create_time;
     Date update_time;
 
-    public Integer getClassify_article_id() {
-        return classify_article_id;
+    public Integer getClassify_drawing_id() {
+        return classify_drawing_id;
     }
 
-    public void setClassify_article_id(Integer classify_article_id) {
-        this.classify_article_id = classify_article_id;
+    public void setClassify_drawing_id(Integer classify_drawing_id) {
+        this.classify_drawing_id = classify_drawing_id;
     }
 
     public String getName() {

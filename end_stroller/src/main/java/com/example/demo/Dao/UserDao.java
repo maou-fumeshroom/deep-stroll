@@ -28,9 +28,18 @@ public class UserDao {
         return false;
     }
 
+    /**
+     *获取全部用户信息
+     */
+    public Map getAllUserInfo(){
+        return null;
+    }
 
-
-
-
+    /**
+     *冻结用户
+     */
+    public boolean changeUserState(Integer id){
+        return false;
+    }
 
 }
