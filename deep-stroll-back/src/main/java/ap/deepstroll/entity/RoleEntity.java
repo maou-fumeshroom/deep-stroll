@@ -13,21 +13,16 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString
-public class UserEntity {
+@Builder
+
+public class RoleEntity {
     
-    private Long id;
-    private String telephone;
-    private String password;
-    private String nickname;
-    private Integer gender;
-    private String eMail;
-    private String sign;
-    private String avatar;
-    private Integer vip;
+    private Integer id;
+    private String name;
+    private String introduction;
     private Integer state;
     private Timestamp createTime;
-    private Timestamp updateTIme;
+    private Timestamp updateTime;
     
 }

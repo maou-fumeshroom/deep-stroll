@@ -13,21 +13,20 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString
-public class UserEntity {
-    
+@Builder
+public class DrawingEntity extends Work {
+
     private Long id;
-    private String telephone;
-    private String password;
-    private String nickname;
-    private Integer gender;
-    private String eMail;
-    private String sign;
-    private String avatar;
-    private Integer vip;
+    private Long authorId;
+    private String title;
+    private String introduction;
+    private String labels;
+    private String url;
+    private Integer classifyId;
     private Integer state;
+    private Integer likeNum;
     private Timestamp createTime;
-    private Timestamp updateTIme;
+    private Timestamp updateTime;
     
 }
