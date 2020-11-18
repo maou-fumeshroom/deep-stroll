@@ -1,5 +1,7 @@
 package ap.deepstroll.entity;
 
+import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,5 +21,6 @@ public class BackMenuEntity {
     private String name;
     private String path;
     private Integer parentId;
-
+    private Timestamp createTime;
+    
 }

@@ -5,38 +5,40 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import ap.deepstroll.entity.ArticleEntity;
+import ap.deepstroll.entity.DrawingEntity;
 
 @Mapper
-public interface ArticleMapper {
-    
-    /**
-     * 插入一条新的文章
-     * @author mxf
-     * @param articleEntity
-     */
-    public Integer insertArticle(ArticleEntity articleEntity);
+public interface DrawingMapper {
 
     /**
-     * 查询指定id的文章信息
-     * @author
+     * 插入一条手绘
+     * @author mxf
+     * @param drawingEntity
+     * @return
+     */
+    public Integer insertDrawing(DrawingEntity drawingEntity);
+
+    /**
+     * 查询指定id的手绘
+     * @author mxf
      * @param id
      * @return
      */
-    public ArticleEntity queryArticleById(@Param("id")Long id);
+    public DrawingEntity queryDrawingById(@Param("id")Long id);
 
     /**
-     * 根据限定条件搜索文章
+     * 查询符合条件的手绘
      * @author mxf
      * @param title
      * @param label
      * @param classifyId
      * @param state
-     * @param startIndex notnull
-     * @param pageSize notnull
+     * @param startIndex
+     * @param pageSize
+     * @param likeNum
      * @return
      */
-    public List<ArticleEntity> queryArticleByTitleLabState(
+    public List<DrawingEntity> queryDrawingByTitleLabClassifyState(
         @Param("title")String title,
         @Param("label")String label,
         @Param("classifyId")Integer classifyId,
@@ -47,7 +49,7 @@ public interface ArticleMapper {
     );
 
     /**
-     * 返回符合条件的总数
+     * 返回上个方法的符合条件的个数
      * @author mxf
      * @param title
      * @param label
@@ -56,7 +58,7 @@ public interface ArticleMapper {
      * @param likeNum
      * @return
      */
-    public Integer queryArticleNumByTitleLabState(
+    public Integer queryDrawingNumByTitleLabClassifyState(
         @Param("title")String title,
         @Param("label")String label,
         @Param("classifyId")Integer classifyId,
@@ -65,19 +67,20 @@ public interface ArticleMapper {
     );
 
     /**
-     * 更新文章状态
+     * 更新指定手绘的状态
      * @author mxf
      * @param id
      * @param state
+     * @return
      */
-    public Integer updateArticleState(@Param("id")Long id, @Param("state")Integer state);
-
+    public Integer updateDrawingState(@Param("id")Long id, @Param("state")Integer state);
+    
     /**
-     * 增加点赞数1
+     * 更新点赞数
      * @author mxf
      * @param id
+     * @param num 需要添加的点赞数
      * @return
      */
     public Integer updateLikeNumById(@Param("id")Long id, @Param("num")Integer num);
-
 }

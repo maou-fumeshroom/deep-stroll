@@ -21,6 +21,7 @@ public class ThemeEntity {
     private String name;
     private String backgroundUrl;
     private String bgmUrl;
+    private Integer isDefault;
     private Timestamp createTime;
 
 }

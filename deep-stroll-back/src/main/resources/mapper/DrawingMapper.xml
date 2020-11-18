@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="ap.deepstroll.mapper.ArticleMapper">
+<mapper namespace="ap.deepstroll.mapper.DrawingMapper">
 
-    <resultMap id="ArticleMap" type="ap.deepstroll.entity.ArticleEntity">
+    <resultMap id="DrawingMap" type="ap.deepstroll.entity.DrawingEntity">
         <result property="id" column="id"/>
         <result property="authorId" column="author_id"/>
         <result property="title" column="title"/>
-        <result property="cover" column="cover"/>
         <result property="introduction" column="introduction"/>
         <result property="url" column="url"/>
         <result property="labels" column="labels"/>
@@ -18,61 +17,57 @@
         <result property="updateTIme" column="update_time"/>
     </resultMap>
 
-    <insert id="insertArticle" parameterType="ap.deepstroll.entity.ArticleEntity">
+    <insert id="insertDrawing" parameterType="ap.deepstroll.entity.DrawingEntity">
         INSERT INTO
-        article(
+        drawing(
             author_id,
             title,
-            cover,
             introduction,
-            url,
             labels,
+            url,
             classify_id
         )
         VALUES(
             #{authorId},
             #{title},
-            #{cover},
             #{introduction},
-            #{url},
             #{labels},
+            #{url},
             #{classifyId}
         )
     </insert>
 
-    <select id="queryArticleById" resultMap="ArticleMap">
+    <select id="queryDrawingById" resultMap="DrawingMap">
         SELECT
             id,
             author_id,
             title,
-            cover,
             introduction,
-            url,
             labels,
+            url,
             classify_id,
-            like_num,
             state,
+            like_num,
             create_time,
             update_time
-        FROM article
+        FROM drawing
         WHERE id = #{id}
     </select>
 
-    <select id="queryArticleByTitleLabState" resultMap="ArticleMap">
+    <select id="queryDrawingByTitleLabClassifyState" resultMap="DrawingMap">
         SELECT
             id,
             author_id,
             title,
-            cover,
             introduction,
-            url,
             labels,
+            url,
             classify_id,
-            like_num,
             state,
+            like_num,
             create_time,
             update_time
-        FROM article
+        FROM drawing
         <where>
             <if test="title != null">
                 OR title = #{title}
@@ -93,10 +88,10 @@
         LIMIT #{startIndex}, #{pageSize}
     </select>
 
-    <select id="queryArticleNumByTitleLabState" resultType="Integer">
+    <select id="queryDrawingNumByTitleLabClassifyState" resultType="Integer">
         SELECT
             count(*)
-        FROM article
+        FROM drawing
         <where>
             <if test="title != null">
                 OR title = #{title}
@@ -116,16 +111,16 @@
         </where>
     </select>
 
-    <update id="updateArticleState">
-        UPDATE article
+    <update id="updateDrawingState">
+        UPDATE drawing
         SET state = #{state}
         WHERE id = #{id}
     </update>
 
     <update id="updateLikeNumById">
-        UPDATE article
+        UPDATE drawing
         SET like_num = like_num + #{num}
         WHERE id = #{id}
     </update>
-
+    
 </mapper>

@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`classify_article` (
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `deep_stroll`.`classify_drawing` (
-  `calssify_drawing_id` INT NOT NULL AUTO_INCREMENT,
+  `classify_drawing_id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `state` INT NOT NULL DEFAULT 0 COMMENT '0:正常 1:删除',
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`theme` (
   `name` VARCHAR(45) NOT NULL,
   `background_url` VARCHAR(100) NOT NULL,
   `bgm_url` VARCHAR(100) NOT NULL,
+  `is_default` INT NOT NULL DEFAULT 0 COMMENT '0:非默认 1：默认',
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -105,17 +106,27 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `deep_stroll`.`back_menu` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `path` VARCHAR(100) NOT NULL,
+  `path` VARCHAR(100) NULL,
   `parent_id` INT NULL,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `deep_stroll`.`role_menu` (
+  `role_menu_id` INT NOT NULL AUTO_INCREMENT,
+  `role_id` INT NOT NULL,
+  `menu_id` INT NOT NULL,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`admin_role_id`))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `deep_stroll`.`home_menu` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `path` VARCHAR(45) NOT NULL,
+  `path` VARCHAR(45) NULL,
   `parent_id` INT NULL,
   `state` INT NOT NULL DEFAULT 0 COMMENT '0:正常 1:不可见',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 

@@ -33,13 +33,19 @@ public class ArticleMapperTest {
 
     @Test
     void queryArticle() {
-        System.out.println(articleMapper.queryArticleByTitleLabState(null, null, null, 0, 1, 1));
-        System.out.println(articleMapper.queryArticleNumByTitleLabState(null, null, null, 0));
+        System.out.println(articleMapper.queryArticleByTitleLabState(null, null, 1, null, 0, 1, 0));
+        System.out.println(articleMapper.queryArticleNumByTitleLabState(null, null, 1, null, 0));
     }
 
     @Test
     void updateState() {
         articleMapper.updateArticleState(1L, 1);
-    }    
+    }
+    
+    @Test
+    void updateLike() {
+        articleMapper.updateLikeNumById(1L, 1);
+    }
+
 
 }

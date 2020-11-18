@@ -15,7 +15,7 @@ public interface ClassifyArticleMapper {
      * @author mxf
      * @param classifyArticleEntity
      */
-    public Integer insertClassifyArticle(ClassifyArticleEntity classifyArticleEntity);
+    public Integer insertClassifyArticle(@Param("name")String name);
     
     /**
      * 查询分类
@@ -23,7 +23,7 @@ public interface ClassifyArticleMapper {
      * @param state
      * @return
      */
-    public List<ClassifyArticleEntity> getALLClassifyArticle(@Param("state")Integer state);
+    public List<ClassifyArticleEntity> queryAllClassifyArticle(@Param("state")Integer state);
 
     /**
      * 修改分类状态
