@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`role_menu` (
   `role_id` INT NOT NULL,
   `menu_id` INT NOT NULL,
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`admin_role_id`))
+  PRIMARY KEY (`role_menu_id`))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `deep_stroll`.`home_menu` (
@@ -127,6 +127,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`home_menu` (
   `parent_id` INT NULL,
   `state` INT NOT NULL DEFAULT 0 COMMENT '0:正常 1:不可见',
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` DATETIME NULL DEFAULT 
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -134,8 +135,8 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`log` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `admin_id` INT NOT NULL,
   `type` INT NOT NULL COMMENT '0插入 1修改 2删除',
-  `talbe_name` VARCHAR(45) NOT NULL,
+  `table_name` VARCHAR(45) NOT NULL,
   `content` VARCHAR(100) NOT NULL,
-  `create_time` VARCHAR(45) NOT NULL DEFAULT 'CURRENT_TIMESTAMP',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;

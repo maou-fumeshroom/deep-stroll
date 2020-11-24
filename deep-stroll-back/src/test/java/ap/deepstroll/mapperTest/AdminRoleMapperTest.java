@@ -22,4 +22,10 @@ public class AdminRoleMapperTest {
     void queryByAdminId() {
         System.out.println(a.queryByAdminId(1));
     }
+
+    @Test
+    void queryRoleIdsAdminId() {
+        System.out.println(a.queryRoleIdsByAdminId(1));
+    }
+    
 }

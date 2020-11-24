@@ -15,14 +15,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class HomeMenuEntity {
+public class RoleMenuEntity {
     
-    private Integer id;
-    private String name;
-    private String path;
-    private Integer parentId;
-    private Integer state;
+    private Integer roleMenuId;
+    private Integer roleId;
+    private Integer menuId;
     private Timestamp createTime;
-    private Timestamp updateTime;
 
 }

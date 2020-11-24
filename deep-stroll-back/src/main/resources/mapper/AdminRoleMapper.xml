@@ -33,4 +33,11 @@
         WHERE admin_id = #{adminId}
     </select>
 
+    <select id="queryRoleIdsByAdminId" resultType="java.lang.Integer">
+        SELECT
+            role_id
+        FROM admin_role
+        WHERE admin_id = #{adminId}
+    </select>
+
 </mapper>

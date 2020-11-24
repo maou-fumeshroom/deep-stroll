@@ -23,11 +23,27 @@ public interface AdminRoleMapper {
     );
 
     /**
+     * 删除指定admin role对应
+     * @author mxf
+     * @param adminRoleId
+     * @return
+     */
+    public Integer deleteByAdminRoleId(@Param("adminRoleId")Integer adminRoleId);
+
+    /**
      * 查询某管理员的角色
      * @author mxf
      * @param adminId
      * @return
      */
     public List<AdminRoleEntity> queryByAdminId(@Param("adminId")Integer adminId);
+
+    /**
+     * 查询某管理员的角色id
+     * @author mxf
+     * @param adminId
+     * @return
+     */
+    public List<Integer> queryRoleIdsByAdminId(@Param("adminId")Integer adminId);
     
 }
