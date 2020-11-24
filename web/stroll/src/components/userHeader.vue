@@ -128,6 +128,7 @@
     height:25px;
     border-radius:50%;
     overflow:hidden;
+    cursor: pointer;
   }
   .avatarBox img{
     width:25px;

@@ -41,25 +41,27 @@
             introduction:"",
             content:""
           },
-          userComment:""
+          userComment:"",
+          backPage:""
         }
       },
 
       mounted () {
-        //接收到传来的代码
+        //接收到传来的文章详情信息
         this.articleMsg = JSON.parse(this.$route.query.articleMsg);
         // var msg = this.$route.params.articleMsg;
         // console.log("msg: "+msg);
         // this.articleMsg = JSON.parse(msg);
         console.log(this.articleMsg);
-        //接收后再初始化
-        // this._initialize();
-        // this.showInit();
+        //接收到传来的返回路径
+        this.backPage = this.$route.query.backpage;
+        console.log(this.backPage);
       },
       methods: {
         back(){
           this.$router.push({
-            path:'/article',
+            // 返回点入的父页面
+            path:'/' + this.backPage,
           })
         }
       }

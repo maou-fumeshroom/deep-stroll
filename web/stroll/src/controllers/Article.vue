@@ -37,35 +37,22 @@
 
     <!--    右侧文章列表-->
     <div id="articleContainer">
-      <ul>
-        <li class="articleBox" @click="focus(item)" v-for="(item,index) in articleList.slice(0,len)" :key="index">
-          <img :src = "item.imgSrc" class = "articleCover"/>
-          <h3 class="articleTitle">{{item.title}}</h3>
-          <div class="articleMsg">
-            <div class="msgLeft">
-              <img :src = "item.avatarSrc" class="authorAvatar"/>
-              <span class="authorName">{{item.nickname}}</span>
-              <span class="articleTime">{{item.releaseTime}}</span>
-            </div>
-            <div class="msgRight">
-              <span>{{item.likes}}</span>
-              <i class="el-icon-location"></i>
-              <span>{{item.commentsNum}}</span>
-              <i class="el-icon-star-on"></i>
-            </div>
-          </div>
-        </li>
-      </ul>
+      <article-box :articleList="articleList" :page="page"/>
     </div>
 
   </div>
 </template>
 
 <script>
+  import articleBox from "../components/articleBox";
   export default {
     name: 'Article',
+    components:{
+      articleBox,
+    },
     data () {
       return {
+        page:"article",
         articleList:[
           {
             id:1,
@@ -99,7 +86,7 @@
           {
             id:3,
             imgSrc:require("../assets/logo.png"),
-            title:"如何看待 Python 之父 Guido 加盟微软？",
+            title:"如何看待 Python 之父 Guido 加盟微软？？？",
             nickname:"李华",
             avatarSrc:require("../assets/logo.png"),
             releaseTime:"11-9",
@@ -152,7 +139,6 @@
               "几个小时前，Guido Van Rossum本人发推宣布了这个消息，他说：「退休生活太无聊了，我决定加入微软的开发者部门！」"
           },
         ],
-        len: 8,
       }
     },
 
@@ -167,15 +153,6 @@
         console.log(key, keyPath);
       },
 
-      focus:function (item) {
-        console.log(item.id);
-        this.$router.push({
-          path:'/articleDetails',
-          // query: {id:item.id},
-          query:{articleMsg:JSON.stringify(item)}
-        })
-
-      },
     }
   }
 </script>
@@ -204,66 +181,6 @@
     float: right;
     list-style-type: none;
     margin-right: 15px;
-  }
-
-  .articleBox{
-    margin: 45px;
-    height: 100px;
-    position: relative;
-    background: #fff;
-    box-shadow: 1px 3px 10px #65626285;
-    cursor: pointer;
-    list-style-type: none;
-    /*-webkit-transform: rotateX(30deg);*/
-    /*-webkit-transition-duration: 1s;*/
-  }
-
-  /*.articleBox:hover{*/
-  /*  -webkit-transform: rotateX(0deg);*/
-  /*}*/
-
-  .articleCover{
-    height: 100%;
-    margin-left: 5px;
-  }
-
-  .articleTitle{
-    display: inline-block;
-    position: absolute;
-    top: 10%;
-    margin-left: 10px;
-    width: 85%;
-    height: 35%;
-    overflow: hidden;
-  }
-
-  .articleMsg{
-    width: 85%;
-    height: 30%;
-    display: inline-block;
-    position: absolute;
-    bottom: 5%;
-    margin-left: 10px;
-  }
-
-  .msgLeft{
-    float: left;
-  }
-
-  .authorAvatar{
-    width: 25px;
-    height: 25px;
-    border-radius: 100%;
-  }
-
-  .articleTime{
-    margin-left: 10px;
-  }
-
-  .msgRight{
-    float: right;
-    margin-right: 10px;
-
   }
 
 </style>

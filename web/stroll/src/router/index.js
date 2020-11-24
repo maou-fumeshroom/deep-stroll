@@ -5,6 +5,7 @@ import Article from '../controllers/Article'
 import mine from '../controllers/mine'
 import drawings from '../controllers/drawings'
 import ArticleDetails from "../controllers/ArticleDetails";
+import EditInformation from "../controllers/EditInformation";
 
 Vue.use(Router)
 
@@ -52,6 +53,15 @@ export default new Router({
       component: mine,
       meta: {
         title: '我的',
+        requireAuth: true,
+        keepAlive:true,
+      }
+    },
+    {
+      path: '/editInformation',
+      component: EditInformation,
+      meta: {
+        title: '信息编辑',
         requireAuth: true,
         keepAlive:true,
       }

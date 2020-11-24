@@ -94,7 +94,8 @@ export default {
   }
   .app-main-container {
     margin: 0 auto;
-    padding-top: 70px;
+    /*padding-top: 70px;*/
+    padding-top: 62px;
     min-height: 100vh;
     height: 100%;
   }
