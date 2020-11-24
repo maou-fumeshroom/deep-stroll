@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ap.deepstroll.mapper.BackMenuMapper">
+
+    <resultMap id="BackMenuMap" type="ap.deepstroll.entity.BackMenuEntity">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="path" column="path"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <insert id="insertBackMenu">
+        INSERT INTO
+        back_menu(
+            name,
+            path,
+            parent_id
+        )
+        VALUES(
+            #{name},
+            #{path},
+            #{parentId} 
+        )
+    </insert>
+
+    <delete id="deleteBackMenuById">
+        DELETE FROM back_menu
+        WHERE id = #{id}
+    </delete>
+
+    <select id="queryById" resultMap="BackMenuMap">
+        SELECT
+            id,
+            name,
+            path,
+            parent_id,
+            create_time
+        FROM back_menu
+        WHERE id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+		    #{id}
+	    </foreach>
+    </select>
+
+    <select id="queryByParentId" resultMap="BackMenuMap">
+        SELECT
+            id,
+            name,
+            path,
+            parent_id,
+            create_time
+        FROM back_menu
+        WHERE parent_id = #{parentId}
+    </select>
+
+</mapper>
