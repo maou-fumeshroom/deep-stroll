@@ -6,6 +6,7 @@ import mine from '../controllers/mine'
 import drawings from '../controllers/drawings'
 import ArticleDetails from "../controllers/ArticleDetails";
 import EditInformation from "../controllers/EditInformation";
+import Release from "../controllers/Release";
 
 Vue.use(Router)
 
@@ -62,6 +63,15 @@ export default new Router({
       component: EditInformation,
       meta: {
         title: '信息编辑',
+        requireAuth: true,
+        keepAlive:true,
+      }
+    },
+    {
+      path: '/release',
+      component: Release,
+      meta: {
+        title: '发布',
         requireAuth: true,
         keepAlive:true,
       }

@@ -18,7 +18,7 @@
 
     <!--文章详情页面下半部分，评论-->
     <div id="comment">
-      <el-input class="inputCom" type="textarea" placeholder="请输入评论" v-model="userComment" maxlength="150" show-word-limit></el-input>
+      <el-input class="inputCom" type="textarea" placeholder="请输入评论" v-model="userComment" maxlength="150" show-word-limit/>
       <el-button class="publish" type="primary">发布</el-button>
     </div>
   </div>

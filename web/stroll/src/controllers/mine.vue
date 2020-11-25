@@ -14,7 +14,7 @@
           <span>{{msg.likes}}</span>
         </div>
         <p class="myIntroduce">{{msg.introduce}}</p>
-        <el-button class="edit" @click="editMsg">编辑</el-button>
+        <el-button class="edit" @click="$router.push('/editInformation')">编辑</el-button>
       </div>
     </div>
 
@@ -55,7 +55,7 @@
 
     </div>
 
-    <img src="../assets/logo.png" id="addButton" @click="add"/>
+    <img src="../assets/logo.png" id="addButton" @click="$router.push('/release')"/>
   </div>
 </template>
 
@@ -140,20 +140,12 @@
         }
       },
       methods: {
-        editMsg(){
-          this.$router.push({
-            path:'/editInformation',
-          })
-        },
         handleSelect(key, keyPath) {
           this.tag = keyPath[0] ;
           this.tagPath = keyPath[1] ;
           // console.log(key, keyPath);
           // console.log(this.tag);
         },
-        add(){
-
-        }
       }
     }
 </script>
