@@ -4,17 +4,20 @@ import java.util.List;
 import java.util.Map;
 
 import ap.deepstroll.bo.Result;
+import ap.deepstroll.entity.AdminEntity;
+import ap.deepstroll.mapper.AdminMapper;
 
 public class AdminService {
-
+    AdminMapper adminMapper;
 
     /**
      * 获取管理员列表
+     * 暂时startindex搞了0
      * @param page
      * @return
      */
-    public Map getAdminList(int page){
-        return null;
+    public List<AdminEntity> getAdminList(Integer page){
+        return adminMapper.queryAdmin(0,0,page);
     }
 
     /**
@@ -28,20 +31,20 @@ public class AdminService {
 
     /**
      * 添加管理员
-     * @param info
+     * @param adminEntity
      * @return
      */
-    public Result addAdmin(Map info){
-        return null;
+    public Integer addAdmin(AdminEntity adminEntity){
+        return adminMapper.insertAdmin(adminEntity);
     }
 
     /**
-     * 删除管理员
+     * 修改管理员状态
      * @param id
      * @return
      */
-    public Result deleteAdmin(int id){
-        return null;
+    public Integer deleteAdmin(Integer id,Integer state){
+        return adminMapper.updateAdminState(id, state);
     }
 
 

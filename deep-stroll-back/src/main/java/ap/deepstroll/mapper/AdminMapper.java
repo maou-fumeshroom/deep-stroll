@@ -11,7 +11,7 @@ import ap.deepstroll.entity.AdminEntity;
 public interface AdminMapper {
 
     /**
-     * 插入管理员信息
+     * 插入管理员信息+log？
      * @author mxf
      * @param adminEntity
      * @return
@@ -39,7 +39,7 @@ public interface AdminMapper {
     public Integer queryAdminNum(@Param("state")Integer state);
 
     /**
-     * 修改管理员状态
+     * 修改管理员状态+log
      * @author mxf
      * @param id
      * @param state

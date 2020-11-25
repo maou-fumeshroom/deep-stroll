@@ -3,8 +3,13 @@ package ap.deepstroll.service;
 import java.util.Map;
 
 import ap.deepstroll.bo.Result;
+import ap.deepstroll.dao.UserDao;
+import ap.deepstroll.entity.UserEntity;
+import ap.deepstroll.mapper.UserMapper;
+import org.apache.ibatis.annotations.Param;
 
 public class UserService {
+    UserMapper userMapper;
 
     /**
      * 用户登陆
@@ -26,11 +31,12 @@ public class UserService {
 
     /**
      * 修改用户信息
-     * @param req
+     * @author lqy
+     * @param userEntity
      * @return
      */
-    public Result changeUserInfo(Map req){
-        return null;
+    public Integer updateUser(UserEntity userEntity){
+        return userMapper.updateUser(userEntity);
     }
 
     /**
@@ -42,14 +48,22 @@ public class UserService {
         return null;
     }
 
-    /**
-     * 冻结用户
-     * @param req
+    /***
+     * 返回指定id的用户信息
+     * @param id
      * @return
      */
-    public Result changeUserState(Map req){
-        return null;
+    public UserEntity queryUserById(Long id){
+        return userMapper.queryUserById(id);
     }
 
+    /**
+     * 冻结用户:需要log
+     * @param
+     * @return
+     */
+    public String  updateUserState(Long id, Integer state){
+        return userMapper.updateUserState(id,state).toString();
+    }
 
 }

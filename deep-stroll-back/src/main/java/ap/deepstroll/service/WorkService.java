@@ -23,10 +23,10 @@ public abstract class WorkService {
 
     /**
      * 分类浏览用户分享的作品
-     * @param req
+     * @param
      * @return
      */
-    public  abstract  Work browseWork(Map req);
+    public  abstract  List browseWork(String title,String labels,Integer classifyId,Integer state,Integer likeNum,Integer startIndex,Integer pageSize);
 
     /**
      * 获取作品的分类
@@ -37,12 +37,12 @@ public abstract class WorkService {
     /**
      *  获取作品详情
      */
-    public abstract Work getDetail(int id);
+    public abstract Work getDetail(Long id);
 
     /**
      * 发布文章
-     * @param req
+     * @param
      * @return
      */
-    public  abstract Work Publish(Map req);
+    public  abstract Integer Publish(Work work);
 }
