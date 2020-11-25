@@ -8,8 +8,12 @@ import ap.deepstroll.entity.ArticleEntity;
 import ap.deepstroll.entity.DrawingEntity;
 import ap.deepstroll.entity.Work;
 import ap.deepstroll.mapper.DrawingMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("drawingService")
 public class DrawingService extends WorkService{
+    @Autowired
     DrawingMapper drawingMapper;
 
     @Override

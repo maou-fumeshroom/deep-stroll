@@ -6,8 +6,12 @@ import java.util.Map;
 import ap.deepstroll.bo.Result;
 import ap.deepstroll.entity.AdminEntity;
 import ap.deepstroll.mapper.AdminMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("adminService")
 public class AdminService {
+    @Autowired
     AdminMapper adminMapper;
 
     /**

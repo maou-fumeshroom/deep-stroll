@@ -7,8 +7,12 @@ import ap.deepstroll.entity.ThemeEntity;
 import ap.deepstroll.mapper.ThemeMapper;
 import org.apache.ibatis.annotations.Param;
 import org.omg.PortableInterceptor.INACTIVE;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("themeService")
 public class ThemeService {
+    @Autowired
     ThemeMapper themeMapper;
 
     /**

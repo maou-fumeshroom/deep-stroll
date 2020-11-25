@@ -7,8 +7,12 @@ import ap.deepstroll.dao.UserDao;
 import ap.deepstroll.entity.UserEntity;
 import ap.deepstroll.mapper.UserMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("userService")
 public class UserService {
+    @Autowired
     UserMapper userMapper;
 
     /**

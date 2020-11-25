@@ -2,6 +2,7 @@ package ap.deepstroll.service;
 
 import ap.deepstroll.entity.Work;
 import ap.deepstroll.mapper.ArticleMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ap.deepstroll.entity.ArticleEntity;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 @Service("articleService")
 public class ArticleService extends WorkService{
+    @Autowired
     ArticleMapper articleMapper;
 
     @Override
