@@ -1,7 +1,9 @@
 package ap.deepstroll.service;
 
+import ap.deepstroll.bo.Result;
 import ap.deepstroll.entity.Work;
 import ap.deepstroll.mapper.ArticleMapper;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import ap.deepstroll.entity.ArticleEntity;
@@ -10,7 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 @Service("articleService")
+@Primary
 public class ArticleService extends WorkService{
+
     ArticleMapper articleMapper;
 
     @Override
@@ -56,4 +60,7 @@ public class ArticleService extends WorkService{
         return articleMapper.insertArticle(articleEntity);
     }
 
+    public Result Collection(Map<String,String> req){
+        return null;
+    }
 }

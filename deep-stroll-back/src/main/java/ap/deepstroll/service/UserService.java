@@ -7,8 +7,12 @@ import ap.deepstroll.dao.UserDao;
 import ap.deepstroll.entity.UserEntity;
 import ap.deepstroll.mapper.UserMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("userService")
 public class UserService {
+    @Autowired
     UserMapper userMapper;
 
     /**
@@ -54,7 +58,16 @@ public class UserService {
      * @return
      */
     public UserEntity queryUserById(Long id){
-        return userMapper.queryUserById(id);
+        System.out.println(id);
+        System.out.println(id.getClass());
+        try{
+            UserEntity userEntity = userMapper.queryUserById(1L);
+            System.out.println("this is test"+userEntity.toString());
+            return userEntity;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     /**
