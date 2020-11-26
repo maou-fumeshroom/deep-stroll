@@ -11,7 +11,6 @@ import java.util.Map;
 @Service("workService")
 public abstract class WorkService {
 
-
     /**
      * 删除我的作品
      * @param req
@@ -21,12 +20,18 @@ public abstract class WorkService {
         return null;
     }
 
+    /***
+     * 浏览
+     * @return
+     */
+    public  abstract  List browseWork();
+
     /**
      * 分类浏览用户分享的作品
      * @param
      * @return
      */
-    public  abstract  List browseWork(String title,String labels,Integer classifyId,Integer state,Integer likeNum,Integer startIndex,Integer pageSize);
+    public  abstract  List searchWork(String title,String labels,Integer classifyId,Integer state,Integer likeNum,Integer page);
 
     /**
      * 获取作品的分类
@@ -44,5 +49,5 @@ public abstract class WorkService {
      * @param
      * @return
      */
-    public  abstract Integer Publish(Work work);
+    //public  abstract Integer Publish(Work work);
 }

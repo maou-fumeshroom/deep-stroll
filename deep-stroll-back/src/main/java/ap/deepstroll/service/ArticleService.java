@@ -12,6 +12,7 @@ import java.util.Map;
 
 @Service("articleService")
 public class ArticleService extends WorkService{
+    Integer pageSize = 10;
     @Autowired
     ArticleMapper articleMapper;
 
@@ -20,8 +21,9 @@ public class ArticleService extends WorkService{
      * lqy
      * 分类浏览用户分享的作品:这么多参数吗
      */
-    public List<ArticleEntity> browseWork(String title,String label,Integer classifyId,Integer state,Integer likeNum,Integer startIndex,Integer pageSize) {
-        return articleMapper.queryArticleByTitleLabState(title,label,classifyId,state,startIndex,pageSize,likeNum);
+    public List<ArticleEntity> browseWork(String title,String label,Integer classifyId,Integer state,Integer likeNum,Integer page) {
+        Integer startIndex= this.pageSize * (page -1);
+        return articleMapper.queryArticleByTitleLabState(title,label,classifyId,state,startIndex,this.pageSize,likeNum);
     }
 
     /***
@@ -42,11 +44,6 @@ public class ArticleService extends WorkService{
     @Override
     public ArticleEntity getDetail(Long id) {
         return articleMapper.queryArticleById(id);
-    }
-
-    @Override
-    public Integer Publish(Work work) {
-        return null;
     }
 
     /***

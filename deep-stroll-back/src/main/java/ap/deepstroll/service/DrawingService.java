@@ -13,12 +13,21 @@ import org.springframework.stereotype.Service;
 
 @Service("drawingService")
 public class DrawingService extends WorkService{
+    Integer pageSize = 10;
     @Autowired
     DrawingMapper drawingMapper;
 
     @Override
-    public List browseWork(String title, String label, Integer classifyId, Integer state, Integer likeNum, Integer startIndex, Integer pageSize) {
-        return drawingMapper.queryDrawingByTitleLabClassifyState(title,label,classifyId,state,startIndex,pageSize,likeNum);
+    //result!!!
+    public List<DrawingEntity> browseWork(){
+        return drawingMapper.queryDrawingByTitleLabClassifyState(null,null,null,0,null,null,null);
+    }
+
+    @Override
+    //result!!!
+    public List searchWork(String title, String label, Integer classifyId, Integer state, Integer likeNum, Integer page) {
+        Integer startIndex= this.pageSize * (page -1);
+        return drawingMapper.queryDrawingByTitleLabClassifyState(title,label,classifyId,state,startIndex,this.pageSize,likeNum);
     }
 
     @Override
@@ -27,13 +36,8 @@ public class DrawingService extends WorkService{
     }
 
     @Override
-    public Work getDetail(Long id) {
+    public DrawingEntity getDetail(Long id) {
         return drawingMapper.queryDrawingById(id);
-    }
-
-    @Override
-    public Integer Publish(Work work) {
-        return null;
     }
 
     public Integer Publish(DrawingEntity drawingEntity) {
