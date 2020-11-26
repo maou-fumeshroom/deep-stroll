@@ -58,7 +58,16 @@ public class UserService {
      * @return
      */
     public UserEntity queryUserById(Long id){
-        return userMapper.queryUserById(id);
+        System.out.println(id);
+        System.out.println(id.getClass());
+        try{
+            UserEntity userEntity = userMapper.queryUserById(1L);
+            System.out.println("this is test"+userEntity.toString());
+            return userEntity;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     /**
