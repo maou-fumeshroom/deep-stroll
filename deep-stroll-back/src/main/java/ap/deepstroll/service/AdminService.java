@@ -26,14 +26,14 @@ public class AdminService {
         return null;
     }
 
-    /**
-     * 添加管理员
-     * @param info
-     * @return
-     */
-    public Result addAdmin(Map info){
-        return null;
-    }
+    // /**
+    //  * 添加管理员
+    //  * @param info
+    //  * @return
+    //  */
+    // public Result addAdmin(Map info){
+    //     return null;
+    // }
 
     /**
      * 删除管理员

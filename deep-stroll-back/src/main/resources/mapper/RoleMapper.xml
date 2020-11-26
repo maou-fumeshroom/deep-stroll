@@ -40,6 +40,26 @@
         </where>
     </select>
 
+    <select id="queryRoleByIds" resultMap="RoleMap">
+        SELECT
+            id,
+            name,
+            introduction,
+            state,
+            create_time,
+            update_time
+        FROM role
+        <where>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            AND id in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+		        #{id}
+	        </foreach>
+        </where>
+    </select>
+    
     <update id="updateRoleState">
         UPDATE role
         SET state = #{state}

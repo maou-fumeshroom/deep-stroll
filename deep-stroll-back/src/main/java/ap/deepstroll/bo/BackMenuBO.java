@@ -1,5 +1,7 @@
 package ap.deepstroll.bo;
 
+import org.springframework.boot.autoconfigure.batch.BatchDataSource;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,11 +13,13 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString
-public class Result {
-
-    private Integer code;
-    private String massage;
+@Builder
+public class BackMenuBO {
+    
+    private Integer id;
+    private String name;
+    private String path;
+    private BackMenuBO[] sonMenu;
 
 }

@@ -1,5 +1,6 @@
-package ap.deepstroll.bo;
+package ap.deepstroll.vo;
 
+import ap.deepstroll.bo.Result;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,9 +14,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Result {
-
-    private Integer code;
-    private String massage;
-
+public class ResponseVO implements ViewObject {
+    
+    private ViewObject data;
+    private Result result;
+    
 }

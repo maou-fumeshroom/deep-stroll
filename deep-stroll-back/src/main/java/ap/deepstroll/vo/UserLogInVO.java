@@ -1,5 +1,6 @@
-package ap.deepstroll.bo;
+package ap.deepstroll.vo;
 
+import ap.deepstroll.bo.HomeMenuBO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,9 +14,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Result {
+public class UserLogInVO implements ViewObject {
 
-    private Integer code;
-    private String massage;
-
+    private String token;
+    private Long id;
+    private HomeMenuBO[] menus;
+    
 }

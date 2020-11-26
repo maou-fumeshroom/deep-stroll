@@ -21,6 +21,12 @@ public class AdminMapperTest {
                                     .password("password")
                                     .build();
         a.insertAdmin(aEntity);
+        System.out.println(aEntity.getId());
+    }
+
+    @Test
+    void query() {
+        System.out.println(a.queryAdminByAccount("account"));
     }
 
     @Test

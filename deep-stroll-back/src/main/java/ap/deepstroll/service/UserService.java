@@ -6,23 +6,23 @@ import ap.deepstroll.bo.Result;
 
 public class UserService {
 
-    /**
-     * 用户登陆
-     * @param req
-     * @return
-     */
-    public Map userLogin(Map req){
-        return null;
-    }
+    // /**
+    //  * 用户登陆
+    //  * @param req
+    //  * @return
+    //  */
+    // public Map userLogin(Map req){
+    //     return null;
+    // }
 
-    /**
-     * 用户注册
-     * @param req
-     * @return
-     */
-    public Result userLogup(Map req){
-        return null;
-    }
+    // /**
+    //  * 用户注册
+    //  * @param req
+    //  * @return
+    //  */
+    // public Result userLogup(Map req){
+    //     return null;
+    // }
 
     /**
      * 修改用户信息

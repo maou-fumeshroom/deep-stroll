@@ -13,9 +13,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Result {
+public class HomeMenuBO implements BusinessObject {
 
-    private Integer code;
-    private String massage;
-
+    private Integer id;
+    private String name;
+    private String path;
+    
 }
