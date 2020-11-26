@@ -1,5 +1,6 @@
 package ap.deepstroll.service;
 
+import ap.deepstroll.entity.DrawingEntity;
 import ap.deepstroll.entity.Work;
 import ap.deepstroll.mapper.ArticleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,19 @@ public class ArticleService extends WorkService{
     @Autowired
     ArticleMapper articleMapper;
 
+
+    @Override
+    //result!!!
+    public List<ArticleEntity> browseWork(){
+        return articleMapper.queryArticleByTitleLabState(null,null,null,0,null,null,null);
+    }
+
     @Override
     /***
      * lqy
      * 分类浏览用户分享的作品:这么多参数吗
      */
-    public List<ArticleEntity> browseWork(String title,String label,Integer classifyId,Integer state,Integer likeNum,Integer page) {
+    public List<ArticleEntity> searchWork(String title,String label,Integer classifyId,Integer state,Integer likeNum,Integer page) {
         Integer startIndex= this.pageSize * (page -1);
         return articleMapper.queryArticleByTitleLabState(title,label,classifyId,state,startIndex,this.pageSize,likeNum);
     }
