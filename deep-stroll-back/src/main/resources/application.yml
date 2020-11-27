@@ -14,3 +14,15 @@ spring:
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
   typeAliasesPackage: com.mbry.IronMan.entity
+
+# JWT
+jwt:
+  header: Authorization
+  secret: mySecret
+  expiration: 604800
+  tokenHead: "Bearer "
+  supercode: "99999"
+  route:
+    authentication:
+      path: /api/login/
+      register: /api/user/register/

@@ -23,7 +23,7 @@ public class UserManagementService {
 
     /***
      * 获取用户列表
-     * mwr
+     * mwr dei
      * @param req
      * @return
      */
@@ -89,7 +89,7 @@ public class UserManagementService {
 
     /***
      * 更改用户状态 status vip
-     * mwr
+     * mwr dei
      * @param req
      * @return
      */

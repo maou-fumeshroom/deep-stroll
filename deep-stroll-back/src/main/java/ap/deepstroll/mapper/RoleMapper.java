@@ -29,6 +29,15 @@ public interface RoleMapper {
     public List<RoleEntity> queryRole(@Param("state")Integer state);
 
     /**
+     * 查询指定ids的角色
+     * @author mxf
+     * @param ids
+     * @param state
+     * @return
+     */
+    public List<RoleEntity> queryRoleByIds(@Param("ids")List<Integer> ids, @Param("state")Integer state);
+
+    /**
      * 更改角色状态
      * @author mxf
      * @param id
