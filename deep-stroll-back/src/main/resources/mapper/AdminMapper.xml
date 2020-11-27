@@ -9,10 +9,10 @@
         <result property="password" column="password"/>
         <result property="state" column="state"/>
         <result property="createTime" column="create_time"/>
-        <result property="updateTIme" column="update_time"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
-    <insert id="insertAdmin">
+    <insert id="insertAdmin" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO
         admin(
             account,
@@ -23,6 +23,30 @@
             #{password}
         )
     </insert>
+
+    <select id="queryAdminByAccount" resultMap="AdminMap">
+        SELECT
+            id,
+            account,
+            password,
+            state,
+            create_time,
+            update_time
+        FROM admin
+        WHERE account = #{account}
+    </select>
+
+     <select id="queryAdminById" resultMap="AdminMap">
+        SELECT
+            id,
+            account,
+            password,
+            state,
+            create_time,
+            update_time
+        FROM admin
+        WHERE id = #{id} 
+    </select>
 
     <select id="queryAdmin" resultMap="AdminMap">
         SELECT
