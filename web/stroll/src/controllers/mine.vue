@@ -83,20 +83,21 @@
           activeIndex: '1',
           articleList:[
             {
-              id:0,
+              id:1,
               imgSrc:require("../assets/logo.png"),
-              title:"Python之父，现在成为微软打工人!",
+              title:"Python之父，现在成为微软打工人",
               nickname:"小明",
               avatarSrc:require("../assets/logo.png"),
               releaseTime:"11-13",
               likes:"232",
               commentsNum:"56",
               introduction:"当程序员开始诉控996加班时，中国多款浏览器竟然匪夷所思地禁止访问",
-              content:"Python之父加入微软干什么？\n" +
-                "几个小时前，Guido Van Rossum本人发推宣布了这个消息，他说：「退休生活太无聊了，我决定加入微软的开发者部门！」"
+              // content:"Python之父加入微软干什么？\n" +
+              //   "几个小时前，Guido Van Rossum本人发推宣布了这个消息，他说：「退休生活太无聊了，我决定加入微软的开发者部门！」"
+              mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481592000.md"
             },
             {
-              id:1,
+              id:2,
               imgSrc:require("../assets/logo.png"),
               title:"如何看待马云 4 月 11 日在内外直播中将 996 称为「修来的福报」？",
               nickname:"小红",
@@ -105,11 +106,12 @@
               likes:"60",
               commentsNum:"12",
               introduction:"4月11日内外直播中，在被问及如何看待996.icu事件时，马云主要提出了一下三个观点： 马云谈996 1. 能996是你们的幸福 ",
-              content:"1. 能996是你们的幸福\n" +
-                "\n" +
-                "2. 我本人从很久开始就不止996，简直007\n" +
-                "\n" +
-                "3. 不要扯法律什么的，法律也没规定公司要给你们提供这么好的工作环境这么高的工资，法律也没规定公司要给你们股票，但是我不也给你们了吗（阿里巴巴对外发布的演讲稿中未提及该条，真实性存疑）"
+              // content:"1. 能996是你们的幸福\n" +
+              //   "\n" +
+              //   "2. 我本人从很久开始就不止996，简直007\n" +
+              //   "\n" +
+              //   "3. 不要扯法律什么的，法律也没规定公司要给你们提供这么好的工作环境这么高的工资，法律也没规定公司要给你们股票，但是我不也给你们了吗（阿里巴巴对外发布的演讲稿中未提及该条，真实性存疑）"
+              mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481596000.md"
             },
           ],
           len: 8,

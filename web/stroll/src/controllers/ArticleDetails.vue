@@ -13,7 +13,9 @@
 
     <!--文章详情页面中部，文章的内容-->
     <div id="container">
-      <p class="content">{{articleMsg.content}}</p>
+<!--      <p class="content">{{articleMsg.content}}</p>-->
+      <VueMarkdown :source="htmlMD"/>
+<!--      <div v-html="htmlMD"></div>-->
     </div>
 
     <!--文章详情页面下半部分，评论-->
@@ -25,8 +27,13 @@
 </template>
 
 <script>
+  const axios = require('axios');
+  import VueMarkdown from "vue-markdown";
     export default {
       name: "ArticleDetails",
+      components:{
+        VueMarkdown,
+      },
       data () {
         return {
           articleMsg:{
@@ -39,23 +46,28 @@
             likes:"",
             commentsNum:"",
             introduction:"",
-            content:""
+            // content:""
+            mdSrc:""
           },
           userComment:"",
-          backPage:""
+          backPage:"",
+          htmlMD:"",
         }
       },
 
       mounted () {
         //接收到传来的文章详情信息
         this.articleMsg = JSON.parse(this.$route.query.articleMsg);
-        // var msg = this.$route.params.articleMsg;
-        // console.log("msg: "+msg);
-        // this.articleMsg = JSON.parse(msg);
         console.log(this.articleMsg);
         //接收到传来的返回路径
         this.backPage = this.$route.query.backpage;
         console.log(this.backPage);
+
+        const url = this.articleMsg.mdSrc;
+        console.log("url: "+ url)
+        this.$http.get(url).then((response) => {
+          this.htmlMD = response.data;
+        });
       },
       methods: {
         back(){
@@ -64,7 +76,7 @@
             path:'/' + this.backPage,
           })
         }
-      }
+      },
     }
 </script>
 

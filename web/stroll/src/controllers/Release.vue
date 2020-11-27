@@ -14,9 +14,20 @@
       <div id="articleRel" v-if="tag === '1'">
         <div class="pageLeft">
           <h4 >选择封面</h4>
-          <img :src=msg.coverSrc class="cover"/>
-          <br/>
-          <el-button class="uploadButton" @click="upload">上传封面</el-button>
+
+          <el-upload
+            class="uploadCover" drag
+            action=""
+            :show-file-list="false"
+            :http-request="UploadCover"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="msg.coverSrc" :src=msg.coverSrc class="cover"/>
+            <div v-else class="uploadLogo">
+              <i  class="el-icon-upload msgCoverI"/>
+              <div class="el-upload__text msgCoverText">将文件拖到此处，或<em>点击上传</em></div>
+            </div>
+            <div class="el-upload__tip" slot="tip">只能上传jpg/png/jpeg文件，且不超过500kb</div>
+          </el-upload>
         </div>
 
         <div class="pageRight">
@@ -34,8 +45,14 @@
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
 
-          <el-button class="uploadButton" @click="upload">上传文档</el-button>
-          <p>您成功上传文件：路径</p>
+<!--          <el-button class="uploadButton" @click="uploadMd">上传文档</el-button>-->
+          <el-upload
+            action=""
+            :show-file-list="false"
+            :http-request="uploadMd">
+            <el-button class="uploadButton">上传文档</el-button>
+          </el-upload>
+          <p class="uploadOK">您已成功上传文件！</p>
         </div>
 
       </div>
@@ -43,14 +60,27 @@
 <!--      手绘发布-->
       <div id="drawingRel" v-if="tag === '2'">
         <div class="pageLeft">
-          <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>
-            <i class="el-icon-upload"/>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload>
+<!--          <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>-->
+<!--            <i class="el-icon-upload"/>-->
+<!--            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
+<!--            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
+<!--          </el-upload>-->
           <ul id="nineBox">
-            <li class="itemBox" @click="focus(item)" v-for="(item,index) in drawings.slice(0,len)" :key="index"/>
+            <li class="itemBox" v-for="(item,index) in drawings.slice(0,len)" :key="index">
+              <img v-if="item.src" :src="item.src" class="itemImg"/>
+            </li>
           </ul>
+          <el-upload
+            class="drawUpload"
+            action=""
+            :show-file-list="false"
+            :http-request="UploadImg"
+            :before-upload="beforeAvatarUpload"
+            multiple>
+            <el-button>上传</el-button>
+<!--            <img v-if="msg.coverSrc" :src=msg.coverSrc class="cover"/>-->
+<!--            <i v-else class="el-icon-plus avatar-uploader-icon"/>-->
+          </el-upload>
         </div>
 
 
@@ -67,6 +97,8 @@
           <el-select class="select" v-model="label" filterable placeholder="请选择标签" clearable>
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
+
+          <p>只能上传jpg/png/jpeg文件，且不超过500kb，最多上传9张</p>
         </div>
       </div>
     </div>
@@ -80,6 +112,8 @@
 </template>
 
 <script>
+  import {client} from "../utils/alioss"
+
     export default {
       name: "Release",
       data(){
@@ -87,9 +121,10 @@
           activeIndex: '1',
           tag:'1',
           msg:{
-            coverSrc:require("../assets/logo.png"),
+            coverSrc:"",
             title:"",
             introduce:"",
+            mdSrc:""
           },
           options: [{
             value: '选项1',
@@ -110,6 +145,7 @@
           sort:"",
           label:"",
           drawings:[
+            // {id:'1', src:"../../static/images/logo.png"},
             {id:'1', src:""},
             {id:'2', src:""},
             {id:'3', src:""},
@@ -120,15 +156,12 @@
             {id:'8', src:""},
             {id:'9', src:""},
           ],
-          len:9,
+          len:0,
         }
       },
       methods: {
         handleSelect(key, keyPath) {
           this.tag = keyPath[0] ;
-        },
-        upload(){
-
         },
         release(){
 
@@ -136,8 +169,63 @@
         cancel(){
 
         },
-        focus:function (item) {
-          this.len += 1;
+        uploadMd(file){
+          var fileName = 'article' + `${Date.parse(new Date())}`+'.md';  //定义唯一的文件名
+          client().multipartUpload(fileName, file.file).then(
+            result => {
+              this.msg.mdSrc = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+              $('.uploadOK').css('display', 'block');
+              // var temp = document.getElementsByClassName("uploadOK");
+              // temp.style = "display:block";
+              // temp.style.display = block;
+            })
+        },
+        UploadCover(file) {
+          var fileName = 'cover' + `${Date.parse(new Date())}`;  //定义唯一的文件名
+          //定义唯一的文件名，打印出来的uid其实就是时间戳
+          client().multipartUpload(fileName, file.file).then(
+            result => {
+              this.msg.coverSrc = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+
+            })
+        },
+        UploadImg(file) {
+          var fileName = 'image' + `${Date.parse(new Date())}`;  //定义唯一的文件名
+          if(this.len < 9){
+            //定义唯一的文件名，打印出来的uid其实就是时间戳
+            client().multipartUpload(fileName, file.file).then(
+              result => {
+                this.drawings[this.len].src = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+                this.len += 1;
+                // uploadBannerPic(this.fileList).then(res => {
+                //   console.log("lalala")
+                //   //此处为给自己属性进行赋值，http后面的代码很有可能会和我的不一样，一切与自己阿里云上的数据为准
+                //   //根据需要可能项目还需对自己的数据库进行保存
+                //   // this.contacts.conImg='http://bai111111.oss-cn-beijing.aliyuncs.com/'+this.fileList[0].result.name;
+                // })
+              })
+          }else{
+            console.log("最多上传9张")
+          }
+
+        },
+        /**
+         * 图片限制
+         * 图片限制在理论上来说可以不用写，如果想要简单，可以不写
+         * 上传图片切记不要过大，可能会导致上传失败
+         */
+        beforeAvatarUpload (file) {
+          const isJPEG = file.name.split('.')[1] === 'jpeg';
+          const isJPG = file.name.split('.')[1] === 'jpg';
+          const isPNG = file.name.split('.')[1] === 'png';
+          const isLt500K = file.size / 1024 / 500 < 2;
+          if (!isJPG && !isJPEG && !isPNG) {
+            this.$message.error('上传图片只能是 JPEG/JPG/PNG 格式!');
+          }
+          if (!isLt500K) {
+            this.$message.error('单张图片大小不能超过 500KB!');
+          }
+          return (isJPEG || isJPG || isPNG) && isLt500K;
         },
 
       }
@@ -161,10 +249,8 @@
 
   /*文章页面左半*/
   .cover{
-    border: 1px solid #000;
-    width: 280px;
-    height: 280px;
-    margin-top: 10px;
+    width: 311px;
+    height: 358px;
   }
 
   .uploadButton{
@@ -173,6 +259,77 @@
     background: #f8f9fa;
     margin-top: 50px;
     margin-bottom: 9px;
+  }
+
+  .uploadCover{
+    border: 1px dashed #d9d9d9;
+    width: 315px;
+    height: 360px;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .uploadCover /deep/ .el-upload-dragger{
+    width: 315px;
+    height: 360px;
+  }
+
+  .uploadLogo .el-icon-upload{
+    position: absolute;
+    left: 52%;
+    top: 26%;
+    transform: translate(-50%, -50%);
+  }
+
+  /*手绘页面左半*/
+  /deep/ .el-upload-dragger {
+    background-color: rgba(204, 204, 204, 0);
+    border: 0;
+    width: 450px;
+    height: 450px;
+  }
+
+  .el-icon-upload {
+    position: absolute;
+    left: 52%;
+    top: 38%;
+    transform: translate(-50%, -50%);
+  }
+
+  .el-upload__text {
+    position: absolute;
+    left: 52%;
+    top: 57%;
+    transform: translate(-50%, -50%);
+  }
+  .drawUpload .el-button{
+    width: 130px;
+    background: #f8f9fa;
+  }
+
+
+  #nineBox{
+    list-style-type: none;
+    width: 404px;
+    height: 404px;
+    padding: 0;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+  }
+
+  .itemBox{
+    width: 130px;
+    height: 130px;
+    float: left;
+    margin: 2px;
+    border: 2px solid #dee2e6;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .itemImg{
+    width: 100%;
+    height: 100%;
   }
 
   /*页面右半*/
@@ -192,7 +349,12 @@
   }
 
   .select{
-    margin: 30px 50px 0 0;
+    margin: 30px 50px 10px 0;
+  }
+
+  .uploadOK{
+    display: none;
+    /*display: block;*/
   }
 
   /deep/ .el-textarea__inner{
@@ -217,55 +379,17 @@
     width: 100px;
   }
 
-  #nineBox{
-    list-style-type: none;
-    width: 464px;
-    height: 464px;
-    padding: 0;
-    position: absolute;
-    top: 21%;
-    border: 1px dashed #d9d9d9;
-}
-
-  .itemBox{
-    width: 150px;
-    height: 150px;
-    float: left;
-    margin: 2px;
-    border: 2px solid #dee2e6;
-    border-radius: 5px;
-    cursor: pointer;
-  }
 
   .drawRight{
     float: right;
     width: 43%;
   }
 
-  .upload-demo{
-    position: absolute;
-    z-index: 1;
+  .drawRight p{
+    font-size: 10px;
+    color: #c0c4cc;
   }
 
-  /deep/ .el-upload-dragger {
-     background-color: rgba(204, 204, 204, 0);
-     border: 0;
-    width: 450px;
-    height: 450px;
-  }
 
-  /deep/.el-icon-upload {
-    position: absolute;
-    left: 52%;
-    top: 38%;
-    transform: translate(-50%, -50%);
-  }
-
-  /deep/.el-upload__text {
-    position: absolute;
-    left: 52%;
-    top: 57%;
-    transform: translate(-50%, -50%);
-  }
 
 </style>

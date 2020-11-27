@@ -17,7 +17,10 @@ import qs from 'qs'
 Vue.use(VueRouter)
 
 Vue.prototype.$http = axios
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
+
+axios.defaults.withCredentials = false
+
 axios.defaults.baseURL = '' // 关键步骤–填写后台请求统一的地址
 axios.defaults.headers.post['x-csrf-token'] = localStorage.getItem('token')
 Vue.config.productionTip = false
