@@ -58,7 +58,7 @@
         WHERE id = #{id}
     </select>
 
-    <select id="queryArticleByTitleLabState" resultMap="ArticleMap">
+    <select id="queryArticleByTitleLabClassifyState" resultMap="ArticleMap">
         SELECT
             id,
             author_id,
@@ -93,7 +93,7 @@
         LIMIT #{startIndex}, #{pageSize}
     </select>
 
-    <select id="queryArticleNumByTitleLabState" resultType="Integer">
+    <select id="queryArticleNumByTitleLabClassifyState" resultType="Integer">
         SELECT
             count(*)
         FROM article

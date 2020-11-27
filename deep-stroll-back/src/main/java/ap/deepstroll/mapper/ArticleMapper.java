@@ -36,7 +36,7 @@ public interface ArticleMapper {
      * @param pageSize notnull
      * @return
      */
-    public List<ArticleEntity> queryArticleByTitleLabState(
+    public List<ArticleEntity> queryArticleByTitleLabClassifyState(
         @Param("title")String title,
         @Param("label")String label,
         @Param("classifyId")Integer classifyId,
@@ -56,7 +56,7 @@ public interface ArticleMapper {
      * @param likeNum
      * @return
      */
-    public Integer queryArticleNumByTitleLabState(
+    public Integer queryArticleNumByTitleLabClassifyState(
         @Param("title")String title,
         @Param("label")String label,
         @Param("classifyId")Integer classifyId,

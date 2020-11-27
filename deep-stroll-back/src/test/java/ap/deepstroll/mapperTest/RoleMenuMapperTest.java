@@ -28,7 +28,7 @@ public class RoleMenuMapperTest {
 
     @Test
     void queryByRoleIds() {
-        List<Integer> roleIds = Arrays.asList(1, 2);
+        List<Integer> roleIds = Arrays.asList(1);
         System.out.println(r.queryByRoleIds(roleIds));
     }
 

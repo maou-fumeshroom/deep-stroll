@@ -1,6 +1,6 @@
-package ap.deepstroll.vo;
+package ap.deepstroll.vo.response;
 
-import ap.deepstroll.bo.HomeMenuBO;
+import ap.deepstroll.vo.ViewObject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,12 +12,10 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString
-public class UserLogInVO implements ViewObject {
+@Builder
+public class UploadFileVO implements ViewObject {
 
-    private String token;
-    private Long id;
-    private HomeMenuBO[] menus;
+    private String url;
     
 }
