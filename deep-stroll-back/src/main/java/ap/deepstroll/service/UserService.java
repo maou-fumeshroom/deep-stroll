@@ -39,9 +39,9 @@ public class UserService {
      * @param userEntity
      * @return
      */
-    public Integer updateUser(UserEntity userEntity){
-        return userMapper.updateUser(userEntity);
-    }
+//      public Integer updateUser(UserEntity userEntity){
+//        return userMapper.updateUser(userEntity);
+//    }
 
     /**
      * 获取全部用户信息
