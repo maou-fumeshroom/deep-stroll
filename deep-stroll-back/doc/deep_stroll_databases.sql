@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`home_menu` (
   `parent_id` INT NULL,
   `state` INT NOT NULL DEFAULT 0 COMMENT '0:正常 1:不可见',
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NULL DEFAULT 
+  `update_time` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 

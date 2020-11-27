@@ -15,7 +15,12 @@ import lombok.ToString;
 @ToString
 public class Result {
 
-    private Integer code;
-    private String massage;
+    private Integer code = 1;
+    private String message;
+
+    public Result(String err) {
+        this.code = 0;
+        this.message = err;
+    }
 
 }
