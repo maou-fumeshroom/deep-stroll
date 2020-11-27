@@ -14,7 +14,7 @@
         <result property="likeNum" column="like_num"/>
         <result property="state" column="state"/>
         <result property="createTime" column="create_time"/>
-        <result property="updateTIme" column="update_time"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <insert id="insertDrawing" parameterType="ap.deepstroll.entity.DrawingEntity">

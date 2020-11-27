@@ -1,8 +1,10 @@
 package ap.deepstroll.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ap.deepstroll.bo.Result;
 import ap.deepstroll.entity.ThemeEntity;
 import ap.deepstroll.mapper.ThemeMapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,20 +18,29 @@ public class ThemeService {
     ThemeMapper themeMapper;
 
     /**
-     * 浏览内置主题
+     * user浏览内置主题
      * @return
      */
-    public List<ThemeEntity> browserThemeList(){
-        return themeMapper.queryTheme();
-    }
+//    public Map<String,Object> browserThemeList(){
+//        List<ThemeEntity> theme = themeMapper.queryTheme();
+//    }
 
     /**
      * id 获取主题(背景音乐、背景图片)
      * @param id
      * @return
      */
-    public ThemeEntity setThemeById(Integer id){
-        return themeMapper.queryThemeById(id);
+    public Map<String,Object> setThemeById(Integer id){
+        HashMap<String,Object> response = new HashMap<>();
+        try {
+            ThemeEntity theme = themeMapper.queryThemeById(id);
+            response.put("data",theme);
+            response.put("result",new Result());
+        }catch (Exception e){
+            response.put("result",new Result(e.getMessage()));
+            response.put("data",null);
+        }
+        return response;
     }
 
     /***
@@ -41,21 +52,4 @@ public class ThemeService {
         return themeMapper.insertNewTheme(themeEntity);
     }
 
-    /***
-     * 删除指定主题
-     * @param id
-     * @return
-     */
-    public Integer deleteThemeById(Integer id){
-        return themeMapper.deleteThemeById(id);
-    }
-
-    /***
-     * 修改默认主题
-     * @param id
-     * @return
-     */
-    public Integer setDefaultTheme(Integer id){
-        return themeMapper.deleteThemeById(id);
-    }
 }

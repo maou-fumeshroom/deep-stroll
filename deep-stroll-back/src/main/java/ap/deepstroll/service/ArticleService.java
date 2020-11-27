@@ -1,8 +1,10 @@
 package ap.deepstroll.service;
 
 import ap.deepstroll.entity.DrawingEntity;
+import ap.deepstroll.entity.UserEntity;
 import ap.deepstroll.entity.Work;
 import ap.deepstroll.mapper.ArticleMapper;
+import ap.deepstroll.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import ap.deepstroll.bo.Result;
 import org.springframework.context.annotation.Primary;
@@ -20,6 +22,7 @@ public class ArticleService extends WorkService{
     Integer pageSize = 10;
     @Autowired
     ArticleMapper articleMapper;
+    UserMapper userMapper;
 
     @Override
     public Map<String,Object> browseWork(){
@@ -82,8 +85,28 @@ public class ArticleService extends WorkService{
      * @return
      */
     @Override
-    public ArticleEntity getDetail(Long id) {
-        return articleMapper.queryArticleById(id);
+    public Map<String, Object> getDetail(Long id) {
+        HashMap<String,Object> response = new HashMap<>();
+        HashMap<String,Object> data = new HashMap<>();
+        try {
+            ArticleEntity articleDetial = articleMapper.queryArticleById(id);
+            Long authorId = articleDetial.getAuthorId();
+            UserEntity userInfo = userMapper.queryUserById(authorId);
+            HashMap<String,Object> author = new HashMap<>();
+            author.put("id",userInfo.getId());
+            author.put("nickname",userInfo.getNickname());
+            author.put("avatar",userInfo.getAvatar());
+            Result result = new Result();
+            data.put("author",author);
+            data.put("",userInfo);
+            response.put("result",result);
+            response.put("data",data);
+        }catch (Exception e){
+            Result result = new Result(e.getMessage());
+            response.put("data",null);
+            response.put("result",result);
+        }
+        return response;
     }
 
     /***
