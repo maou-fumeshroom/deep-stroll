@@ -62,7 +62,7 @@ public  abstract class WorkService {
     /**
      *  获取作品详情
      */
-    public  Work getDetail(Long id){return null;}
+    public  Map<String,Object> getDetail(Long id){return null;}
 
     /**
      * 发布文章
