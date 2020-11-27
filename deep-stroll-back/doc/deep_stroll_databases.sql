@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`user` (
   `e_mail` VARCHAR(45) NULL,
   `sign` VARCHAR(100) NULL,
   `avatar` VARCHAR(255) NULL,
-  `vip` INT NOT NULL DEFAULT 0 COMMENT '0：普通 1：vip',
+  `vip` INT NOT NULL DEFAULT 0 COMMENT '0：普�?1：vip',
   `state` INT NOT NULL DEFAULT 0 COMMENT '0:正常 1:冻结',
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -59,7 +59,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `deep_stroll`.`classify_drawing` (
   `classify_drawing_id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `state` INT NOT NULL DEFAULT 0 COMMENT '0:正常 1:删除',
+  `state` INT NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`calssify_drawing_id`))
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`theme` (
   `name` VARCHAR(45) NOT NULL,
   `background_url` VARCHAR(100) NOT NULL,
   `bgm_url` VARCHAR(100) NOT NULL,
-  `is_default` INT NOT NULL DEFAULT 0 COMMENT '0:非默认 1：默认',
+  `is_default` INT NOT NULL DEFAULT 0 COMMENT '0:非默�?1：默�?,
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`home_menu` (
   `name` VARCHAR(45) NOT NULL,
   `path` VARCHAR(45) NULL,
   `parent_id` INT NULL,
-  `state` INT NOT NULL DEFAULT 0 COMMENT '0:正常 1:不可见',
+  `state` INT NOT NULL DEFAULT 0 COMMENT '0:正常 1:不可�?,
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` DATETIME NULL DEFAULT 
   PRIMARY KEY (`id`))

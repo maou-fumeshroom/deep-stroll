@@ -63,7 +63,7 @@ public class IdentityService {
                                      .result(
                                          Result.builder()
                                                .code(1)   
-                                               .massage("ok")
+                                               .message("ok")
                                                .build()
                                      )
                                      .build();            
@@ -72,7 +72,7 @@ public class IdentityService {
                                      .result(
                                          Result.builder()
                                                .code(0)
-                                               .massage("frozen")
+                                               .message("frozen")
                                                .build()
                                      )
                                      .build();
@@ -82,7 +82,7 @@ public class IdentityService {
                                  .result(
                                     Result.builder()
                                            .code(0)
-                                           .massage("wrong password")
+                                           .message("wrong password")
                                            .build()
                                  )
                                  .build();
@@ -92,7 +92,7 @@ public class IdentityService {
                              .result(
                                 Result.builder()
                                       .code(0)
-                                      .massage("no user")
+                                      .message("no user")
                                       .build()
                               )
                               .build();
@@ -127,7 +127,7 @@ public class IdentityService {
                                      .result(
                                          Result.builder()
                                                .code(1)   
-                                               .massage("ok")
+                                               .message("ok")
                                                .build()
                                      )
                                      .build();            
@@ -136,7 +136,7 @@ public class IdentityService {
                                      .result(
                                          Result.builder()
                                                .code(0)
-                                               .massage("frozen")
+                                               .message("frozen")
                                                .build()
                                      )
                                      .build();
@@ -146,7 +146,7 @@ public class IdentityService {
                                  .result(
                                     Result.builder()
                                            .code(0)
-                                           .massage("wrong password")
+                                           .message("wrong password")
                                            .build()
                                  )
                                  .build();
@@ -156,7 +156,7 @@ public class IdentityService {
                              .result(
                                 Result.builder()
                                       .code(0)
-                                      .massage("no user")
+                                      .message("no user")
                                       .build()
                               )
                               .build();
@@ -188,7 +188,7 @@ public class IdentityService {
                                  .result(
                                      Result.builder()
                                            .code(0)
-                                           .massage("unknow error") 
+                                           .message("unknow error")
                                            .build() 
                                  )
                                  .build();
@@ -198,7 +198,7 @@ public class IdentityService {
                              .result(
                                  Result.builder()
                                  .code(1)
-                                 .massage("ok") 
+                                 .message("ok")
                                  .build() 
                              )
                              .build();
@@ -207,7 +207,7 @@ public class IdentityService {
                              .result(
                                  Result.builder()
                                  .code(0)
-                                 .massage("account already exists") 
+                                 .message("account already exists")
                                  .build() 
                              )
                              .build();

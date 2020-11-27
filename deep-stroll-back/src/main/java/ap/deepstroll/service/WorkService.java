@@ -57,7 +57,7 @@ public  abstract class WorkService {
      * 获取作品的分类
      * @return
      */
-    public List getClassify(){return null;};
+    public Map<String,Object> getClassify(){return null;};
 
     /**
      *  获取作品详情
@@ -69,6 +69,6 @@ public  abstract class WorkService {
      * @param
      * @return
      */
-    //public  abstract Integer Publish(Work work);
+    //public  abstract Result Publish(Work work);
 
 }

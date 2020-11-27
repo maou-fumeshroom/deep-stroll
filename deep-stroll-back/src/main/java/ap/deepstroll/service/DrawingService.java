@@ -6,10 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import ap.deepstroll.bo.Result;
-import ap.deepstroll.entity.ArticleEntity;
-import ap.deepstroll.entity.DrawingEntity;
-import ap.deepstroll.entity.UserEntity;
-import ap.deepstroll.entity.Work;
+import ap.deepstroll.entity.*;
+import ap.deepstroll.mapper.ClassifyDrawingMapper;
 import ap.deepstroll.mapper.DrawingMapper;
 import ap.deepstroll.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +24,8 @@ public class DrawingService extends WorkService{
     DrawingMapper drawingMapper;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    ClassifyDrawingMapper classifyDrawingMapper;
 
     @Override
     public Map<String,Object> browseWork(){
@@ -69,9 +69,23 @@ public class DrawingService extends WorkService{
         return response;
     }
 
+    /***
+     * 获得分类
+     * @return
+     */
     @Override
-    public List getClassify() {
-        return null;
+    public Map<String,Object> getClassify(){
+        HashMap<String,Object> response = new HashMap<>();
+        HashMap<String,Object> data = new HashMap<>();
+        try{
+            List<ClassifyDrawingEntity> classifyDrawingEntities= classifyDrawingMapper.queryAllClassifyDrawing(0);
+            data.put("classify",classifyDrawingEntities);
+            response.put("data",data);
+            response.put("result",new Result());
+        }catch (Exception e){
+            response.put("result",new Result(e.getMessage()));
+        }
+        return response;
     }
 
     /***
@@ -110,9 +124,27 @@ public class DrawingService extends WorkService{
        return null;
     }
 
-//    public Integer Publish(DrawingEntity drawingEntity) {
-//        return drawingMapper.insertDrawing(drawingEntity);
-//    }
+    public Result Publish(DrawingEntity drawingEntity) {
+        try{
+            drawingMapper.insertDrawing(drawingEntity);
+            Result result = new Result();
+            return result;
+        }catch (Exception e){
+            Result result = new Result(e.getMessage());
+            return result;
+        }
+    }
+
+    public Result deleteWork(Long id) {
+        try{
+            drawingMapper.updateDrawingState(id,1);
+            Result result = new Result();
+            return result;
+        }catch (Exception e){
+            Result result = new Result(e.getMessage());
+            return result;
+        }
+    }
 
 
 }

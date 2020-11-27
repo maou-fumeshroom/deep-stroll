@@ -82,5 +82,4 @@ public class AdminService {
         return adminMapper.updateAdminState(id, state);
     }
 
-
 }
