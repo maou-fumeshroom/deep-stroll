@@ -44,14 +44,14 @@ public  abstract class WorkService {
      * 浏览
      * @return
      */
-    public  abstract  List browseWork();
+    public  abstract  Map<String,Object>  browseWork();
 
     /**
      * 分类浏览用户分享的作品
      * @param
      * @return
      */
-    public  abstract  List searchWork(String title,String labels,Integer classifyId,Integer state,Integer likeNum,Integer page);
+    public  abstract  Map<String,Object> searchWork(String title,String labels,Integer classifyId,Integer state,Integer likeNum,Integer page);
 
     /**
      * 获取作品的分类

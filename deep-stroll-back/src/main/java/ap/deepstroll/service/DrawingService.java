@@ -1,6 +1,7 @@
 package ap.deepstroll.service;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,16 +25,45 @@ public class DrawingService extends WorkService{
     DrawingMapper drawingMapper;
 
     @Override
-    //result!!!
-    public List<DrawingEntity> browseWork(){
-        return drawingMapper.queryDrawingByTitleLabClassifyState(null,null,null,0,null,null,null);
+    public Map<String,Object> browseWork(){
+        HashMap<String,Object> response = new HashMap<>();
+        HashMap<String,Object> data = new HashMap<>();
+        try {
+            List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByTitleLabClassifyState(null,null,null,0,null,null,null);
+            data.put("drawing",drawingList);
+            Result result = new Result();
+            Integer totalPage= drawingMapper.queryDrawingNumByTitleLabClassifyState(null,null,null,0,null)/this.pageSize;
+            data.put("totalpage",totalPage);
+            response.put("result",result);
+            response.put("data",data);
+        }catch (Exception e){
+            Result result = new Result(e.getMessage());
+            response.put("data",null);
+            response.put("result",result);
+        }
+        return response;
     }
 
     @Override
     //result!!!
-    public List searchWork(String title, String label, Integer classifyId, Integer state, Integer likeNum, Integer page) {
+    public Map<String,Object> searchWork(String title, String label, Integer classifyId, Integer state, Integer likeNum, Integer page) {
         Integer startIndex= this.pageSize * (page -1);
-        return drawingMapper.queryDrawingByTitleLabClassifyState(title,label,classifyId,state,startIndex,this.pageSize,likeNum);
+        HashMap<String,Object> response = new HashMap<>();
+        HashMap<String,Object> data = new HashMap<>();
+        try {
+            List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByTitleLabClassifyState(title,label,classifyId,state,startIndex,this.pageSize,likeNum);
+            data.put("drawing",drawingList);
+            Result result = new Result();
+            Integer totalPage= drawingMapper.queryDrawingNumByTitleLabClassifyState(title,label,classifyId,state,likeNum)/this.pageSize;
+            data.put("totalpage",totalPage);
+            response.put("result",result);
+            response.put("data",data);
+        }catch (Exception e){
+            Result result = new Result(e.getMessage());
+            response.put("data",null);
+            response.put("result",result);
+        }
+        return response;
     }
 
     @Override

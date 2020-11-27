@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import ap.deepstroll.entity.ArticleEntity;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,11 +21,24 @@ public class ArticleService extends WorkService{
     @Autowired
     ArticleMapper articleMapper;
 
-
     @Override
-    //result!!!
-    public List<ArticleEntity> browseWork(){
-        return articleMapper.queryArticleByTitleLabState(null,null,null,0,null,null,null);
+    public Map<String,Object> browseWork(){
+        HashMap<String,Object> response = new HashMap<>();
+        HashMap<String,Object> data = new HashMap<>();
+        try {
+            List<ArticleEntity> articleList =  articleMapper.queryArticleByTitleLabState(null,null,null,0,null,null,null);
+            data.put("article",articleList);
+            Result result = new Result();
+            Integer totalPage= articleMapper.queryArticleNumByTitleLabState(null,null,null,0,null)/this.pageSize;
+            data.put("totalpage",totalPage);
+            response.put("result",result);
+            response.put("data",data);
+        }catch (Exception e){
+            Result result = new Result(e.getMessage());
+            response.put("data",null);
+            response.put("result",result);
+        }
+        return response;
     }
 
     @Override
@@ -32,9 +46,24 @@ public class ArticleService extends WorkService{
      * lqy
      * 分类浏览用户分享的作品:这么多参数吗
      */
-    public List<ArticleEntity> searchWork(String title,String label,Integer classifyId,Integer state,Integer likeNum,Integer page) {
+    public Map<String,Object> searchWork(String title,String label,Integer classifyId,Integer state,Integer likeNum,Integer page) {
         Integer startIndex= this.pageSize * (page -1);
-        return articleMapper.queryArticleByTitleLabState(title,label,classifyId,state,startIndex,this.pageSize,likeNum);
+        HashMap<String,Object> response = new HashMap<>();
+        HashMap<String,Object> data = new HashMap<>();
+        try {
+            List<ArticleEntity> articleList =  articleMapper.queryArticleByTitleLabState(title,label,classifyId,state,startIndex,this.pageSize,likeNum);
+            data.put("article",articleList);
+            Result result = new Result();
+            Integer totalPage= articleMapper.queryArticleNumByTitleLabState(title,label,classifyId,state,likeNum)/this.pageSize;
+            data.put("totalpage",totalPage);
+            response.put("result",result);
+            response.put("data",data);
+        }catch (Exception e){
+            Result result = new Result(e.getMessage());
+            response.put("data",null);
+            response.put("result",result);
+        }
+        return response;
     }
 
     /***

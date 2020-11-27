@@ -62,8 +62,15 @@ public class AdminService {
      * @param adminEntity
      * @return
      */
-    public Integer addAdmin(AdminEntity adminEntity){
-        return adminMapper.insertAdmin(adminEntity);
+    public Result addAdmin(AdminEntity adminEntity){
+        try{
+            adminMapper.insertAdmin(adminEntity);
+            Result result = new Result();
+            return result;
+        }catch (Exception e){
+            Result result = new Result(e.getMessage());
+            return result;
+        }
     }
 
     /**
