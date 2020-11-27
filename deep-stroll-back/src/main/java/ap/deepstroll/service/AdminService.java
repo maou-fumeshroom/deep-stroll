@@ -23,6 +23,10 @@ public class AdminService {
     private static final int ROLE_VALID_STATE = 0;
     private static final int ROLE_INVALID_STATE = 1;
 
+    //正常状态下管理员的角色
+    private static final Integer Admin_VALID_STATE = 0;
+    private static final Integer Admin_INVALID_STATE = 1;
+
     /**
      * 获取管理员列表
      * 暂时startindex搞了0
@@ -75,12 +79,22 @@ public class AdminService {
 
     /**
      * 修改管理员状态
-     * @param id
+     * mwr
+     * @param
      * @return
      */
-    public Integer deleteAdmin(Integer id,Integer state){
-        return adminMapper.updateAdminState(id, state);
+    public Map<String,Result> deleteAdmin(Map<String,Integer> req){
+        Map<String,Result> response = new HashMap<>();
+        int ans =  adminMapper.updateAdminState(req.get("id"),Admin_INVALID_STATE);
+        System.out.println(ans);
+        if(ans==1){
+            Result result =  new Result();
+            response.put("result",result);
+        }else{
+            Result result =  new Result("databaseErr");
+            response.put("result",result);
+        }
+        return response;
     }
-
 
 }

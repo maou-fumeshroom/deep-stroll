@@ -3,11 +3,8 @@ package ap.deepstroll.controller;
 import ap.deepstroll.entity.UserEntity;
 import ap.deepstroll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 
 @RestController
 public class UserController {

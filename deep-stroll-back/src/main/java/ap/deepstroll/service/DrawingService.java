@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 public class DrawingService extends WorkService{
     Integer pageSize = 10;
     @Autowired
-
     DrawingMapper drawingMapper;
 
     @Override
