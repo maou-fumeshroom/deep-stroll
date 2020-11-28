@@ -21,9 +21,9 @@ import ap.deepstroll.filter.JwtAuthenticationTokenFilter;
 /**
  * @author mxf
  */
-@Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@Configuration
+//@EnableWebSecurity
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -34,10 +34,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-        return new JwtAuthenticationTokenFilter();
-    }
+//    @Bean
+//    public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
+//        return new JwtAuthenticationTokenFilter();
+//    }
 
      @Bean
      public UserDetailsService createUserDetailsService() {
@@ -77,9 +77,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // 除上面外的所有请求全部需要鉴权认证
             .anyRequest().authenticated();
         // // 添加JWT filter
-        httpSecurity
-            .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+//        httpSecurity
+//            .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
          //禁用缓存
+//        httpSecurity
+//            .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        // 禁用缓存
         httpSecurity.headers().cacheControl();
     }
     

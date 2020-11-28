@@ -28,7 +28,6 @@ public class AdminController {//管理员管理
         return  adminService.getAdminRoleList();
     }
 
-
     /**
      * 获取管理员列表
      * mwr dei

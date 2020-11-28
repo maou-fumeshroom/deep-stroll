@@ -65,4 +65,38 @@ public class AdminThemeService {
             return result;
         }
     }
+
+    /***
+     * 根据id获得主题
+     */
+    public Map<String,Object> queryThemeById(Integer id){
+        HashMap<String,Object> response = new HashMap<>();
+        try {
+            ThemeEntity theme = themeMapper.queryThemeById(id);
+            response.put("data",theme);
+            response.put("result",new Result());
+        }catch (Exception e){
+            response.put("data",null);
+            response.put("result",new Result(e.getMessage()));
+        }
+        return response;
+    }
+
+    /***
+     * 管理员添加主题
+     * 还没加log
+     * @param themeEntity
+     * @return
+     */
+    public Result insertNewTheme(ThemeEntity themeEntity){
+        try {
+            themeMapper.insertNewTheme(themeEntity);
+            Result result=new Result();
+            return result;
+        }catch (Exception e){
+            Result result=new Result(e.getMessage());
+            return result;
+        }
+    }
+
 }

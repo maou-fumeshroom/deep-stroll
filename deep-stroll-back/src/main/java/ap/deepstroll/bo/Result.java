@@ -1,15 +1,21 @@
 package ap.deepstroll.bo;
 
+
 import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@ToString
 @Builder
+@ToString
 public class Result {
-
-    private Integer code = 1;
+    private Integer code  = 1;
     private String message = null;
 
     /**
@@ -29,3 +35,4 @@ public class Result {
         this.message = err;
     }
 }
+
