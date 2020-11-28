@@ -20,6 +20,8 @@ public class UserManageService {
 
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    primeUtil primeUtil;
 
 
     /***

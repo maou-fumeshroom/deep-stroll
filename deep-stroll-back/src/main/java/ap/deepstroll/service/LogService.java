@@ -17,7 +17,6 @@ public class LogService {
     @Autowired
     LogMapper logMapper;
 
-
     private static final Integer PAGE_SIZE = 10;
 
     /**
@@ -31,7 +30,7 @@ public class LogService {
         HashMap<String, Object>response = new HashMap<>();
         HashMap<String,Object>data = new HashMap<>();
         Integer page = req.get("page");
-        if(page<1){
+        if(page<1){//非法页数
             Result request = new Result("Invalid page");
             data.put("totalPage",new Integer("0"));
             data.put("log",null);
@@ -42,7 +41,6 @@ public class LogService {
         try{
             page = (page-1)* PAGE_SIZE;
             List<LogEntity> preLogs = logMapper.queryLog(page,PAGE_SIZE);
-//            System.out.println(preLogs);
             List<LogBo> logs =LogBo.transLogEntityToBo(preLogs);
             Integer totalPage = (logMapper.queryLogNum()/PAGE_SIZE)+1;
             data.put("log",logs);
@@ -55,7 +53,7 @@ public class LogService {
             data.put("totalPage",new Integer("0"));
             data.put("log",null);
             response.put("data",data);
-            response.put("request",request);
+            response.put("result",request);
         }
         return response;
 

@@ -19,6 +19,9 @@ public class UserFunctionManageService {
     @Autowired
     HomeMenuMapper homeMenuMapper;
 
+    @Autowired
+    primeUtil primeUtil;
+
     /***
      * 获取功能菜单列表
      * mwr dei

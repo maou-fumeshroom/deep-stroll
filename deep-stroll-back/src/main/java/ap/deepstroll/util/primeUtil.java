@@ -1,12 +1,14 @@
 package ap.deepstroll.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+@Component
 public class primeUtil {
 
     private static String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(16[5,6])|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8,9]))\\d{8}$";
@@ -27,7 +29,7 @@ public class primeUtil {
      * @param phone
      * @return
      */
-    public static Boolean checkPhone(String  phone) {
+    public  Boolean checkPhone(String  phone) {
         if (phone.length() != 11) {
             return false;
         } else {
@@ -49,8 +51,8 @@ public class primeUtil {
      * @param type
      * @return
      */
-    public static Boolean checkvalue(Integer i ,String type){
-        Integer[] series  = ((Integer[])statusBox.get(type));
+    public  Boolean checkvalue(Integer i ,String type){
+        Integer[] series  = statusBox.get(type);
         return Arrays.asList(series).contains(i);
     }
 }
