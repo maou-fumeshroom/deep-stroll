@@ -3,20 +3,21 @@ package ap.deepstroll.service;
 
 import ap.deepstroll.Exception.StateException;
 import ap.deepstroll.bo.Result;
+import ap.deepstroll.bo.UserBO;
 import ap.deepstroll.entity.UserEntity;
 import ap.deepstroll.mapper.UserMapper;
 import ap.deepstroll.util.primeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.nio.cs.ext.MacHebrew;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service("userManagementService")
-public class UserManagementService {
+@Service("userManageService")
+public class UserManageService {
     private static final Integer PAGE_SIZE = 10;
+
     @Autowired
     UserMapper userMapper;
 
@@ -41,6 +42,7 @@ public class UserManagementService {
                 return response;
             }
             page = (page -1)*10;
+            System.out.println("page"+page);
             String[] keys = req.get("key")==null? null:req.get("key").toString().split(" ");
             //存在一个前后端不一致
             Integer state = (Integer) req.get("status");
@@ -69,8 +71,10 @@ public class UserManagementService {
                     nickname = keys.toString();
                 }
             }
-            List<UserEntity> users = userMapper.queryUser(telephone, nickname, state, vip, page, PAGE_SIZE);
-            Integer totalPage = (int) (Math.floor(users.size() / PAGE_SIZE)) + 1;
+            System.out.println(telephone+nickname+state+vip+page);
+            List<UserEntity> preusers = userMapper.queryUser(telephone, nickname, state, vip, page, PAGE_SIZE);
+            List< UserBO>  users = UserBO.transToVo(preusers);
+            Integer totalPage = (userMapper.queryUserNum(telephone,nickname,state,vip)/PAGE_SIZE)+1;
             Result result = new Result();
             data.put("totalPage",totalPage);
             data.put("users",users);

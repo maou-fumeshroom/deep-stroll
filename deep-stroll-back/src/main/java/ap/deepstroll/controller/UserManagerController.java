@@ -1,7 +1,7 @@
 package ap.deepstroll.controller;
 
 import ap.deepstroll.bo.Result;
-import ap.deepstroll.service.UserManagementService;
+import ap.deepstroll.service.UserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,26 +12,26 @@ import java.util.Map;
 public class UserManagerController {
 
     @Autowired
-    UserManagementService userManagementService;
+    UserManageService userManageService;
     /**
-     * 浏览用户，包含条件搜索
+     * 获取用户列表，包含条件搜索
      * mwr dei
      * @param req
      * @return
      */
-    @PostMapping("admin/userManager/users")
+    @PostMapping("/api/admin/user")
     public Map<String,Object> getUsersList(@RequestBody Map<String,Object> req){
-        return userManagementService.getUserList(req);
+        return userManageService.getUserList(req);
     }
 
     /**
-     * 获取用户状态
+     * 更新用户状态
      * mwr dei
      * @param req
      * @return
      */
     @PostMapping("admin/userManager/userstate")
     public Map<String, Result>updateUserState(@RequestBody Map<String,Object> req){
-        return userManagementService.changeUserState(req);
+        return userManageService.changeUserState(req);
     }
 }

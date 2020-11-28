@@ -1,4 +1,4 @@
-CREATE SCHEMA IF NOT EXISTS `deep_stroll` DEFAULT CHARACTER SET utf8 ;
+﻿CREATE SCHEMA IF NOT EXISTS `deep_stroll` DEFAULT CHARACTER SET utf8 ;
 
 CREATE TABLE IF NOT EXISTS `deep_stroll`.`user` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`home_menu` (
   `parent_id` INT NULL,
   `state` INT NOT NULL DEFAULT 0 COMMENT '0:正常 1:不可见',
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NULL DEFAULT 
+  `update_time` DATETIME NULL DEFAULT ，
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 

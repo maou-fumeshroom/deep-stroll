@@ -40,6 +40,12 @@
         LIMIT #{startIndex}, #{pageSize}
     </select>
 
+    <select id="queryLogNum" resultType="Integer">
+        SELECT
+        count(*)
+        FROM log
+    </select>
+
     <select id="queryLogByAdminIdTypeTableNameTime" resultMap="LogMap">
         SELECT
             id,

@@ -1,45 +1,67 @@
 package ap.deepstroll.controller;
 
 import ap.deepstroll.bo.Result;
+import ap.deepstroll.entity.AdminEntity;
 import ap.deepstroll.service.AdminService;
-import ap.deepstroll.service.UserManagementService;
+import ap.deepstroll.service.UserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
-public class AdminController {
+public class AdminController {//管理员管理
     @Autowired
     AdminService adminService;
     @Autowired
-    UserManagementService userManagementService;
+    UserManageService userManageService;
 
     /**
      * 获取管理员角色测试通过
-     * mwr
+     * mwr dei
      * @return
      */
-    @GetMapping("/admin/roleList")
+    @GetMapping("/api/admin/role")
+    @PreAuthorize("hasRole('admin')")
     public Map<String,Object> getAdminRoleList(){
         return  adminService.getAdminRoleList();
     }
 
-    /***
-     * 删除管理员，实际更改管理员状态
-     * mwr
-     * @param id
+
+    /**
+     * 获取管理员列表
+     * mwr dei
+     * @param
      * @return
      */
-    @PostMapping("/admin/delete")
-    public Map<String,Result> deleteAdmin(@RequestBody Map<String,Integer> id){
-        return adminService.deleteAdmin(id);
+    @GetMapping("/api/admin/list/{page}")
+    @PreAuthorize("hasRole('admin')")
+    public Map<String,Object>getAdminList(@PathVariable Integer page){
+        return adminService.getAdminList(page);
     }
 
 
+    /***
+     * 添加管理员
+     * mwr
+     */
+    @PostMapping("/api/admin/add")
+    @PreAuthorize("hasRole('admin')")
+    public Map<String,Result>addAdmin(@RequestBody AdminEntity req){
+        return adminService.addAdmin(req);
+    }
 
+    /***
+     * 删除管理员，实际更改管理员状态
+     * mwr dei
+     * @param id
+     * @return
+     */
+    @PostMapping("/api/admin/delete")
+    @PreAuthorize("hasRole('admin')")
+    public Map<String,Result> deleteAdmin(@RequestBody Map<String,Integer> id){
+        return adminService.deleteAdmin(id);
+    }
 
 }

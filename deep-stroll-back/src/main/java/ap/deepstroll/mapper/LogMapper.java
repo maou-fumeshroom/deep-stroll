@@ -33,6 +33,8 @@ public interface LogMapper {
         @Param("pageSize")Integer pageSize
     );
 
+    public Integer queryLogNum();
+
     /**
      * 根据条件查询log
      * @author mxf
