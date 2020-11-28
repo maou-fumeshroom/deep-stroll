@@ -3,10 +3,7 @@ package ap.deepstroll.controller;
 import ap.deepstroll.bo.Result;
 import ap.deepstroll.service.AdminThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -19,7 +16,7 @@ public class AdminThemeController {
      * 获取主题列表
      * @return
      */
-    @GetMapping("/config/themeList")
+    @GetMapping("/admin/themeList")
     public Map<String,Object> browserThemeList(){
         return adminThemeService.browserThemeList();
     }
@@ -29,8 +26,8 @@ public class AdminThemeController {
      * @param id
      * @return
      */
-    @GetMapping("/config/theme/{id}")
-    public Map<String,Object> queryThemeById(@PathVariable Integer id){
+    @GetMapping("/admin/theme")
+    public Map<String,Object> queryThemeById(@RequestParam Integer id){
         return adminThemeService.queryThemeById(id);
     }
 
@@ -39,8 +36,8 @@ public class AdminThemeController {
      * @param id
      * @return
      */
-    @PostMapping("/admin/theme/delete/{id}")
-    public Result deleteThemeById(@PathVariable Integer id){
+    @PostMapping("/admin/theme/delete")
+    public Result deleteThemeById(@RequestParam Integer id){
         return adminThemeService.deleteThemeById(id);
     }
 
@@ -49,8 +46,8 @@ public class AdminThemeController {
      * @param id
      * @return
      */
-    @PostMapping("/admin/theme/default/{id}")
-    public Result setDefaultTheme(@PathVariable Integer id){
+    @PostMapping("/admin/theme/default")
+    public Result setDefaultTheme(@RequestParam Integer id){
         return adminThemeService.setDefaultTheme(id);
     }
 }

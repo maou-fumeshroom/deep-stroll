@@ -24,12 +24,12 @@ public class DrawingController {
     }
 
     //获取详情
-    @GetMapping("/drawing/detial/{id}")
-    public Map<String,Object> getDetail(@PathVariable Long id){return drawingService.getDetail(id);}
+    @GetMapping("/drawing/detial")
+    public Map<String,Object> getDetail(@RequestParam Long id){return drawingService.getDetail(id);}
 
     //分类浏览
-    @GetMapping("/drawing/search/{page}")
-    public Map<String,Object> searchWork(@PathVariable Integer page, @RequestBody DrawingEntity drawingEntity){
+    @GetMapping("/drawing/search")
+    public Map<String,Object> searchWork(@RequestParam Integer page, @RequestBody DrawingEntity drawingEntity){
         return drawingService.searchWork(drawingEntity.getTitle(),
                 drawingEntity.getLabels(),
                 drawingEntity.getClassifyId(),

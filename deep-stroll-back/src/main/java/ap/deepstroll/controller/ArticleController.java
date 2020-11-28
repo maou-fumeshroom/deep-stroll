@@ -20,12 +20,12 @@ public class ArticleController {
     }
 
     //获取详情
-    @GetMapping("/article/detial/{id}")
-    public Map<String,Object> getDetail(@PathVariable Long id){return articleService.getDetail(id);}
+    @GetMapping("/article/detial")
+    public Map<String,Object> getDetail(@RequestParam Long id){return articleService.getDetail(id);}
 
     //分类浏览
-    @GetMapping("/artile/search/{page}")
-    public Map<String,Object> searchWork(@PathVariable Integer page,
+    @GetMapping("/artile/search")
+    public Map<String,Object> searchWork(@RequestParam Integer page,
                                          @RequestBody ArticleEntity articleEntity){
         return articleService.searchWork(articleEntity.getTitle(),
                 articleEntity.getLabels(),

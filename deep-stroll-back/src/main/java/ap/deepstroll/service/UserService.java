@@ -61,20 +61,34 @@ public class UserService {
     }
 
     /**
-     * 获取全部用户信息
-     * @param req
+     * 获取用户基本信息
+     * nickname & avatar vip
+     * @param
      * @return
      */
-//    public Result getAllUserInfo(Map req){
-//        return null;
-//    }
+    public Map<String,Object> getUserBasicInfo(Long id){
+        HashMap<String,Object> response = new HashMap<>();
+        HashMap<String,Object> data = new HashMap<>();
+        try{
+            UserEntity userEntity = userMapper.queryUserById(id);
+            data.put("nickename",userEntity.getNickname());
+            data.put("avatar",userEntity.getAvatar());
+            data.put("vip",userEntity.getVip());
+            response.put("data",data);
+            response.put("result",new Result());
+        }catch (Exception e){
+            response.put("data",null);
+            response.put("result",new Result(e.getMessage()));
+        }
+        return response;
+    }
 
     /***
      * 返回指定id的用户全部信息
      * @param id
      * @return
      */
-    public Map<String,Object> queryUserById(Long id){
+    public Map<String,Object> queryUserAllInfoById(Long id){
         HashMap<String,Object> response = new HashMap<>();
         try{
             UserEntity userEntity = userMapper.queryUserById(id);

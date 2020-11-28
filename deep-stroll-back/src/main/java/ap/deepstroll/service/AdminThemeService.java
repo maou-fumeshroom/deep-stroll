@@ -3,7 +3,6 @@ package ap.deepstroll.service;
 import ap.deepstroll.bo.Result;
 import ap.deepstroll.entity.ThemeEntity;
 import ap.deepstroll.mapper.ThemeMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,4 +81,22 @@ public class AdminThemeService {
         }
         return response;
     }
+
+    /***
+     * 管理员添加主题
+     * 还没加log
+     * @param themeEntity
+     * @return
+     */
+    public Result insertNewTheme(ThemeEntity themeEntity){
+        try {
+            themeMapper.insertNewTheme(themeEntity);
+            Result result=new Result();
+            return result;
+        }catch (Exception e){
+            Result result=new Result(e.getMessage());
+            return result;
+        }
+    }
+
 }
