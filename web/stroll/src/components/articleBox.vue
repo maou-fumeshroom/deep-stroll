@@ -25,7 +25,7 @@
       name: "articleBox",
       data () {
         return {
-          len: 8,
+          len: 6,
         }
       },
       // 拿到从父组件传来的值，动态更新子组件的信息，重复利用
@@ -47,6 +47,19 @@
             }
           })
         },
+      },
+      created() {
+        // this.$set(this.articleList);
+        console.log("zujian : "+this.articleList[0].id)
+      },
+      watch:{
+        articleList: {
+          handler(newval, old) {
+            console.log("erzi: " +newval, old);
+          },
+          immediate: true,
+          deep: true,
+        }
       }
     }
 </script>

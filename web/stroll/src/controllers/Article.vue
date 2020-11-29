@@ -37,14 +37,12 @@
 
     <!--    右侧文章列表-->
     <div id="articleContainer">
-      <article-box :articleList="articleList" :page="page"/>
+<!--      <article-box :articleList="articleList" :page="page"/>-->
+      <article-box :articleList="testList" :page="page"/>
     </div>
 
     <div class="pagination">
-      <el-pagination
-        layout="prev, pager, next"
-        :total="50">
-      </el-pagination>
+      <el-pagination layout="prev, pager, next" :total=arcNum :page-size="6" @current-change="currentChange" :hide-on-single-page="arcNum === 10"></el-pagination>
     </div>
 
   </div>
@@ -152,6 +150,8 @@
             mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481596000.md",
           },
         ],
+        arcNum:6,
+        testList:[],
       }
     },
 
@@ -160,12 +160,82 @@
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
       },
-
       //收起指定的分类
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       },
+      //当前页
+      currentChange(val){
+        let curNum = (val-1)*10;
+        let len = this.articleList.length;
+        let temp = len - curNum;
+        let current = 0;
+        if(temp >= 10){
+          current = curNum + 10;
+          for(let i=curNum,j=0;i<current;i++,j++){
+            let obj = this.articleList[i];
+            this.$set(this.testList,j,obj)
+          }
+        }
+        else{
+          current = curNum + temp;
+          for(let i=curNum,j=0;i<current;i++,j++){
+            let obj = this.articleList[i];
+            this.$set(this.testList,j,obj)
+          }
 
+          // for(let i=len-current,j=temp;i<len;i++,j++){
+          //   let obj = {};
+          //   this.$set(this.testList,j,obj)
+          // }
+        }
+
+        console.log("2 test: "+this.testList[0].id);
+      },
+
+    },
+    created() {
+      for(let i=0,j=0;i<10;i++,j++){
+        this.testList[j] = this.articleList[i];
+      }
+      console.log("1 test: "+this.testList[0].id);
+
+      // 监听滑动条
+      window.addEventListener('scroll',()=>{
+        console.log("65555555555555555")
+        console.log("len = " + this.len);
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+        //滚动条到底部的条件
+        //这里加1，是因为不知道为什么滑动条到底了，但是scrollTop + windowHeight总是比scrollHeight少0.2，所以加1，判断滑动条是否到底
+        if(scrollTop + windowHeight + 1 > scrollHeight){
+          console.log("距顶部"+scrollTop+"可视区高度"+windowHeight+"滚动条总高度"+scrollHeight);
+          console.log("!!!!!!!!  len = " + this.len);
+          // 滑动条到底更新len，给len加8，会多显示8张照片
+          // this.len = this.len + 8;
+
+          $(".pagination").css('top', scrollHeight-30);
+          console.log("OKOKOKOKOK!!!!!!!!");
+        }
+        console.log("=========================");
+      })
+
+    },
+    watch:{
+      testList: {
+        handler(newValue, oldValue) {
+          console.log("baba1: "+newValue)
+          for (let i = 0; i < newValue.length; i++) {
+            if (oldValue[i] !== newValue[i]) {
+              console.log("baba2: "+newValue)
+            }
+          }
+        },
+      },
     }
   }
 </script>
@@ -198,7 +268,9 @@
 
   .pagination{
     position: absolute;
-    top: 50%;
+    top: 800px;
+    left: 52%;
+    /*bottom: 30px;*/
   }
 
 </style>
