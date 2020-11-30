@@ -44,7 +44,7 @@
     <select id="queryMenuIdByRoleIds" resultType="java.lang.Integer">
         SELECT
             menu_id 
-        FROM role_menu
+        FROM role_menu 
         WHERE role_id in
         <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
             #{roleId}

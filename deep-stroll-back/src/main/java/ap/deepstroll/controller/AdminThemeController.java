@@ -37,8 +37,9 @@ public class AdminThemeController {
      * @return
      */
     @PostMapping("/api/admin/theme/delete")
-    public Map<String, Result> deleteThemeById(@RequestParam Integer id){
-        return adminThemeService.deleteThemeById(id);
+    public Map<String, Result> deleteThemeById(@RequestBody Map<String,Integer> id){
+        Integer Id = id.get("id");
+        return adminThemeService.deleteThemeById(Id);
     }
 
     /***
@@ -47,8 +48,9 @@ public class AdminThemeController {
      * @return
      */
     @PostMapping("/api/admin/theme/default")
-    public Map<String, Result> setDefaultTheme(@RequestParam Integer id){
-        return adminThemeService.setDefaultTheme(id);
+    public Map<String, Result> setDefaultTheme(@RequestBody Map<String,Integer> id){
+        Integer Id = id.get("id");
+        return adminThemeService.setDefaultTheme(Id);
     }
 
     /***
@@ -58,7 +60,8 @@ public class AdminThemeController {
      * @return
      */
     @PostMapping("/api/admin/theme/add")
-    public Map<String, Result> insertNewTheme(@RequestBody String name, @RequestBody  String bg, @RequestBody  String bgm){
+    public Map<String, Result> insertNewTheme(@RequestParam String name, @RequestParam  String bg, @RequestBody  String bgm){
         return adminThemeService.insertNewTheme(name, bg, bgm);
     }
+
 }

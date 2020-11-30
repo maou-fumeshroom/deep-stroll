@@ -1,6 +1,7 @@
-package ap.deepstroll.vo;
+package ap.deepstroll.vo.response;
 
 import ap.deepstroll.bo.BackMenuBO;
+import ap.deepstroll.vo.ViewObject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

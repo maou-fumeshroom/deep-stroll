@@ -24,7 +24,7 @@ public class HomeMenuMapperTest {
 
     @Test
     void queryMenu() {
-        System.out.println(h.queryMenu());
+        System.out.println(h.queryMenuByState(0));
     }
 
     @Test

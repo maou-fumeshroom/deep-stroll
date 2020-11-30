@@ -5,13 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import ap.deepstroll.bo.Result;
+<<<<<<< HEAD
 import ap.deepstroll.dao.UserDao;
+=======
+import ap.deepstroll.bo.UserBO;
+>>>>>>> a380a41c8e108dbf6ba0bc4e64bdb52b35480426
 import ap.deepstroll.entity.ArticleEntity;
 import ap.deepstroll.entity.DrawingEntity;
 import ap.deepstroll.entity.UserEntity;
 import ap.deepstroll.mapper.ArticleMapper;
 import ap.deepstroll.mapper.DrawingMapper;
 import ap.deepstroll.mapper.UserMapper;
+import ap.deepstroll.vo.request.UserVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,16 +36,14 @@ public class UserService {
      * @param
      * @return
      */
-      public Result updateUser(UserEntity userEntity){
-//          Long id,String nickname,Integer gender,String email,String sign,String avatar
-//          UserEntity userEntity = UserEntity.builder()
-//                  .id(id)
-//                  .nickname(nickname)
-//                  .gender(gender)
-//                  .eMail(email)
-//                  .sign(sign)
-//                  .avatar(avatar)
-//                  .build();
+      public Result updateUser(UserVo req,long id){
+
+          UserEntity userEntity = UserEntity.builder().id(id)
+                                                        .eMail(req.getE_mail()==""? null:req.getE_mail())
+                                                        .nickname(req.getNickName()==""? null:req.getNickName())
+                                                        .gender(req.getSex())
+                                                        .sign(req.getSign()==""?null:req.getSign())
+                                                        .avatar(req.getAvatar()==""? null:req.getAvatar()).build();
           try {
               userMapper.updateUser(userEntity);
               Result result = new Result();

@@ -52,8 +52,6 @@ public interface UserMapper {
      * @param nickname
      * @param state
      * @param vip
-     * @param startIndex
-     * @param pageSize
      * @return
      */
     public Integer queryUserNum(

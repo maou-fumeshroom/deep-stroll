@@ -1,6 +1,5 @@
 package ap.deepstroll.mapperTest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class RoleMenuMapperTest {
 
     @Test
     void queryMenuIdByRoleIds() {
-      List<Integer> roleIds = Arrays.asList(1,2);
+        List<Integer> roleIds = Arrays.asList(1, 2);
         System.out.println(r.queryMenuIdByRoleIds(roleIds));
     }
 }

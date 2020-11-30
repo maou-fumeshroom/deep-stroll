@@ -26,7 +26,7 @@ public class UserMapperTest {
     @Test
     void queryUserById() {
         UserEntity userEntity = userMapper.queryUserById(1L);
-        System.out.println("this is test"+userEntity.toString());
+        System.out.println(userEntity.toString());
     }
 
     @Test

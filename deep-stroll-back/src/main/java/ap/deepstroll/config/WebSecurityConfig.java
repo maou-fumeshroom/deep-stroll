@@ -1,6 +1,5 @@
 package ap.deepstroll.config;
 
-import ap.deepstroll.security.UserDetailsServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -21,9 +19,9 @@ import ap.deepstroll.filter.JwtAuthenticationTokenFilter;
 /**
  * @author mxf
  */
-//@Configuration
-//@EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -34,15 +32,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-//        return new JwtAuthenticationTokenFilter();
-//    }
+    @Bean
+    public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
+        return new JwtAuthenticationTokenFilter();
+    }
 
-     @Bean
-     public UserDetailsService createUserDetailsService() {
-         return new UserDetailsServiceImp();
-     }
+    // @Bean
+    // public UserDetailsService createUserDetailsService() {
+    //     return new UserDetailsServiceImp();
+    // }
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -72,16 +70,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // 对于获取token的rest api要允许匿名访问
             .antMatchers(
                 "/api/login",
-                "/api/admin/login"
+                "/api/admin/login",
+                "/api/register",
+                "/api/ssm"
             ).permitAll()
             // 除上面外的所有请求全部需要鉴权认证
             .anyRequest().authenticated();
         // // 添加JWT filter
-//        httpSecurity
-//            .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-         //禁用缓存
-//        httpSecurity
-//            .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity
+            .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
         // 禁用缓存
         httpSecurity.headers().cacheControl();
     }

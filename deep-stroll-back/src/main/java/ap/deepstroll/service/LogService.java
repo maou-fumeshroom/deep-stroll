@@ -32,7 +32,7 @@ public class LogService {
         Integer page = req.get("page");
         if(page<1){//非法页数
             Result request = new Result("Invalid page");
-            data.put("totalPage",new Integer("0"));
+            data.put("totalPage",Integer.valueOf(0));
             data.put("log",null);
             response.put("data",data);
             response.put("request",request);
@@ -50,7 +50,7 @@ public class LogService {
             response.put("data",data);
         }catch (Exception e){
             Result request = new Result(e.getMessage());
-            data.put("totalPage",new Integer("0"));
+            data.put("totalPage",Integer.valueOf(0));
             data.put("log",null);
             response.put("data",data);
             response.put("result",request);

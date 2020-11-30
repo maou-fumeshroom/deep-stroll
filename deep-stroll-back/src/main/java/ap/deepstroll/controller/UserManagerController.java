@@ -3,9 +3,7 @@ package ap.deepstroll.controller;
 import ap.deepstroll.bo.Result;
 import ap.deepstroll.service.UserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 @RestController
@@ -19,9 +17,12 @@ public class UserManagerController {
      * @param req
      * @return
      */
-    @PostMapping("/api/admin/user")
-    public Map<String,Object> getUsersList(@RequestBody Map<String,Object> req){
-        return userManageService.getUserList(req);
+    @GetMapping("/api/admin/user")
+    public Map<String,Object> getUsersList(@RequestParam String key,
+                                           @RequestParam Integer status,
+                                           @RequestParam Integer vip,
+                                           @RequestParam Integer page){
+        return userManageService.getUserList(key,status,vip,page);
     }
 
     /**
@@ -30,7 +31,7 @@ public class UserManagerController {
      * @param req
      * @return
      */
-    @PostMapping("admin/userManager/userstate")
+    @PostMapping("/api/admin/user/status")
     public Map<String, Result>updateUserState(@RequestBody Map<String,Object> req){
         return userManageService.changeUserState(req);
     }

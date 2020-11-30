@@ -12,6 +12,9 @@ import ap.deepstroll.entity.*;
 import ap.deepstroll.mapper.ClassifyDrawingMapper;
 import ap.deepstroll.mapper.DrawingMapper;
 import ap.deepstroll.mapper.UserMapper;
+import ap.deepstroll.vo.request.ArticleVO;
+import ap.deepstroll.vo.request.DrawingVO;
+import ap.deepstroll.vo.request.WorkVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,37 +28,37 @@ public class DrawingService extends WorkService{
     @Autowired
     ClassifyDrawingMapper classifyDrawingMapper;
 
-    @Override
-    public Map<String,Object> browseWork(){
-        HashMap<String,Object> response = new HashMap<>();
-        HashMap<String,Object> data = new HashMap<>();
-        try {
-            List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByTitleLabClassifyState(null,null,null,0,0,10,null);
-            data.put("drawing",drawingList);
-            Result result = new Result();
-            Integer totalPage= drawingMapper.queryDrawingNumByTitleLabClassifyState(null,null,null,0,null)/this.pageSize + 1;
-            data.put("totalpage",totalPage);
-            response.put("result",result);
-            response.put("data",data);
-        }catch (Exception e){
-            Result result = new Result(e.getMessage());
-            response.put("data",null);
-            response.put("result",result);
-        }
-        return response;
-    }
+//    @Override
+//    public Map<String,Object> browseWork(){
+//        HashMap<String,Object> response = new HashMap<>();
+//        HashMap<String,Object> data = new HashMap<>();
+//        try {
+//            List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByTitleLabClassifyState(null,null,null,0,0,10,null);
+//            data.put("drawing",drawingList);
+//            Result result = new Result();
+//            Integer totalPage= drawingMapper.queryDrawingNumByTitleLabClassifyState(null,null,null,0,null)/this.pageSize + 1;
+//            data.put("totalpage",totalPage);
+//            response.put("result",result);
+//            response.put("data",data);
+//        }catch (Exception e){
+//            Result result = new Result(e.getMessage());
+//            response.put("data",null);
+//            response.put("result",result);
+//        }
+//        return response;
+//    }
 
     @Override
     //result!!!
-    public Map<String,Object> searchWork(String title, String label, Integer classifyId, Integer state, Integer likeNum, Integer page) {
+    public Map<String,Object> searchWork(String title, String label, Integer classifyId, Integer state,  Integer page) {
         Integer startIndex= this.pageSize * (page -1);
         HashMap<String,Object> response = new HashMap<>();
         HashMap<String,Object> data = new HashMap<>();
         try {
-            List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByTitleLabClassifyState(title,label,classifyId,state,startIndex,this.pageSize,likeNum);
+            List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByTitleLabClassifyState(title!="" ? title:null,label!="" ? label:null,classifyId,state,startIndex,this.pageSize,null);
             data.put("drawing",drawingList);
             Result result = new Result();
-            Integer totalPage= drawingMapper.queryDrawingNumByTitleLabClassifyState(title,label,classifyId,state,likeNum)/this.pageSize + 1;
+            Integer totalPage= drawingMapper.queryDrawingNumByTitleLabClassifyState(title!="" ? title:null,label!="" ? label:null,classifyId,state,null)/this.pageSize + 1;
             data.put("totalpage",totalPage);
             response.put("result",result);
             response.put("data",data);
@@ -118,30 +121,45 @@ public class DrawingService extends WorkService{
         return response;
     }
 
+    @Override
+    public Map<String, Result> Publish(WorkVO work, long id) {
+        DrawingVO req = (DrawingVO)work;
+        String transImgToString = req.getImage().toString();
+        transImgToString = transImgToString.substring(1,transImgToString.length()-1);
+        HashMap<String,Result> response = new HashMap<>();
+        DrawingEntity drawingEntity = DrawingEntity.builder().title(req.getTitle())
+                .authorId(id)
+                .url(transImgToString)
+                .classifyId(req.getClassify())
+                .labels(null)
+                .introduction(req.getIntroduction()).build();
+        try{
+            drawingMapper.insertDrawing(drawingEntity);
+            Result result = new Result();
+            response.put("result",result);
+            return response;
+        }catch (Exception e){
+            Result result = new Result(e.getMessage());
+            response.put("result",result);
+            return response;
+        }
+    }
+
     public Result Collection(Map<String,String> req){
        return null;
     }
 
-    public Result Publish(DrawingEntity drawingEntity) {
-        try{
-            drawingMapper.insertDrawing(drawingEntity);
-            Result result = new Result();
-            return result;
-        }catch (Exception e){
-            Result result = new Result(e.getMessage());
-            return result;
-        }
-    }
-
-    public Result deleteWork(Long id) {
+    public Map<String,Result> deleteWork(Long id,Integer type) {
+        Map<String,Result>response = new HashMap<>();
         try{
             drawingMapper.updateDrawingState(id,1);
             Result result = new Result();
-            return result;
+            response.put("result",result);
         }catch (Exception e){
             Result result = new Result(e.getMessage());
-            return result;
+            response.put("result",result);
         }
+        return response;
     }
 
     /***

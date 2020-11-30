@@ -152,23 +152,23 @@ public class AdminService {
      * mwr change
      * @return
      */
-    public Map<String,Result> addAdmin(AdminEntity adminEntity){
-        HashMap<String,Result> response = new HashMap<>();
-        try{
-            int ans = adminMapper.insertAdmin(adminEntity);
-            if(ans ==1){
-                Result result = new Result();
-                response.put("result",result);
-            }else{
-                Result result = new Result("Database error");
-                response.put("result",result);
-            }
-        }catch (Exception e){
-            Result result = new Result(e.getMessage());
-            response.put("result",result);
-        }
-        return response;
-    }
+    // public Map<String,Result> addAdmin(AdminEntity adminEntity){
+    //     HashMap<String,Result> response = new HashMap<>();
+    //     try{
+    //         int ans = adminMapper.insertAdmin(adminEntity);
+    //         if(ans ==1){
+    //             Result result = new Result();
+    //             response.put("result",result);
+    //         }else{
+    //             Result result = new Result("Database error");
+    //             response.put("result",result);
+    //         }
+    //     }catch (Exception e){
+    //         Result result = new Result(e.getMessage());
+    //         response.put("result",result);
+    //     }
+    //     return response;
+    // }
 
     /**
      * 修改管理员状态

@@ -32,7 +32,7 @@ public class UserFunctionManageService {
         HashMap<String,Object> data = new HashMap<>();
         response.put("data",data);
         try{
-            List<HomeMenuEntity> preMenu = homeMenuMapper.queryMenu();
+            List<HomeMenuEntity> preMenu = homeMenuMapper.queryMenuByState(null);
             List<HomeMenuBO> menu = HomeMenuBO.transMenuEntityToVo(preMenu);
             data.put("menu",menu);
             Result result = new Result();
