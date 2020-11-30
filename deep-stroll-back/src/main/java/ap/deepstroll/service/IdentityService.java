@@ -1,18 +1,28 @@
 package ap.deepstroll.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ap.deepstroll.bo.BackMenuBO;
+import ap.deepstroll.bo.HomeMenuBO;
 import ap.deepstroll.bo.Result;
 import ap.deepstroll.entity.AdminEntity;
+import ap.deepstroll.entity.BackMenuEntity;
+import ap.deepstroll.entity.HomeMenuEntity;
 import ap.deepstroll.entity.UserEntity;
 import ap.deepstroll.global.Global;
 import ap.deepstroll.global.VerificationCode;
 import ap.deepstroll.global.VerificationCodeMap;
 import ap.deepstroll.mapper.AdminMapper;
 import ap.deepstroll.mapper.AdminRoleMapper;
+import ap.deepstroll.mapper.BackMenuMapper;
+import ap.deepstroll.mapper.HomeMenuMapper;
+import ap.deepstroll.mapper.RoleMenuMapper;
 // import ap.deepstroll.mapper.RoleMapper;
 import ap.deepstroll.mapper.UserMapper;
 import ap.deepstroll.utils.JwtTokenUtil;
@@ -39,10 +49,16 @@ public class IdentityService {
     AdminRoleMapper adminRoleMapper;
 
     @Autowired
-    SMSMessageUtil sMSMessageUtil
-;
-    // @Autowired
-    // RoleMapper roleMapper;
+    SMSMessageUtil sMSMessageUtil;
+
+    @Autowired
+    RoleMenuMapper roleMenuMapper;
+
+    @Autowired
+    BackMenuMapper backMenuMapper;
+
+    @Autowired
+    HomeMenuMapper homeMenuMapper;
 
     @Autowired
     JwtTokenUtil jwtTokenUtil;
@@ -66,12 +82,23 @@ public class IdentityService {
                 if (user.getState() == 0) {
                     final String token = jwtTokenUtil.generateToken(Long.toString(user.getId()), "common");
                     logger.info("用户: " + telephone + "登录");
+                    List<HomeMenuEntity> homeMenuEntitys = homeMenuMapper.queryMenuByState(0);
+                    List<HomeMenuBO> homeMenuBOs = new ArrayList<HomeMenuBO>();
+                    for (HomeMenuEntity homeMenuEntity: homeMenuEntitys) {
+                        homeMenuBOs.add(
+                            HomeMenuBO.builder()
+                                      .id(homeMenuEntity.getId())
+                                      .path(homeMenuEntity.getPath())
+                                      .name(homeMenuEntity.getName())
+                                      .build()
+                        );
+                    }
                     return ResponseVO.builder()
                                      .data(
                                          UserLogInVO.builder()
                                                     .id(user.getId())
                                                     .token(token)
-                                                    .menus(null)
+                                                    .menus(homeMenuBOs.toArray(new HomeMenuBO[homeMenuBOs.size()]))
                                                     .build()
                                      )
                                      .result(
@@ -261,11 +288,48 @@ public class IdentityService {
                 if (admin.getState() == 0) {
                     logger.info("管理员：" + account + "登录");
                     final String token = jwtTokenUtil.generateToken(Integer.toString(admin.getId()), "admin");
+                    
+                    List<Integer> roleIds = adminRoleMapper.queryRoleIdsByAdminId(admin.getId());
+                    List<Integer> backMenuIds = roleMenuMapper.queryMenuIdByRoleIds(roleIds);
+                    List<BackMenuEntity> backMenuEntities = backMenuMapper.queryById(backMenuIds);
+                    List<BackMenuBO> backMenuBOs = new ArrayList<BackMenuBO>();
+                    
+                    for (BackMenuEntity backMenuEntity: backMenuEntities) {
+                        if (backMenuEntity.getParentId() == null) {
+                            backMenuBOs.add(
+                                BackMenuBO.builder()
+                                          .id(backMenuEntity.getId())
+                                          .path(backMenuEntity.getPath())
+                                          .name(backMenuEntity.getName())
+                                          .sonMenuList(new ArrayList<BackMenuBO>())
+                                          .build()
+                            );
+                        } else {
+                            for (int i = 0; i < backMenuBOs.size(); i++) {
+                                if (backMenuBOs.get(i).getId() == backMenuEntity.getParentId()) {
+                                    backMenuBOs.get(i).addSonMenuList(
+                                        BackMenuBO.builder()
+                                          .id(backMenuEntity.getId())
+                                          .path(backMenuEntity.getPath())
+                                          .name(backMenuEntity.getName())
+                                          .sonMenuList(new ArrayList<BackMenuBO>())
+                                          .build()
+                                    );
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    for (BackMenuBO backMenuBO: backMenuBOs) {
+                        backMenuBO.tranArray();
+                    }
+
                     return ResponseVO.builder()
                                      .data(
                                          AdminLogInVO.builder()
                                                     .token(token)
-                                                    .menu(null)
+                                                    .menu(backMenuBOs.toArray(new BackMenuBO[backMenuBOs.size()]))
                                                     .build()
                                      )
                                      .result(

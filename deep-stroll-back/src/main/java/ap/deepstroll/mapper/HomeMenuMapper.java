@@ -23,7 +23,7 @@ public interface HomeMenuMapper {
      * @author mxf
      * @return
      */
-    public List<HomeMenuEntity> queryMenu();
+    public List<HomeMenuEntity> queryMenuByState(@Param("state")Integer state);
 
     /**
      * 更新menu状态
