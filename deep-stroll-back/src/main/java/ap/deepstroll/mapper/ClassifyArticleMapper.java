@@ -18,6 +18,8 @@ public interface ClassifyArticleMapper {
      * @param classifyArticleEntity
      */
     public Integer insertClassifyArticle(@Param("name")String name);
+
+    public ClassifyArticleEntity queryClassifyById(@Param("id")Integer id);
     
     /**
      * 查询分类

@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import ap.deepstroll.bo.Result;
-<<<<<<< HEAD
-import ap.deepstroll.dao.UserDao;
-=======
 import ap.deepstroll.bo.UserBO;
->>>>>>> a380a41c8e108dbf6ba0bc4e64bdb52b35480426
 import ap.deepstroll.entity.ArticleEntity;
 import ap.deepstroll.entity.DrawingEntity;
 import ap.deepstroll.entity.UserEntity;

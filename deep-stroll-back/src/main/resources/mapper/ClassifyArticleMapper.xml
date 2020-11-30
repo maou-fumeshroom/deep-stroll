@@ -21,6 +21,17 @@
         )
     </insert>
 
+    <select id="queryClassifyById" resultMap="ClassifyArticleMap">
+        SELECT 
+            classify_article_id,
+            name,
+            state,
+            create_time,
+            update_time
+        FROM classify_article
+        WHERE classify_article_id = #{id}
+    </select>
+
     <select id="queryAllClassifyArticle" resultMap="ClassifyArticleMap">
         SELECT 
             classify_article_id,

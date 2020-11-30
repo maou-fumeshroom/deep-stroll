@@ -21,6 +21,17 @@
         )
     </insert>
 
+    <select id="queryClassifyById" resultMap="ClassifyDrawingMap">
+        SELECT 
+            classify_drawing_id,
+            name,
+            state,
+            create_time,
+            update_time
+        FROM classify_drawing
+        WHERE classify_drawing_id = #{id}
+    </select>
+
     <select id="queryAllClassifyDrawing" resultMap="ClassifyDrawingMap">
         SELECT 
             classify_drawing_id,

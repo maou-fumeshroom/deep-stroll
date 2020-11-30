@@ -10,15 +10,15 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @ToString
 @Builder
-public class ArticleVo {
+public class DrawingVo {
     private Long id;
-//    private Long authorId;
+    //    private Long authorId;
     private String title;
     private String cover;
     private String introduction;
     private String avatar;
     private String nickName;
-//    private String url;
+    //    private String url;
 //    private String labels;
 //    private Integer classifyId;
     private Timestamp dateTime;

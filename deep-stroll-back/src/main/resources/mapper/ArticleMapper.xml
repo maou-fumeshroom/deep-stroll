@@ -73,7 +73,7 @@
         LIMIT #{startIndex}, #{pageSize}
     </select>
 
-    <select id="queryArticleNumByAuthorId" resultMap="java.lang.Integer">
+    <select id="queryArticleNumByAuthorId" resultType="java.lang.Integer">
         SELECT
             count(*)
         FROM article

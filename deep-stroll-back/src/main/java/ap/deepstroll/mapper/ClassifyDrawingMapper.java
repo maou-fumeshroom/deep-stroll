@@ -19,6 +19,8 @@ public interface ClassifyDrawingMapper {
      * @return
      */
     public Integer insertClassifyDrawing(@Param("name")String name);
+
+    public ClassifyDrawingEntity queryClassifyById(@Param("id")Integer id);
     
     /**
      * 获取全部分类

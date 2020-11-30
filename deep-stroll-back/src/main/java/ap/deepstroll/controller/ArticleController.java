@@ -34,7 +34,8 @@ public class ArticleController {
                                          @RequestParam String key,
                                          @RequestParam Integer classify,
                                          @RequestParam Integer status){
-        return articleService.searchWork(key, key,classify, status, page);
+        return articleService.searchWork(key, key,
+                classify, status, page);
     }
 
     //发布

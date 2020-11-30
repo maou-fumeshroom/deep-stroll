@@ -1,6 +1,7 @@
 package ap.deepstroll.service;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import ap.deepstroll.entity.*;
 import ap.deepstroll.mapper.ClassifyDrawingMapper;
 import ap.deepstroll.mapper.DrawingMapper;
 import ap.deepstroll.mapper.UserMapper;
-import ap.deepstroll.vo.request.ArticleVO;
+import ap.deepstroll.vo.DrawingVo;
 import ap.deepstroll.vo.request.DrawingVO;
 import ap.deepstroll.vo.request.WorkVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,27 @@ public class DrawingService extends WorkService{
         HashMap<String,Object> data = new HashMap<>();
         try {
             List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByTitleLabClassifyState(title!="" ? title:null,label!="" ? label:null,classifyId,state,startIndex,this.pageSize,null);
-            data.put("drawing",drawingList);
+
+            ArrayList <DrawingVo> drawingVOList = new ArrayList<>();
+            for (int i = 0; i < drawingList.size();i++){
+                UserEntity userEntity = userMapper.queryUserById(drawingList.get(i).getAuthorId());
+                String classifyName = classifyDrawingMapper.queryClassifyById(drawingList.get(i).getClassifyId()).getName();
+                String cover = drawingList.get(i).getUrl().split(";")[0];
+                DrawingVo drawingVO = DrawingVo.builder()
+                        .id(drawingList.get(i).getId())
+                        .cover(cover)
+                        .title(drawingList.get(i).getTitle())
+                        .introduction(drawingList.get(i).getIntroduction())
+                        .avatar(userEntity.getAvatar())
+                        .nickName(userEntity.getNickname())
+                        .dateTime(drawingList.get(i).getUpdateTime())
+                        .comment("")
+                        .status(drawingList.get(i).getState())
+                        .classifyName(classifyName)
+                        .build();
+                drawingVOList.add(drawingVO);
+            }
+            data.put("drawing",drawingVOList);
             Result result = new Result();
             Integer totalPage= drawingMapper.queryDrawingNumByTitleLabClassifyState(title!="" ? title:null,label!="" ? label:null,classifyId,state,null)/this.pageSize + 1;
             data.put("totalpage",totalPage);
@@ -170,9 +191,27 @@ public class DrawingService extends WorkService{
         HashMap<String,Object> response = new HashMap<>();
         HashMap<String,Object> data = new HashMap<>();
         try {
-            List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByAuthorId(aurhorId,title,label,classify,0,startIndex,pageSize);
-            data.put("drawings",drawingList);
-
+            List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByTitleLabClassifyState(title!="" ? title:null,label!="" ? label:null,classify,0,startIndex,this.pageSize,null);
+            ArrayList <DrawingVo> drawingVOList = new ArrayList<>();
+            for (int i = 0; i < drawingList.size();i++){
+                UserEntity userEntity = userMapper.queryUserById(drawingList.get(i).getAuthorId());
+                String classifyName = classifyDrawingMapper.queryClassifyById(drawingList.get(i).getClassifyId()).getName();
+                String cover = drawingList.get(i).getUrl().split(";")[0];
+                DrawingVo drawingVO = DrawingVo.builder()
+                        .id(drawingList.get(i).getId())
+                        .cover(cover)
+                        .title(drawingList.get(i).getTitle())
+                        .introduction(drawingList.get(i).getIntroduction())
+                        .avatar(userEntity.getAvatar())
+                        .nickName(userEntity.getNickname())
+                        .dateTime(drawingList.get(i).getUpdateTime())
+                        .comment("")
+                        .status(drawingList.get(i).getState())
+                        .classifyName(classifyName)
+                        .build();
+                drawingVOList.add(drawingVO);
+            }
+            data.put("drawing",drawingVOList);
             Result result = new Result();
             Integer totalPage= drawingMapper.queryDrawingNumByAuthorId(aurhorId,title,label,classify,0)/this.pageSize+1;
             data.put("totalpage",totalPage);
