@@ -57,6 +57,7 @@ public class AdminDetailsServiceImp implements UserDetailsService {
                             adminEntity.getState(),
                             temp.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
                        );
+
         } else {
             return null;
         }

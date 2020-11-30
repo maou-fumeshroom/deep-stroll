@@ -18,7 +18,7 @@ public class ThemeController {
      * 如果是默认主题的话，就显示背景和音乐，否则只显示id和name
      * @return
      */
-    @GetMapping("/config/themeList")
+    @GetMapping("/api/config/themeList")
     public Map<String,Object> userBrowserThemeList(){
         return themeService.userBrowserThemeList();
     }
@@ -28,7 +28,7 @@ public class ThemeController {
      * @param id
      * @return
      */
-    @GetMapping("/config/theme")
+    @GetMapping("/api/config/theme")
     public Map<String,Object> getThemeById(@RequestParam Integer id){
         return themeService.getThemeById(id);
     }
@@ -38,7 +38,7 @@ public class ThemeController {
      * @param themeEntity
      * @return
      */
-    @PostMapping("/config/theme/add")
+    @PostMapping("/api/config/theme/add")
     public Result insertNewTheme(@RequestBody ThemeEntity themeEntity){
         return themeService.insertNewTheme(themeEntity);
     }

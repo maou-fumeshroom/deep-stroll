@@ -6,6 +6,8 @@ import ap.deepstroll.entity.Work;
 import ap.deepstroll.mapper.ArticleMapper;
 import ap.deepstroll.mapper.ClassifyArticleMapper;
 import ap.deepstroll.mapper.UserMapper;
+import ap.deepstroll.vo.request.ArticleVO;
+import ap.deepstroll.vo.request.WorkVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import ap.deepstroll.bo.Result;
 import org.springframework.context.annotation.Primary;
@@ -27,41 +29,43 @@ public class ArticleService extends WorkService{
     UserMapper userMapper;
     @Autowired
     ClassifyArticleMapper classifyArticleMapper;
+    @Autowired
+    DrawingService drawingService;
 
-    @Override
-    public Map<String,Object> browseWork(){
-        HashMap<String,Object> response = new HashMap<>();
-        HashMap<String,Object> data = new HashMap<>();
-        try {
-            List<ArticleEntity> articleList =  articleMapper.queryArticleByTitleLabState(null,null,null,0,null,null,null);
-            data.put("article",articleList);
-            Result result = new Result();
-            Integer totalPage= articleMapper.queryArticleNumByTitleLabState(null,null,null,0,null)/this.pageSize + 1;
-            data.put("totalpage",totalPage);
-            response.put("result",result);
-            response.put("data",data);
-        }catch (Exception e){
-            Result result = new Result(e.getMessage());
-            response.put("data",null);
-            response.put("result",result);
-        }
-        return response;
-    }
+//    @Override
+//    public Map<String,Object> browseWork(){
+//        HashMap<String,Object> response = new HashMap<>();
+//        HashMap<String,Object> data = new HashMap<>();
+//        try {
+//            List<ArticleEntity> articleList =  articleMapper.queryArticleByTitleLabClassifyState(null,null,null,0,null,null,null);
+//            data.put("article",articleList);
+//            Result result = new Result();
+//            Integer totalPage= articleMapper.queryArticleNumByTitleLabClassifyState(null,null,null,0,null)/this.pageSize + 1;
+//            data.put("totalpage",totalPage);
+//            response.put("result",result);
+//            response.put("data",data);
+//        }catch (Exception e){
+//            Result result = new Result(e.getMessage());
+//            response.put("data",null);
+//            response.put("result",result);
+//        }
+//        return response;
+//    }
 
     @Override
     /***
      * lqy
      * 分类浏览用户分享的作品:hao多参数
      */
-    public Map<String,Object> searchWork(String title,String label,Integer classifyId,Integer state,Integer likeNum,Integer page) {
+    public Map<String,Object> searchWork(String title,String label,Integer classifyId,Integer state,Integer page) {
         Integer startIndex= this.pageSize * (page -1);
         HashMap<String,Object> response = new HashMap<>();
         HashMap<String,Object> data = new HashMap<>();
         try {
-            List<ArticleEntity> articleList =  articleMapper.queryArticleByTitleLabState(title,label,classifyId,state,startIndex,this.pageSize,likeNum);
+            List<ArticleEntity> articleList =  articleMapper.queryArticleByTitleLabClassifyState(title!="" ? title:null,label!="" ? label:null,classifyId,state,startIndex,this.pageSize,null);
             data.put("article",articleList);
             Result result = new Result();
-            Integer totalPage= articleMapper.queryArticleNumByTitleLabState(title,label,classifyId,state,likeNum)/this.pageSize;
+            Integer totalPage= articleMapper.queryArticleNumByTitleLabClassifyState(title!="" ? title:null,label!="" ? label:null,classifyId,state,null)/this.pageSize;
             data.put("totalpage",totalPage);
             response.put("result",result);
             response.put("data",data);
@@ -123,34 +127,52 @@ public class ArticleService extends WorkService{
         return response;
     }
 
-    /***
-     * 发布
-     * @param articleEntity
-     * @return
-     */
-    public Result Publish(ArticleEntity articleEntity) {
+    @Override
+    public Map<String, Result> Publish(WorkVO work, long id) {
+        ArticleVO req = (ArticleVO)work;
+        HashMap<String,Result> response = new HashMap<>();
+        ArticleEntity articleEntity = ArticleEntity.builder().cover(req.getCover())
+                                                            .authorId(id)
+                                                            .title(req.getTitle())
+                                                            .classifyId(req.getClassify())
+                                                            .labels(null)
+                                                            .introduction(req.getIntroduction())
+                                                            .url(req.getFileUrl()).build();
         try{
             articleMapper.insertArticle(articleEntity);
             Result result = new Result();
-            return result;
+            response.put("result",result);
+            return response;
         }catch (Exception e){
             Result result = new Result(e.getMessage());
-            return result;
+            response.put("result",result);
+            return response;
         }
     }
+
 
     public Result Collection(Map<String,String> req){
         return null;
     }
 
-    public Result deleteWork(Long id) {
+    /**
+     * 删除作品
+     * @param id
+     * @param type
+     * @return
+     */
+    public Map<String,Result> deleteWork(Long id, Integer type) {
+        if (type == 1) return drawingService.deleteWork(id, type);
+        Map<String,Result>response = new HashMap<>();
         try{
             articleMapper.updateArticleState(id,1);
             Result result = new Result();
-            return result;
+            response.put("result",result);
+            return response;
         }catch (Exception e){
             Result result = new Result(e.getMessage());
-            return result;
+            response.put("result",result);
+            return response;
         }
     }
 

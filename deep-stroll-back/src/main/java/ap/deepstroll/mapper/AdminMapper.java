@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface AdminMapper {
 
     /**
-     * 插入管理员信息+log？
+     * 插入管理员信息
      * @author mxf
      * @param adminEntity
      * @return
@@ -55,7 +55,7 @@ public interface AdminMapper {
     public Integer queryAdminNum(@Param("state")Integer state);
 
     /**
-     * 修改管理员状态+log
+     * 修改管理员状态
      * @author mxf
      * @param id
      * @param state

@@ -34,9 +34,9 @@ public class AdminController {//管理员管理
      * @param
      * @return
      */
-    @GetMapping("/api/admin/list/{page}")
+    @GetMapping("/api/admin/list}")
     @PreAuthorize("hasRole('admin')")
-    public Map<String,Object>getAdminList(@PathVariable Integer page){
+    public Map<String,Object>getAdminList(@RequestParam Integer page){
         return adminService.getAdminList(page);
     }
 
@@ -45,11 +45,11 @@ public class AdminController {//管理员管理
      * 添加管理员
      * mwr
      */
-    @PostMapping("/api/admin/add")
-    @PreAuthorize("hasRole('admin')")
-    public Map<String,Result>addAdmin(@RequestBody AdminEntity req){
-        return adminService.addAdmin(req);
-    }
+    // @PostMapping("/api/admin/add")
+    // @PreAuthorize("hasRole('admin')")
+    // public Map<String,Result>addAdmin(@RequestBody AdminEntity req){
+    //     return adminService.addAdmin(req);
+    // }
 
     /***
      * 删除管理员，实际更改管理员状态

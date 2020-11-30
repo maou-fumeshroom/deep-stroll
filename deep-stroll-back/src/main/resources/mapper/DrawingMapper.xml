@@ -14,7 +14,7 @@
         <result property="likeNum" column="like_num"/>
         <result property="state" column="state"/>
         <result property="createTime" column="create_time"/>
-        <result property="updateTime" column="update_time"/>
+        <result property="updateTIme" column="update_time"/>
     </resultMap>
 
     <insert id="insertDrawing" parameterType="ap.deepstroll.entity.DrawingEntity">
@@ -36,6 +36,69 @@
             #{classifyId}
         )
     </insert>
+
+    <select id="queryDrawingByAuthorId" resultMap="DrawingMap">
+        SELECT
+            id,
+            author_id,
+            title,
+            introduction,
+            labels,
+            url,
+            classify_id,
+            state,
+            like_num,
+            create_time,
+            update_time
+        FROM drawing
+        <where>
+            AND author_id = #{authorId}
+            <if test="title != null">
+                OR title = #{title}
+            </if>
+            <if test="label != null">
+                OR labels like concat('%', #{label}, '%')
+            </if>
+            <if test="classifyId != null">
+                AND classify_id = #{classifyId}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="queryDrawingNumByAuthorId" resultMap="java.lang.Integer">
+        SELECT
+            id,
+            author_id,
+            title,
+            introduction,
+            labels,
+            url,
+            classify_id,
+            state,
+            like_num,
+            create_time,
+            update_time
+        FROM drawing
+        <where>
+            AND author_id = #{authorId}
+            <if test="title != null">
+                OR title = #{title}
+            </if>
+            <if test="label != null">
+                OR labels like concat('%', #{label}, '%')
+            </if>
+            <if test="classifyId != null">
+                AND classify_id = #{classifyId}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+    </select>
 
     <select id="queryDrawingById" resultMap="DrawingMap">
         SELECT

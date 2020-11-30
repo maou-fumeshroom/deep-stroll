@@ -26,3 +26,11 @@ jwt:
     authentication:
       path: /api/login/
       register: /api/user/register/
+
+# Tencent Cos
+tencent:
+  cos:
+    secretId: "AKIDlHvyxiLXdVBfyUgDTdcWJxPcaJn4upL0"
+    secretKey: "jfaHky2pMdexzpQWOSEl11lEPN7fxvf9"
+    region: "ap-beijing"
+    bucket:  "deep-stroll-1303131952"

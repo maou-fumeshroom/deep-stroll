@@ -1,12 +1,18 @@
 package ap.deepstroll.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ap.deepstroll.bo.Result;
-import ap.deepstroll.dao.UserDao;
+import ap.deepstroll.bo.UserBO;
+import ap.deepstroll.entity.ArticleEntity;
+import ap.deepstroll.entity.DrawingEntity;
 import ap.deepstroll.entity.UserEntity;
+import ap.deepstroll.mapper.ArticleMapper;
+import ap.deepstroll.mapper.DrawingMapper;
 import ap.deepstroll.mapper.UserMapper;
+import ap.deepstroll.vo.request.UserVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +21,10 @@ import org.springframework.stereotype.Service;
 public class UserService {
     @Autowired
     UserMapper userMapper;
-
+    @Autowired
+    ArticleMapper articleMapper;
+    @Autowired
+    DrawingMapper drawingMapper;
 
     /**
      * 修改用户信息
@@ -23,16 +32,14 @@ public class UserService {
      * @param
      * @return
      */
-      public Result updateUser(UserEntity userEntity){
-//          Long id,String nickname,Integer gender,String email,String sign,String avatar
-//          UserEntity userEntity = UserEntity.builder()
-//                  .id(id)
-//                  .nickname(nickname)
-//                  .gender(gender)
-//                  .eMail(email)
-//                  .sign(sign)
-//                  .avatar(avatar)
-//                  .build();
+      public Result updateUser(UserVo req,long id){
+
+          UserEntity userEntity = UserEntity.builder().id(id)
+                                                        .eMail(req.getE_mail()==""? null:req.getE_mail())
+                                                        .nickname(req.getNickName()==""? null:req.getNickName())
+                                                        .gender(req.getSex())
+                                                        .sign(req.getSign()==""?null:req.getSign())
+                                                        .avatar(req.getAvatar()==""? null:req.getAvatar()).build();
           try {
               userMapper.updateUser(userEntity);
               Result result = new Result();
@@ -73,9 +80,16 @@ public class UserService {
      */
     public Map<String,Object> queryUserAllInfoById(Long id){
         HashMap<String,Object> response = new HashMap<>();
+        HashMap<String,Object> data = new HashMap<>();
         try{
             UserEntity userEntity = userMapper.queryUserById(id);
-            response.put("data",userEntity);
+            data.put("nickname",userEntity.getNickname());
+            data.put("sex",userEntity.getGender());
+            data.put("telephone",userEntity.getTelephone());
+            data.put("e_mail",userEntity.getEMail());
+            data.put("sign",userEntity.getSign());
+            data.put("avatar",userEntity.getAvatar());
+            response.put("data",data);
             response.put("result",new Result());
         }catch (Exception e){
             response.put("data",null);
@@ -85,15 +99,25 @@ public class UserService {
     }
 
     /***
-     * 返回指定id用户信息:点赞还没写 所以暂时和上一个一样
+     * 返回指定id用户信息:
      * @param id
      * @return
      */
     public Map<String,Object> queryUserInfoById(Long id){
         HashMap<String,Object> response = new HashMap<>();
+        HashMap<String,Object> data = new HashMap<>();
         try{
             UserEntity userEntity = userMapper.queryUserById(id);
-            response.put("data",userEntity);
+            data.put("nickname",userEntity.getNickname());
+            data.put("avatar",userEntity.getAvatar());
+            List<ArticleEntity> articleEntityList = articleMapper.queryArticleByAuthorId(id,null,null,null,0,0,10);
+            data.put("article",articleEntityList);
+            List<DrawingEntity> drawingEntityList = drawingMapper.queryDrawingByAuthorId(id,null,null,null,0,0,10);
+            data.put("drawing",drawingEntityList);
+            Integer likeNum = articleMapper.queryArticleNumByAuthorId(id,null,null,null,0)+drawingMapper.queryDrawingNumByAuthorId(id,null,null,null,0);
+            data.put("likeNum",likeNum);
+            data.put("sign",userEntity.getSign());
+            response.put("data",data);
             response.put("result",new Result());
         }catch (Exception e){
             response.put("data",null);

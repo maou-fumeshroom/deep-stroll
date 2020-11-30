@@ -39,15 +39,17 @@ public class AdminThemeService {
      * @param id
      * @return
      */
-    public Result deleteThemeById(Integer id){
+    public Map<String ,Result> deleteThemeById(Integer id){
+        HashMap<String,Result> response = new HashMap<>();
         try {
             themeMapper.deleteThemeById(id);
             Result result = new Result();
-            return result;
+            response.put("result",result);
         }catch (Exception e){
             Result result = new Result(e.getMessage());
-            return result;
+            response.put("result",result);
         }
+        return response;
     }
 
     /***
@@ -55,48 +57,56 @@ public class AdminThemeService {
      * @param id
      * @return
      */
-    public Result setDefaultTheme(Integer id){
+    public Map<String, Result> setDefaultTheme(Integer id){
+        HashMap<String,Result> response = new HashMap<>();
         try {
             themeMapper.setDefaultTheme(id);
             Result result = new Result();
-            return result;
+            response.put("result",result);
         }catch (Exception e){
             Result result = new Result(e.getMessage());
-            return result;
-        }
-    }
-
-    /***
-     * 根据id获得主题
-     */
-    public Map<String,Object> queryThemeById(Integer id){
-        HashMap<String,Object> response = new HashMap<>();
-        try {
-            ThemeEntity theme = themeMapper.queryThemeById(id);
-            response.put("data",theme);
-            response.put("result",new Result());
-        }catch (Exception e){
-            response.put("data",null);
-            response.put("result",new Result(e.getMessage()));
+            response.put("result",result);
         }
         return response;
     }
 
     /***
+     * 根据id获得主题
+     */
+//    public Map<String,Object> queryThemeById(Integer id){
+//        HashMap<String,Object> response = new HashMap<>();
+//        try {
+//            ThemeEntity theme = themeMapper.queryThemeById(id);
+//            response.put("data",theme);
+//            response.put("result",new Result());
+//        }catch (Exception e){
+//            response.put("data",null);
+//            response.put("result",new Result(e.getMessage()));
+//        }
+//        return response;
+//    }
+
+    /***
      * 管理员添加主题
      * 还没加log
-     * @param themeEntity
+     * @param
      * @return
      */
-    public Result insertNewTheme(ThemeEntity themeEntity){
+    public Map<String, Result> insertNewTheme(String name, String bg, String bgm){
+        HashMap<String,Result> response = new HashMap<>();
         try {
+            ThemeEntity themeEntity = new ThemeEntity();
+            themeEntity.setName(name);
+            themeEntity.setBackgroundUrl(bg);
+            themeEntity.setBgmUrl(bgm);
             themeMapper.insertNewTheme(themeEntity);
             Result result=new Result();
-            return result;
+            response.put("result",result);
         }catch (Exception e){
             Result result=new Result(e.getMessage());
-            return result;
+            response.put("result",result);
         }
+        return response;
     }
 
 }

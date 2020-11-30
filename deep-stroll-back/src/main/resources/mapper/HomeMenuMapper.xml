@@ -27,7 +27,7 @@
         )
     </insert>
 
-    <select id="queryMenu" resultMap="HomeMenuMap">
+    <select id="queryMenuByState" resultMap="HomeMenuMap">
         SELECT
             id,
             name,
@@ -37,6 +37,11 @@
             create_time,
             update_time
         FROM home_menu
+        <where>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where> 
     </select>
 
     <update id="updateMenuState">
