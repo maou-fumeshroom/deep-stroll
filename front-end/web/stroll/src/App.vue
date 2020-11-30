@@ -1,35 +1,14 @@
 <template lang="pug">
  div
-  user-header(v-show="$route.meta.keepAlive")
-    <!--template(slot="logo"): router-link(to="/")-->
-
-    <!--template(slot="nav")-->
-      <!--li.link-->
-        <!--router-link(to="/article", exact) 文章-->
-      <!--li.link-->
-        <!--router-link(to="/essay") 随笔-->
-      <!--li.link-->
-        <!--router-link(to="/drawings") 手绘-->
-    <!--template(slot="tool")-->
-      <!--a(href="javascript:void(0)", @click="$root.login()", v-if="user") 登录-->
-      <!--template(v-else)-->
-        <!--router-link.twt&#45;&#45;header-user.twt-m-r-1(to="/mine")-->
-          <!--img.twt&#45;&#45;header-user-avatar(:src="user.avatar")-->
-          <!--| {{user.realname}}-->
-        <!--a.twt-hidden-md-down(href='javascript:void(0)', @click="$root.logout()") 退出-->
-    <!--el-row.app-header-box(type="flex", justify="space-between")-->
-      <!--div(v-show="!$root.manage")-->
-        <!--router-link(to="/article", exact, tag="li", class="header-item") 文章-->
-        <!--router-link(to="/essay", tag="li", class="header-item") 随笔-->
-        <!--router-link(to="/drawings", tag="li", class="header-item") 手绘-->
-      <!--.header-admin(v-if="$root.managePage")-->
+  user-header(v-if="$route.meta.keepAlive")
+  user-background(v-if="$route.meta.keepAlive" :activeMode="activeMode")
   .app-main-container(ref="element")
-    //- transition(name="el-zoom-in-center")
-    router-view(v-if="isRouterAlive")
+    router-view(v-if="isRouterAlive" @changeActive="changeActive")
 </template>
 
 <script>
   import userHeader from './components/userHeader'
+  import userBackground from './components/userBackground'
 export default {
   provide () {
     return {
@@ -41,6 +20,7 @@ export default {
       isRouterAlive: true,
       isLogin:false,
       user:null,
+      activeMode:'none',
       // user:{
       //   avatar: require('../assets/logo.png'),
       //   nickname:'baozilong'
@@ -48,7 +28,8 @@ export default {
     }
   },
   components: {
-    userHeader
+    userHeader,
+    userBackground
   },
   watch: {
     $route: {
@@ -59,7 +40,9 @@ export default {
     }
   },
   created () {
-    localStorage.setItem('token','1111111')
+    if(localStorage.getItem("activeMode")){
+      this.activeMode = localStorage.getItem("activeMode")
+    }
   },
   methods: {
     reload () {
@@ -68,6 +51,9 @@ export default {
         this.isRouterAlive = true
       })
     },
+    changeActive(val){
+      this.activeMode = val
+    }
   }
 }
 </script>
@@ -83,7 +69,7 @@ export default {
   }
   .app-main-container {
     margin: 0 auto;
-    padding: 70px 0;
-    min-height: 100vh;
+    padding: 0;
+    min-height: calc(100vh - 62px);
   }
 </style>

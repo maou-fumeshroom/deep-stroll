@@ -13,7 +13,7 @@
       </div>
     </el-form>
     <div style="display: flex;justify-content: center;">
-      <el-button class="loginbtn" type="primary" @click="onSubmit">
+      <el-button class="loginbtn" type="primary" @click="onSubmit">f
         <i class="el-icon-loading" v-if="loading"></i>
         登录</el-button>
     </div>
@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  data(){
+  data(){p
     return{
       form:{
         password:'',

@@ -18,6 +18,8 @@
       <div class="avatarBox" @click="$router.push('/mine')">
         <img :src="user.avatar"/>
       </div>
+      <img :src="setIcon" @click="$router.push('/set')" class="setIcon"/>
+      <img :src="logoutIcon" @click="logout" class="setIcon"/>
     </el-row>
     <div class="burger" @click="handleBurger()">
       <div class="top-line"></div>
@@ -31,7 +33,8 @@
   export default {
     data(){
       return{
-
+        setIcon: require('../../static/set.png'),
+        logoutIcon: require('../../static/logout.png'),
       }
     },
     props: {
@@ -40,7 +43,7 @@
         default () {
           return {
             avatar: require('../assets/logo.png'),
-            nickname:'baozilong'
+            nickname:'baozilong',
           }
         }
       }
@@ -52,6 +55,12 @@
         burger.addEventListener("click",function(){
           burger.classList.toggle("active");
           navMenu.classList.toggle("open");
+        })
+      },
+      logout(){
+        localStorage.clear()
+        this.$router.push({
+          path:'/'
         })
       }
     }
@@ -77,7 +86,8 @@
     align-items: center;
     padding:16px 5vw;
     height: 62px;
-    background-color: rgba(36,41,46,0.1);
+    background-color: rgba(36,41,46,1);
+    z-index:999;
   }
   .logo{
     font-size: 28px;
@@ -125,12 +135,18 @@
     height:25px;
     border-radius:50%;
     overflow:hidden;
+    cursor:pointer;
   }
   .avatarBox img{
     width:25px;
     height:25px;
     border-radius:50%;
     display:block;
+  }
+  .setIcon{
+    width:25px;
+    height:25px;
+    cursor:pointer;
   }
   @media screen and (max-width: 768px){
     .nav-menu{

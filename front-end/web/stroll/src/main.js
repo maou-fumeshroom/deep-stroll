@@ -17,7 +17,7 @@ import qs from 'qs'
 Vue.use(VueRouter)
 
 Vue.prototype.$http = axios
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = false
 axios.defaults.baseURL = '' // 关键步骤–填写后台请求统一的地址
 axios.defaults.headers.post['x-csrf-token'] = localStorage.getItem('token')
 Vue.config.productionTip = false
@@ -50,8 +50,9 @@ router.beforeEach((to, from, next) => {
       if (to.path === '/login') {
         next();
       } else {
+        Vue.prototype.$message.warning("请先登录")
         next({
-          path: '/'
+          path: '/login'
         })
       }
     }
@@ -67,6 +68,10 @@ router.beforeEach((to, from, next) => {
     } else {
       next();
     }
+  }
+  if (to.fullPath == "/drawings" && from.fullPath == "/drawings") {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = document.body.scrollTop = 0;
   }
 });
 

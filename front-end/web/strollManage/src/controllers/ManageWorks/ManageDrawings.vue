@@ -62,11 +62,19 @@
 
     </div>
 
+    <el-dialog title="手绘详情" :visible.sync="dialogDetail" :center="true" :before-close="handleClose" width="1000px">
+      <drawingdetail :id="id" @closeUsermsg1="closeUsermsg1"></drawingdetail>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取消</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 
 <script>
+  import drawingdetail from '../../components/drawingdetail'
   export default {
     data() {
       return {
@@ -109,7 +117,12 @@
         page: 1,
         pageSize: 10,
         currentPage1: 1,
+        id:'',
+        dialogDetail:false,
       }
+    },
+    components: {
+      drawingdetail,
     },
     filters: {
       filters: function(arg) {
@@ -168,7 +181,21 @@
         // }).then(response => {
         //   console.log(data)
         // })
-      }
+      },
+      closeUsermsg1() {
+
+        this.dialogDetail = false;
+        this.getlist()
+
+      },
+      detail(id) {
+        this.id = id;
+        console.log(this.id)
+        this.dialogDetail = true
+      },
+      handleClose() {
+        this.dialogDetail = false
+      },
     }
   }
 </script>

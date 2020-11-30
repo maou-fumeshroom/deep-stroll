@@ -26,15 +26,15 @@
         </div>
       </div>
 
-      <el-dialog title="添加管理员" :visible.sync="dialogFormVisible">
+      <el-dialog title="添加管理员" :visible.sync="dialogFormVisible" width="500px">
         <el-form :model="add">
-          <el-form-item label="账号" label-width="150px">
+          <el-form-item label="账号" label-width="140px">
             <el-input v-model="add.account" autocomplete="off" style="width:220px;" placeholder="请输入账号"></el-input>
           </el-form-item>
-          <el-form-item label="密码" label-width="150px">
+          <el-form-item label="密码" label-width="140px">
             <el-input v-model="add.password" autocomplete="off" style="width:220px;" placeholder="请输入密码"></el-input>
           </el-form-item>
-          <el-form-item label="类别" label-width="150px">
+          <el-form-item label="类别" label-width="140px">
             <el-select v-model="add.type" placeholder="请选择类别" style="width:220px;">
               <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value">
               </el-option>
@@ -110,19 +110,21 @@
           // })
         },
         deleteAdmin(a){
-          // this.$http.post('/api/admin/delete', {
-          //   id: a
-          // }).then(response => {
-          //   console.log(data)
-          // })
-        },
-        handleoder(val, val1) {
-          this.info = val1;
-          console.log(this.info)
-          this.dialogEadd = true
-        },
-        handleClose() {
-          this.dialogEadd = false
+          this.$confirm('是否确认删除该管理员?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            // this.$http.post('/api/admin/delete', {
+            //   id: a
+            // }).then(response => {
+            //   console.log(data)
+            // })
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }).catch(() => {});
         },
         handled(){
           if (this.add.account == ''||this.add.password == ''||this.add.type == ''){
@@ -134,7 +136,7 @@
           }
           console.log(this.add);
           let that =this;
-          that._postData('/api/admin/add',{
+          that.postData('/api/admin/add',{
             roleId:that.add.type,
             password:that.add.password,
             account:that.add.account

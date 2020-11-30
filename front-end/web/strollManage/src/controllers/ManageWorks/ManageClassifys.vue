@@ -51,12 +51,12 @@
         </div>
       </div>
 
-      <el-dialog title="添加分类" :visible.sync="dialogFormVisible">
+      <el-dialog title="添加分类" :visible.sync="dialogFormVisible" width="500px">
         <el-form :model="add">
-          <el-form-item label="分类名称" label-width="170px">
+          <el-form-item label="分类名称" label-width="150px">
             <el-input v-model="add.account" autocomplete="off" style="width:220px;" placeholder="请输入账号"></el-input>
           </el-form-item>
-          <el-form-item label="分类类别" label-width="170px">
+          <el-form-item label="分类类别" label-width="150px">
             <el-select v-model="add.type" placeholder="请选择类别" style="width:220px;">
               <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value">
               </el-option>

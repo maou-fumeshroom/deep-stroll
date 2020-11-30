@@ -62,14 +62,23 @@
 
     </div>
 
+    <el-dialog title="文章详情" :visible.sync="dialogDetail" :center="true" :before-close="handleClose" width="1000px">
+      <articledetail :id="id" @closeUsermsg1="closeUsermsg1"></articledetail>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取消</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 
 <script>
+  import articledetail from '../../components/articledetail'
   export default {
     data() {
       return {
+        dialogDetail:false,
         options:[{
           name:"随笔",
           value:0
@@ -94,7 +103,7 @@
             "dateTime":"2020/11/7 01:00"
           },
           {
-            "id": "123",
+            "id": "144",
             "title": "白日做梦",
             "nickname": "白嘉欣",
             "status": 1,
@@ -109,7 +118,11 @@
         page: 1,
         pageSize: 10,
         currentPage1: 1,
+        id:''
       }
+    },
+    components: {
+      articledetail,
     },
     filters: {
       filters: function(arg) {
@@ -168,7 +181,21 @@
         // }).then(response => {
         //   console.log(data)
         // })
-      }
+      },
+      closeUsermsg1() {
+
+        this.dialogDetail = false;
+        this.getlist()
+
+      },
+      detail(id) {
+        this.id = id;
+        console.log(this.id)
+        this.dialogDetail = true
+      },
+      handleClose() {
+        this.dialogDetail = false
+      },
     }
   }
 </script>
