@@ -143,4 +143,28 @@ public class DrawingService extends WorkService{
             return result;
         }
     }
+
+    /***
+     *我的作品
+     */
+    public Map<String ,Object> myWorks(Long aurhorId,String title,String label,Integer classify,Integer page){
+        Integer startIndex= this.pageSize * (page -1);
+        HashMap<String,Object> response = new HashMap<>();
+        HashMap<String,Object> data = new HashMap<>();
+        try {
+            List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByAuthorId(aurhorId,title,label,classify,0,startIndex,pageSize);
+            data.put("drawings",drawingList);
+
+            Result result = new Result();
+            Integer totalPage= drawingMapper.queryDrawingNumByAuthorId(aurhorId,title,label,classify,0)/this.pageSize+1;
+            data.put("totalpage",totalPage);
+            response.put("result",result);
+            response.put("data",data);
+        }catch (Exception e){
+            Result result = new Result(e.getMessage());
+            response.put("data",null);
+            response.put("result",result);
+        }
+        return response;
+    }
 }

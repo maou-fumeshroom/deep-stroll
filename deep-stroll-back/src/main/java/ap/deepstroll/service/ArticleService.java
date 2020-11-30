@@ -33,10 +33,10 @@ public class ArticleService extends WorkService{
         HashMap<String,Object> response = new HashMap<>();
         HashMap<String,Object> data = new HashMap<>();
         try {
-            List<ArticleEntity> articleList =  articleMapper.queryArticleByTitleLabState(null,null,null,0,null,null,null);
+            List<ArticleEntity> articleList =  articleMapper.queryArticleByTitleLabClassifyState(null,null,null,0,null,null,null);
             data.put("article",articleList);
             Result result = new Result();
-            Integer totalPage= articleMapper.queryArticleNumByTitleLabState(null,null,null,0,null)/this.pageSize + 1;
+            Integer totalPage= articleMapper.queryArticleNumByTitleLabClassifyState(null,null,null,0,null)/this.pageSize + 1;
             data.put("totalpage",totalPage);
             response.put("result",result);
             response.put("data",data);
@@ -58,10 +58,33 @@ public class ArticleService extends WorkService{
         HashMap<String,Object> response = new HashMap<>();
         HashMap<String,Object> data = new HashMap<>();
         try {
-            List<ArticleEntity> articleList =  articleMapper.queryArticleByTitleLabState(title,label,classifyId,state,startIndex,this.pageSize,likeNum);
+            List<ArticleEntity> articleList =  articleMapper.queryArticleByTitleLabClassifyState(title,label,classifyId,state,startIndex,this.pageSize,likeNum);
             data.put("article",articleList);
             Result result = new Result();
-            Integer totalPage= articleMapper.queryArticleNumByTitleLabState(title,label,classifyId,state,likeNum)/this.pageSize;
+            Integer totalPage= articleMapper.queryArticleNumByTitleLabClassifyState(title,label,classifyId,state,likeNum)/this.pageSize + 1;
+            data.put("totalpage",totalPage);
+            response.put("result",result);
+            response.put("data",data);
+        }catch (Exception e){
+            Result result = new Result(e.getMessage());
+            response.put("data",null);
+            response.put("result",result);
+        }
+        return response;
+    }
+
+    /***
+     *我的作品
+     */
+    public Map<String ,Object> myWorks(Long aurhorId,String title,String label,Integer classify,Integer page){
+        Integer startIndex= this.pageSize * (page -1);
+        HashMap<String,Object> response = new HashMap<>();
+        HashMap<String,Object> data = new HashMap<>();
+        try {
+            List<ArticleEntity> articleList =  articleMapper.queryArticleByAuthorId(aurhorId,title,label,classify,0,startIndex,pageSize);
+            data.put("articles",articleList);
+            Result result = new Result();
+            Integer totalPage= articleMapper.queryArticleNumByAuthorId(aurhorId,title,label,classify,0)/this.pageSize+1;
             data.put("totalpage",totalPage);
             response.put("result",result);
             response.put("data",data);

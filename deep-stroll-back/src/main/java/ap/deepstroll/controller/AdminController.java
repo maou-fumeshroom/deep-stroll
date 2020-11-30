@@ -34,9 +34,9 @@ public class AdminController {//管理员管理
      * @param
      * @return
      */
-    @GetMapping("/api/admin/list/{page}")
+    @GetMapping("/api/admin/list")
     @PreAuthorize("hasRole('admin')")
-    public Map<String,Object>getAdminList(@PathVariable Integer page){
+    public Map<String,Object>getAdminList(@RequestParam Integer page){
         return adminService.getAdminList(page);
     }
 

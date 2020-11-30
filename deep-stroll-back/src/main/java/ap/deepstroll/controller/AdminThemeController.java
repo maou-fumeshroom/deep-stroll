@@ -16,7 +16,7 @@ public class AdminThemeController {
      * 获取主题列表
      * @return
      */
-    @GetMapping("/admin/themeList")
+    @GetMapping("/api/admin/theme")
     public Map<String,Object> browserThemeList(){
         return adminThemeService.browserThemeList();
     }
@@ -26,18 +26,18 @@ public class AdminThemeController {
      * @param id
      * @return
      */
-    @GetMapping("/admin/theme")
-    public Map<String,Object> queryThemeById(@RequestParam Integer id){
-        return adminThemeService.queryThemeById(id);
-    }
+    //@GetMapping("/admin/theme")
+    //public Map<String,Object> queryThemeById(@RequestParam Integer id){
+    //    return adminThemeService.queryThemeById(id);
+    //}
 
     /***
      * 删除指定主题
      * @param id
      * @return
      */
-    @PostMapping("/admin/theme/delete")
-    public Result deleteThemeById(@RequestParam Integer id){
+    @PostMapping("/api/admin/theme/delete")
+    public Map<String, Result> deleteThemeById(@RequestParam Integer id){
         return adminThemeService.deleteThemeById(id);
     }
 
@@ -46,8 +46,19 @@ public class AdminThemeController {
      * @param id
      * @return
      */
-    @PostMapping("/admin/theme/default")
-    public Result setDefaultTheme(@RequestParam Integer id){
+    @PostMapping("/api/admin/theme/default")
+    public Map<String, Result> setDefaultTheme(@RequestParam Integer id){
         return adminThemeService.setDefaultTheme(id);
+    }
+
+    /***
+     * 管理员添加主题
+     * 还没加log
+     * @param
+     * @return
+     */
+    @PostMapping("/api/admin/theme/add")
+    public Map<String, Result> insertNewTheme(@RequestBody String name, @RequestBody  String bg, @RequestBody  String bgm){
+        return adminThemeService.insertNewTheme(name, bg, bgm);
     }
 }

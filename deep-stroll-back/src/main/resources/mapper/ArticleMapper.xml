@@ -40,6 +40,60 @@
         )
     </insert>
 
+    <select id="queryArticleByAuthorId" resultMap="ArticleMap">
+        SELECT
+            id,
+            author_id,
+            title,
+            cover,
+            introduction,
+            url,
+            labels,
+            classify_id,
+            like_num,
+            state,
+            create_time,
+            update_time
+        FROM article
+        <where>
+            author_id = #{authorId}
+            <if test="title != null">
+                OR title = #{title}
+            </if>
+            <if test="label != null">
+                OR labels like concat('%', #{label}, '%')
+            </if>
+            <if test="classifyId != null">
+                AND classify_id = #{classifyId}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="queryArticleNumByAuthorId" resultMap="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM article
+        <where>
+            author_id = #{authorId}
+            <if test="title != null">
+                OR title = #{title}
+            </if>
+            <if test="label != null">
+                OR labels like concat('%', #{label}, '%')
+            </if>
+            <if test="classifyId != null">
+                AND classify_id = #{classifyId}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+    </select>
+ 
     <select id="queryArticleById" resultMap="ArticleMap">
         SELECT
             id,
@@ -58,7 +112,7 @@
         WHERE id = #{id}
     </select>
 
-    <select id="queryArticleByTitleLabState" resultMap="ArticleMap">
+    <select id="queryArticleByTitleLabClassifyState" resultMap="ArticleMap">
         SELECT
             id,
             author_id,
@@ -93,7 +147,7 @@
         LIMIT #{startIndex}, #{pageSize}
     </select>
 
-    <select id="queryArticleNumByTitleLabState" resultType="Integer">
+    <select id="queryArticleNumByTitleLabClassifyState" resultType="Integer">
         SELECT
             count(*)
         FROM article
