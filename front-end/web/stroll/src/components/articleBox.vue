@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <ul id="articleUl">
     <li class="articleBox" @click="focus(item)" v-for="(item,index) in articleList.slice(0,len)" :key="index">
       <img :src = "item.imgSrc" class = "articleCover"/>
       <h3 class="articleTitle">{{item.title}}</h3>
@@ -65,14 +65,17 @@
 </script>
 
 <style scoped>
+  /*ul{*/
+  /*  padding-left: 5px;*/
+  /*}*/
   .articleBox{
-    margin: 45px;
     height: 100px;
     position: relative;
     background: #fff;
     box-shadow: 1px 3px 10px #65626285;
     cursor: pointer;
     list-style-type: none;
+    margin: 45px 20px 45px 0;
     /*-webkit-transform: rotateX(30deg);*/
     /*-webkit-transition-duration: 1s;*/
   }

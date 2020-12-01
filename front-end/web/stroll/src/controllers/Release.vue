@@ -228,11 +228,18 @@
 
 <style scoped>
   #release{
-    margin: 1% 10%;
-    margin-top:62px;
+    height: 100%;
+    width: 76%;
+    margin: 0 12% 0 12%;
+    background-color: #fff;
+    position: absolute;
+  }
+  #nav{
+    padding: 6% 5% 0 5%;
   }
   #releaseBox{
-    margin: 2% 15%;
+    margin: 3% 12%;
+    position: relative;
   }
   /*页面左半*/
   .pageLeft{

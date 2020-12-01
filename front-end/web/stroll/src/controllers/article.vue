@@ -235,21 +235,25 @@
 
 <style scoped>
   #article{
-    height: 100%;
-    margin-top:62px;
+    /*height: 100%;*/
+    width: 76%;
+    margin: 0 12% 0 12%;
+    background-color: #fff;
+    position: absolute;
   }
   /*左侧分类选择菜单*/
   #articleTags{
-    width: 15%;
+    width: 13%;
     position: fixed;
+    padding-top: 5%;
   }
   /deep/ .el-col-12 {
     width: 100%;
   }
   /*右侧文章列表*/
   #articleContainer{
-    /*background: rgb(246 246 246);*/
-    width: 85%;
+    padding-top: 5%;
+    width: 82%;
     height: 100%;
     float: right;
     list-style-type: none;

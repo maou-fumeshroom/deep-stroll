@@ -81,7 +81,10 @@
       isBottom:{
         type: Boolean,
         default: false
-      }
+      },
+      page:{
+        type:String
+      },
     },
     data() {
       return {
@@ -127,6 +130,9 @@
       })
       if (!this.isMobile && !this.width) window.addEventListener('resize', this.response)
       this.scroll()
+      if(this.page === "mine"){
+        console.log("This MINE")
+      }
     },
     beforeDestroy() {
       window.removeEventListener('resize', this.response)
@@ -154,7 +160,7 @@
         if (newV){
           this.waterfallOver()
         }
-      }
+      },
     },
     methods: {
       //预加载
@@ -245,7 +251,7 @@
         var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
         //滚动条总高度
         var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
-
+        console.log("scrollTop: "+scrollTop+" windowHeight: "+windowHeight+" scrollHeight: "+scrollHeight)
         if(scrollTop+windowHeight >= scrollHeight-1 && scrollTop+windowHeight <= scrollHeight+1){
           //加载新图片，并加锁等待图片加载完成
           this.isPreloading = true

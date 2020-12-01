@@ -35,13 +35,17 @@
 </script>
 
 <style scoped>
+  ul{
+    padding-left: 5px;
+  }
   .messageBox{
-    margin: 45px;
     height: 100px;
     position: relative;
     background: #fff;
     box-shadow: 1px 3px 10px #65626285;
+    cursor: pointer;
     list-style-type: none;
+    margin: 45px 20px 45px 0;
   }
   .messageCover{
     height: 100%;

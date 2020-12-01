@@ -84,7 +84,10 @@
 <style scoped>
   #edit{
     height: 100%;
-    margin-top:62px;
+    width: 54%;
+    margin: 0 23% 0 23%;
+    background-color: #fff;
+    position: absolute;
   }
   #mask{
     display: none;
@@ -99,11 +102,12 @@
     height: 300px;
     width: 350px;
     position: absolute;
-    left: 50%;
+    left: 27%;
     top: 50%;
-    margin: -175px 0 0 -150px;
+    /* margin: -175px 0 0 -150px; */
     background: #fff;
     text-align: center;
+    transform: translate(-50%, -50%);
   }
   h4{
     margin: 10px 0 20px 0;
@@ -115,12 +119,14 @@
     margin-bottom:35px;
   }
   #editBox{
-    padding: 5% 25%;
+    /*padding: 5% 25%;*/
+    padding: 20% 10%;
   }
   /*页面左半*/
   #pageLeft{
     float: left;
     text-align: center;
+    position: relative;
   }
   .myAvatar{
     border-radius: 100%;
@@ -139,6 +145,7 @@
   #pageRight{
     float: right;
     text-align: center;
+    position: relative;
   }
   .inputBox{
     width: 300px;

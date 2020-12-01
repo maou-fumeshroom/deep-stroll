@@ -81,7 +81,7 @@
 <style scoped>
   #articleDetails{
     margin: 62px 15% 0 15%;
-    /*background:#e5e6ee26;*/
+    background-color: #fff;
     height: 100%;
     position:relative;
   }
