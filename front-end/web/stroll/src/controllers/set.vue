@@ -5,6 +5,7 @@
     .theme_box
       .theme_item(@click="changeActive('none')") 默认
       .theme_item(@click="changeActive('sun')") 阳光
+      .theme_item(@click="changeActive('rain')") 雷雨
       .theme_item(@click="changeActive('snow')") 下雪
 </template>
 

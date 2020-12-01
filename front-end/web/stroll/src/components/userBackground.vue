@@ -1,8 +1,16 @@
 <template lang="pug">
   .user-background
     img.background(:src="imgSrc")
-    .snow(v-if="activeMode==='snow'" v-for="item in 200")
+
+    div(v-if="activeMode==='snow'")
+      .snow(v-for="item in 200")
+
     img.sun(v-if="activeMode==='sun'" :src="sunSrc")
+
+    div(v-if="activeMode==='rain'")
+      hr(v-for="item in 100" :style="'left:'+ (Math.floor(Math.random() * 100) + 10) + '%;'+ 'animationDuration:'+ (0.7 + Math.random() * 0.3) + 's;' + 'animationDelay:' + Math.random() * 5 + 's;'")
+      hr.thunder
+
     .audio_animate(v-if="!pause" @click="closeAudio")
       img.horn(:src="horn")
       img.left(:src="left")
@@ -10,6 +18,7 @@
     .audio_animate.opacity(v-else @click="openAudio")
       img.horn(:src="horn")
       img.pause(:src="x")
+
     audio(ref="audio" :src="audioSrc")
 </template>
 
@@ -27,7 +36,7 @@
         },
         activeMode:{          // none默认模式 sun光照模式 snow下雪模式
           type: String,
-          default:'snow'
+          default:'rain'
         }
       },
       data () {
@@ -51,7 +60,7 @@
         closeAudio(){
           this.pause = true
           this.$refs.audio.pause()
-        }
+        },
       }
     }
 </script>
@@ -186,7 +195,7 @@
     left:20px;
     top:12.5px;
     width:10px;
-    animation: pauseshake 0.5s linear 1 forwards;
+    animation: pauseshake 0.5s ease-out 1 forwards;
   }
   @keyframes pauseshake {
     0% {
@@ -194,6 +203,56 @@
     }
     100%{
       left:15px;
+    }
+  }
+
+  hr.thunder {
+    border: unset;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    animation-name: thunder;
+    animation-duration: 20s;
+    animation-timing-function: linear;
+    animation-delay: 5s;
+    animation-iteration-count: infinite;
+  }
+
+  hr:not(.thunder) {
+    width: 15px;
+    border-color: rgba(255, 255, 255, 1);
+    border-right-color: rgba(255, 255, 255, 1);
+    border-right-width: 15px;
+    position: absolute;
+    bottom: 100%;
+    transform-origin: 100% 50%;
+    animation-name: rain;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes rain {
+    from {
+      transform: rotate(105deg) translateX(0);
+    }
+    to {
+      transform: rotate(105deg) translateX(calc(100vh + 20px));
+    }
+  }
+
+  @keyframes thunder {
+    0% {
+      background-color: transparent;
+    }
+    1% {
+      background-color: white;
+    }
+    2% {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    8% {
+      background-color: transparent;
     }
   }
 </style>

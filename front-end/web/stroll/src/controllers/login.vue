@@ -36,6 +36,8 @@
           islogin:1,
           CodeStatus: false,
           CodeBtn: '获取验证码',
+          a:null,
+          b:'1',
         }
       },
       methods:{
@@ -90,7 +92,10 @@
           })
         },
         submitRegister(){
-
+          this.$http.post('1111',{
+            a:this.a,
+            b:this.b
+          })
         }
       }
     }
