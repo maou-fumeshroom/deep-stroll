@@ -1,5 +1,6 @@
 package ap.deepstroll.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +27,15 @@ public class ThemeService {
         HashMap<String,Object> data = new HashMap<>();
         try {
             List<ThemeEntity> theme = themeMapper.queryTheme();
-            Map<String,Object> notDefaultThemes = new HashMap<>();
+
+            ArrayList themes = new ArrayList();
             Map<String,Object> defaultTheme = new HashMap<>();
             for (int i = 0;i < theme.size(); i ++){
                 if(theme.get(i).getIsDefault() == 0){
+                    Map<String,Object> notDefaultThemes = new HashMap<>();
                     notDefaultThemes.put("id",theme.get(i).getId());
                     notDefaultThemes.put("name",theme.get(i).getName());
+                    themes.add(notDefaultThemes);
                 }
                 else {
                     defaultTheme.put("id",theme.get(i).getId());
@@ -40,7 +44,7 @@ public class ThemeService {
                     defaultTheme.put("bgm",theme.get(i).getBgmUrl());
                 }
             }
-            data.put("themes",notDefaultThemes);
+            data.put("themes",themes);
             data.put("default",defaultTheme);
             response.put("data",data);
             response.put("result",new Result());

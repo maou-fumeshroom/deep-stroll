@@ -3,9 +3,12 @@ package ap.deepstroll.service;
 import ap.deepstroll.bo.Result;
 import ap.deepstroll.entity.ThemeEntity;
 import ap.deepstroll.mapper.ThemeMapper;
+import ap.deepstroll.vo.request.ThemeVO;
+import ap.deepstroll.vo.response.ThemeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +27,18 @@ public class AdminThemeService {
         HashMap<String,Object> data = new HashMap<>();
         try {
             List<ThemeEntity> theme = themeMapper.queryTheme();
-            data.put("themes",theme);
+            ArrayList<ThemeVo> themeVOList = new ArrayList<>();
+            for (int i = 0; i < theme.size();i++){
+                ThemeVo themeVO = ThemeVo.builder()
+                        .id(theme.get(i).getId())
+                        .name(theme.get(i).getName())
+                        .bg(theme.get(i).getBackgroundUrl())
+                        .bgm(theme.get(i).getBgmUrl())
+                        .isDefault(theme.get(i).getIsDefault())
+                        .build();
+                themeVOList.add(themeVO);
+            }
+            data.put("themes",themeVOList);
             response.put("data",data);
             response.put("result",new Result());
         }catch (Exception e){
@@ -92,13 +106,14 @@ public class AdminThemeService {
      * @param
      * @return
      */
-    public Map<String, Result> insertNewTheme(String name, String bg, String bgm){
+    public Map<String, Result> insertNewTheme(ThemeVO themeVo){
         HashMap<String,Result> response = new HashMap<>();
         try {
-            ThemeEntity themeEntity = new ThemeEntity();
-            themeEntity.setName(name);
-            themeEntity.setBackgroundUrl(bg);
-            themeEntity.setBgmUrl(bgm);
+            ThemeEntity themeEntity = ThemeEntity.builder()
+                    .name(themeVo.getName())
+                    .backgroundUrl(themeVo.getBg())
+                    .bgmUrl(themeVo.getBgm())
+                    .build();
             themeMapper.insertNewTheme(themeEntity);
             Result result=new Result();
             response.put("result",result);

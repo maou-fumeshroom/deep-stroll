@@ -52,4 +52,13 @@ public class ArticleController {
     public Map<String,Object> getClassify(){
         return articleService.getClassify();
     }
+
+    //我的文章：
+    @GetMapping("/api/person/article")
+    public Map<String ,Object> myWorks(@RequestParam String key,@RequestParam Integer classify,@RequestParam Integer page,@RequestHeader HttpHeaders headers) {
+        String token = headers.get("Authorization").get(0).substring("Bearer ".length());
+        String id = jwtTokenUtil.getIdFromToken(token);
+        Long Id = Long.valueOf(id);
+        return articleService.myWorks(Id,key,key,classify,page);
+    }
 }

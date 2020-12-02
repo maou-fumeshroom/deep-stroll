@@ -2,6 +2,7 @@ package ap.deepstroll.controller;
 
 import ap.deepstroll.bo.Result;
 import ap.deepstroll.service.AdminThemeService;
+import ap.deepstroll.vo.request.ThemeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,8 +61,8 @@ public class AdminThemeController {
      * @return
      */
     @PostMapping("/api/admin/theme/add")
-    public Map<String, Result> insertNewTheme(@RequestParam String name, @RequestParam  String bg, @RequestBody  String bgm){
-        return adminThemeService.insertNewTheme(name, bg, bgm);
+    public Map<String, Result> insertNewTheme(@RequestBody ThemeVO themeVO){
+        return adminThemeService.insertNewTheme(themeVO);
     }
 
 }

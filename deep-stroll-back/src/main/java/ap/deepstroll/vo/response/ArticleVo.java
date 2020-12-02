@@ -1,4 +1,4 @@
-package ap.deepstroll.vo;
+package ap.deepstroll.vo.response;
 
 import lombok.*;
 

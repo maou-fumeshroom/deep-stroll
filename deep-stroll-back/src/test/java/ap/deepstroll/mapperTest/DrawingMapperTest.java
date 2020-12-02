@@ -33,7 +33,7 @@ public class DrawingMapperTest {
 
     @Test
     void queryDrawing() {
-        System.out.println(d.queryDrawingByTitleLabClassifyState(null, null, 12, null, 0, 1, 0));
+        System.out.println(d.queryDrawingByTitleLabClassifyState(null, null, 1, 0, 0, 10, null));
         System.out.println(d.queryDrawingNumByTitleLabClassifyState("title", "label", null, null, 0));
     }
     

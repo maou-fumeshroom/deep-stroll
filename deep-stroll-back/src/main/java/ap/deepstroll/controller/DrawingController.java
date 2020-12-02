@@ -45,8 +45,17 @@ public class DrawingController {
     }
 
     ///article/classify
-    @GetMapping("/api/article/classify")
+    @GetMapping("/api/drawing/classify")
     public Map<String,Object> getClassify(){
         return drawingService.getClassify();
+    }
+
+    //mywork /api/person/drawing
+    @GetMapping("/api/person/drawing")
+    public Map<String,Object> myworks(@RequestParam String key,@RequestParam Integer classify,@RequestParam Integer page,@RequestHeader HttpHeaders headers){
+        String token = headers.get("Authorization").get(0).substring("Bearer ".length());
+        String id = jwtTokenUtil.getIdFromToken(token);
+        Long Id = Long.valueOf(id);
+        return drawingService.myWorks(Id,key,key,classify,page);
     }
 }

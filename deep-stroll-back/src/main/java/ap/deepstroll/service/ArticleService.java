@@ -2,11 +2,10 @@ package ap.deepstroll.service;
 
 import ap.deepstroll.entity.ClassifyArticleEntity;
 import ap.deepstroll.entity.UserEntity;
-import ap.deepstroll.entity.Work;
 import ap.deepstroll.mapper.ArticleMapper;
 import ap.deepstroll.mapper.ClassifyArticleMapper;
 import ap.deepstroll.mapper.UserMapper;
-import ap.deepstroll.vo.ArticleVo;
+import ap.deepstroll.vo.response.ArticleVo;
 import ap.deepstroll.vo.request.ArticleVO;
 import ap.deepstroll.vo.request.WorkVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,8 +76,8 @@ public class ArticleService extends WorkService{
                         .introduction(articleList.get(i).getIntroduction())
                         .avatar(userEntity.getAvatar())
                         .nickName(userEntity.getNickname())
-                        .dateTime(articleList.get(i).getUpdateTIme())
-                        .comment("无评论")
+                        .dateTime(articleList.get(i).getCreateTime())
+                        .comment("")
                         .status(articleList.get(i).getState())
                         .classifyName(classifyName)
                         .build();
@@ -119,8 +118,8 @@ public class ArticleService extends WorkService{
                         .introduction(articleList.get(i).getIntroduction())
                         .avatar(userEntity.getAvatar())
                         .nickName(userEntity.getNickname())
-                        .dateTime(articleList.get(i).getUpdateTIme())
-                        .comment("无评论")
+                        .dateTime(articleList.get(i).getCreateTime())
+                        .comment("")
                         .status(articleList.get(i).getState())
                         .classifyName(classifyName)
                         .build();
@@ -179,7 +178,18 @@ public class ArticleService extends WorkService{
             author.put("avatar",userInfo.getAvatar());
             Result result = new Result();
             data.put("author",author);
-            data.put("",userInfo);
+//            data.put("",articleDetial);
+            data.put("title",articleDetial.getTitle());
+            data.put("introduction",articleDetial.getIntroduction());
+            data.put("fileUrl",articleDetial.getUrl());
+            data.put("likeNum",articleDetial.getLikeNum());
+            data.put("isLike",0);
+            data.put("isCollect",0);
+            data.put("lables",articleDetial.getLabels().split(";"));
+            data.put("type",0);
+            data.put("dateTime",articleDetial.getCreateTime());
+            data.put("status",articleDetial.getState());
+            data.put("classifyName",classifyArticleMapper.queryClassifyById(articleDetial.getClassifyId()).getName());
             response.put("result",result);
             response.put("data",data);
         }catch (Exception e){

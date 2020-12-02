@@ -13,7 +13,7 @@ import ap.deepstroll.entity.*;
 import ap.deepstroll.mapper.ClassifyDrawingMapper;
 import ap.deepstroll.mapper.DrawingMapper;
 import ap.deepstroll.mapper.UserMapper;
-import ap.deepstroll.vo.DrawingVo;
+import ap.deepstroll.vo.response.DrawingVo;
 import ap.deepstroll.vo.request.DrawingVO;
 import ap.deepstroll.vo.request.WorkVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class DrawingService extends WorkService{
         HashMap<String,Object> data = new HashMap<>();
         try {
             List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByTitleLabClassifyState(title!="" ? title:null,label!="" ? label:null,classifyId,state,startIndex,this.pageSize,null);
-
+            System.out.println(drawingList.toString());
             ArrayList <DrawingVo> drawingVOList = new ArrayList<>();
             for (int i = 0; i < drawingList.size();i++){
                 UserEntity userEntity = userMapper.queryUserById(drawingList.get(i).getAuthorId());
@@ -70,7 +70,7 @@ public class DrawingService extends WorkService{
                         .introduction(drawingList.get(i).getIntroduction())
                         .avatar(userEntity.getAvatar())
                         .nickName(userEntity.getNickname())
-                        .dateTime(drawingList.get(i).getUpdateTime())
+                        .dateTime(drawingList.get(i).getCreateTime())
                         .comment("")
                         .status(drawingList.get(i).getState())
                         .classifyName(classifyName)
@@ -131,7 +131,18 @@ public class DrawingService extends WorkService{
             author.put("avatar",userInfo.getAvatar());
             Result result = new Result();
             data.put("author",author);
-            data.put("drawingDetial",drawingDetial);
+//            data.put("drawingDetial",drawingDetial);
+            data.put("title",drawingDetial.getTitle());
+            data.put("introduction",drawingDetial.getIntroduction());
+            data.put("images",drawingDetial.getUrl().split(";"));
+            data.put("likeNum",drawingDetial.getLikeNum());
+            data.put("isLike",0);
+            data.put("isCollect",0);
+            data.put("lables",drawingDetial.getLabels().split(";"));
+            data.put("type",0);
+            data.put("dateTime",drawingDetial.getCreateTime());
+            data.put("status",drawingDetial.getState());
+            data.put("classifyName",classifyDrawingMapper.queryClassifyById(drawingDetial.getClassifyId()).getName());
             response.put("result",result);
             response.put("data",data);
         }catch (Exception e){
@@ -191,25 +202,29 @@ public class DrawingService extends WorkService{
         HashMap<String,Object> response = new HashMap<>();
         HashMap<String,Object> data = new HashMap<>();
         try {
-            List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByTitleLabClassifyState(title!="" ? title:null,label!="" ? label:null,classify,0,startIndex,this.pageSize,null);
+            List<DrawingEntity> drawingList =  drawingMapper.queryDrawingByAuthorId(aurhorId,title!="" ? title:null,label!="" ? label:null,classify,0,startIndex,this.pageSize);
+            System.out.println(drawingList.toString());
             ArrayList <DrawingVo> drawingVOList = new ArrayList<>();
             for (int i = 0; i < drawingList.size();i++){
-                UserEntity userEntity = userMapper.queryUserById(drawingList.get(i).getAuthorId());
-                String classifyName = classifyDrawingMapper.queryClassifyById(drawingList.get(i).getClassifyId()).getName();
+//                UserEntity userEntity = userMapper.queryUserById(drawingList.get(i).getAuthorId());
+                String classifyName = classifyDrawingMapper
+                        .queryClassifyById(drawingList.get(i).getClassifyId()).getName();
                 String cover = drawingList.get(i).getUrl().split(";")[0];
                 DrawingVo drawingVO = DrawingVo.builder()
                         .id(drawingList.get(i).getId())
                         .cover(cover)
                         .title(drawingList.get(i).getTitle())
                         .introduction(drawingList.get(i).getIntroduction())
-                        .avatar(userEntity.getAvatar())
-                        .nickName(userEntity.getNickname())
-                        .dateTime(drawingList.get(i).getUpdateTime())
+//                        .avatar(userEntity.getAvatar())
+//                        .nickName(userEntity.getNickname())
+                        .dateTime(drawingList.get(i).getCreateTime())
                         .comment("")
                         .status(drawingList.get(i).getState())
                         .classifyName(classifyName)
                         .build();
+                System.out.println(drawingVO.toString());
                 drawingVOList.add(drawingVO);
+                System.out.println(drawingVOList.toString());
             }
             data.put("drawing",drawingVOList);
             Result result = new Result();
