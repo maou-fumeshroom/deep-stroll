@@ -1,18 +1,18 @@
 <template>
   <ul id="articleUl">
     <li class="articleBox" @click="focus(item)" v-for="(item,index) in articleList.slice(0,len)" :key="index">
-      <img :src = "item.imgSrc" class = "articleCover"/>
+      <img :src = "item.cover" class = "articleCover"/>
       <h3 class="articleTitle">{{item.title}}</h3>
       <div class="articleMsg">
         <div class="msgLeft">
-          <img :src = "item.avatarSrc" class="authorAvatar"/>
+          <img :src = "item.avatar" class="authorAvatar"/>
           <span class="authorName">{{item.nickname}}</span>
-          <span class="articleTime">{{item.releaseTime}}</span>
+          <span class="articleTime">{{item.dateTime}}</span>
         </div>
         <div class="msgRight">
-          <span>{{item.likes}}</span>
+          <span>{{item.likeNum}}</span>
           <i class="el-icon-location"></i>
-          <span>{{item.commentsNum}}</span>
+          <span>{{item.comment}}</span>
           <i class="el-icon-star-on"></i>
         </div>
       </div>
@@ -40,11 +40,14 @@
         // console.log(this.page);
         this.$router.push({
           path:'/articleDetails',
-          // query: {id:item.id},
-          query:{
-            articleMsg:JSON.stringify(item),
+          query: {
+            id:item.id,
             backpage:this.page
-          }
+          },
+          // query:{
+          //   articleMsg:JSON.stringify(item),
+          //   backpage:this.page
+          // }
         })
       },
     },

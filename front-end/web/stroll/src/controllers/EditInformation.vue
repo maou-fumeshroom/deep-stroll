@@ -14,19 +14,19 @@
 
     <div id="editBox">
       <div id="pageLeft">
-        <img :src=msg.avatarSrc class="myAvatar"/>
+        <img :src=msg.avatar class="myAvatar"/>
         <el-button class="changePass" @click="changePassword">修改密码</el-button>
         <el-button class="saveButton" type="primary" @click="save">保存</el-button>
       </div>
 
       <div id="pageRight">
         <el-input class="inputBox" placeholder="请输入内容" v-model="msg.nickname" clearable/>
-        <el-radio class="radio" v-model="msg.gender" label="女">女</el-radio>
-        <el-radio v-model="msg.gender" label="男">男</el-radio>
+        <el-radio class="radio" v-model="msg.sex" label="0">女</el-radio>
+        <el-radio v-model="msg.sex" label="1">男</el-radio>
         <br/>
-        <el-input class="inputBox" placeholder="请输入内容" v-model="msg.phoneNumber" clearable/>
-        <el-input class="inputBox" placeholder="请输入内容" v-model="msg.Email" clearable/>
-        <el-input class="inputBox" placeholder="请输入内容" v-model="msg.introduce" clearable/>
+        <el-input class="inputBox" placeholder="请输入内容" v-model="msg.telephone" clearable/>
+        <el-input class="inputBox" placeholder="请输入内容" v-model="msg.e_mail" clearable/>
+        <el-input class="inputBox" placeholder="请输入内容" v-model="msg.sign" clearable/>
         <el-button class="cancelButton" @click="cancel">取消</el-button>
       </div>
     </div>
@@ -40,13 +40,13 @@
     data () {
       return {
         msg:{
-          id:"0",
+          // id:"0",
           nickname:"王明明",
-          avatarSrc:require("../assets/logo.png"),
-          gender:"男",
-          phoneNumber:"13313131133",
-          Email:"14259763@qq.com",
-          introduce:"好好学习，天天向上",
+          avatar:require("../assets/logo.png"),
+          sex:'1',
+          telephone:"13313131133",
+          e_mail:"14259763@qq.com",
+          sign:"好好学习，天天向上",
         },
         oldPassword:"",
         newPassword1:"",

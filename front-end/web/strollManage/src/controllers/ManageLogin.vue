@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  data(){p
+  data(){
     return{
       form:{
         password:'',

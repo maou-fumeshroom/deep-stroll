@@ -21,7 +21,7 @@
             :show-file-list="false"
             :http-request="UploadCover"
             :before-upload="beforeAvatarUpload">
-            <img v-if="msg.coverSrc" :src=msg.coverSrc class="cover"/>
+            <img v-if="msg.cover" :src=msg.cover class="cover"/>
             <div v-else class="uploadLogo">
               <i  class="el-icon-upload msgCoverI"/>
               <div class="el-upload__text msgCoverText">将文件拖到此处，或<em>点击上传</em></div>
@@ -35,9 +35,8 @@
           <el-input class="inputBox" placeholder="请输入内容" v-model="msg.title" clearable/>
           <br/>
           <span>文章介绍：</span>
-          <!--          <el-input class="inputBox" placeholder="请输入内容" v-model="msg.introduce" clearable/>-->
           <el-input type="textarea" placeholder="请输入介绍" v-model="msg.introduce" maxlength="150" show-word-limit/>
-          <el-select class="select" v-model="sort" filterable placeholder="请选择分类" clearable>
+          <el-select class="select" v-model="msg.classify" filterable placeholder="请选择分类" clearable>
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
 
@@ -45,7 +44,6 @@
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
 
-          <!--          <el-button class="uploadButton" @click="uploadMd">上传文档</el-button>-->
           <el-upload
             action=""
             :show-file-list="false"
@@ -60,11 +58,6 @@
       <!--      手绘发布-->
       <div id="drawingRel" v-if="tag === '2'">
         <div class="pageLeft">
-          <!--          <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>-->
-          <!--            <i class="el-icon-upload"/>-->
-          <!--            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
-          <!--            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
-          <!--          </el-upload>-->
           <ul id="nineBox">
             <li class="itemBox" v-for="(item,index) in drawings.slice(0,len)" :key="index">
               <img v-if="item.src" :src="item.src" class="itemImg"/>
@@ -78,8 +71,6 @@
             :before-upload="beforeAvatarUpload"
             multiple>
             <el-button>上传</el-button>
-            <!--            <img v-if="msg.coverSrc" :src=msg.coverSrc class="cover"/>-->
-            <!--            <i v-else class="el-icon-plus avatar-uploader-icon"/>-->
           </el-upload>
         </div>
 
@@ -120,10 +111,12 @@
         activeIndex: '1',
         tag:'1',
         msg:{
-          coverSrc:"",
+          cover:"",
           title:"",
           introduce:"",
-          mdSrc:""
+          fileUrl:"",
+          classify:"",
+          labels:[],
         },
         options: [{
           value: '选项1',
@@ -144,7 +137,6 @@
         sort:"",
         label:"",
         drawings:[
-          // {id:'1', src:"../../static/images/logo.png"},
           {id:'1', src:""},
           {id:'2', src:""},
           {id:'3', src:""},
@@ -155,6 +147,13 @@
           {id:'8', src:""},
           {id:'9', src:""},
         ],
+        draws:{
+          title:"",
+          classify:2,
+          labels:[],
+          introduction:"",
+          image:[]
+        },
         len:0,
       }
     },
@@ -170,11 +169,8 @@
         var fileName = 'article' + `${Date.parse(new Date())}`+'.md';  //定义唯一的文件名
         client().multipartUpload(fileName, file.file).then(
           result => {
-            this.msg.mdSrc = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+            this.msg.fileUrl = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
             $('.uploadOK').css('display', 'block');
-            // var temp = document.getElementsByClassName("uploadOK");
-            // temp.style = "display:block";
-            // temp.style.display = block;
           })
       },
       UploadCover(file) {
@@ -182,7 +178,7 @@
         //定义唯一的文件名，打印出来的uid其实就是时间戳
         client().multipartUpload(fileName, file.file).then(
           result => {
-            this.msg.coverSrc = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+            this.msg.cover = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
           })
       },
       UploadImg(file) {

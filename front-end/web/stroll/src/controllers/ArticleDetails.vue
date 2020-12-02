@@ -5,9 +5,9 @@
     <div id="message">
       <h2 class="title">{{articleMsg.title}}</h2>
       <p class="introduction">{{articleMsg.introduction}}</p>
-      <img :src = "articleMsg.avatarSrc" class="avatar"/>
-      <span class="nickname">{{articleMsg.nickname}}</span>
-      <span class="time">{{articleMsg.releaseTime}}</span>
+      <img :src = "articleMsg.autor.avatar" class="avatar"/>
+      <span class="nickname">{{articleMsg.autor.nickname}}</span>
+      <span class="time">{{articleMsg.dateTime}}</span>
       <hr/>
     </div>
 
@@ -38,16 +38,22 @@
       return {
         articleMsg:{
           id:"",
-          imgSrc:require("../assets/logo.png"),
-          title:"",
-          nickname:"",
-          avatarSrc:require("../assets/logo.png"),
-          releaseTime:"",
-          likes:"",
-          commentsNum:"",
-          introduction:"",
-          // content:""
-          mdSrc:""
+          autor:{
+            id:"1",
+            nickname:"李华",
+            avatar:require("../assets/logo.png"),
+          },
+          title:"如何看待 Python 之父 Guido 加盟微软？？？",
+          introduction:"Python 之父 Guido van Rossum 在 Python 邮件组里发邮称，他将退出 Python 核心决策层，而转居幕后。",
+          fileUrl:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481592000.md",
+          likeNum:3,
+          isLike:0,
+          isCollect:1,
+          labels:["python","程序员"],
+          type:0,
+          dateTime:"2020-11-20",
+          status:0,
+          classifyName:"互联网"
         },
         userComment:"",
         backPage:"",
@@ -56,12 +62,13 @@
     },
     mounted () {
       //接收到传来的文章详情信息
-      this.articleMsg = JSON.parse(this.$route.query.articleMsg);
-      console.log(this.articleMsg);
+      // this.articleMsg = JSON.parse(this.$route.query.articleMsg);
+      this.articleMsg.id = this.$route.query.id;
+      console.log(this.articleMsg.id);
       //接收到传来的返回路径
       this.backPage = this.$route.query.backpage;
       console.log(this.backPage);
-      const url = this.articleMsg.mdSrc;
+      const url = this.articleMsg.fileUrl;
       console.log("url: "+ url)
       this.$http.get(url).then((response) => {
         this.htmlMD = response.data;
