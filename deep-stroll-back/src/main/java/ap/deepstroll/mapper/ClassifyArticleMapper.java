@@ -6,8 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import ap.deepstroll.entity.ClassifyArticleEntity;
+import org.springframework.stereotype.Repository;
 
 @Mapper
+@Repository
 public interface ClassifyArticleMapper {
 
     /**
@@ -16,6 +18,8 @@ public interface ClassifyArticleMapper {
      * @param classifyArticleEntity
      */
     public Integer insertClassifyArticle(@Param("name")String name);
+
+    public ClassifyArticleEntity queryClassifyById(@Param("id")Integer id);
     
     /**
      * 查询分类

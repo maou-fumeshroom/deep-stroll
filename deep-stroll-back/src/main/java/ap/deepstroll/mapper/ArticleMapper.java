@@ -6,8 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import ap.deepstroll.entity.ArticleEntity;
+import org.springframework.stereotype.Repository;
 
 @Mapper
+@Repository
 public interface ArticleMapper {
     
     /**
@@ -24,6 +26,29 @@ public interface ArticleMapper {
      * @return
      */
     public ArticleEntity queryArticleById(@Param("id")Long id);
+
+    /**
+     * 查询指定作者的作品
+     * @param id
+     * @return
+     */
+    public List<ArticleEntity> queryArticleByAuthorId(
+        @Param("authorId")Long id,
+        @Param("title")String title,
+        @Param("label")String label,
+        @Param("classifyId")Integer classifyId,
+        @Param("state")Integer state,
+        @Param("startIndex")Integer startIndex,
+        @Param("pageSize")Integer pageSize
+    );
+
+    public Integer queryArticleNumByAuthorId(
+        @Param("authorId")Long id,
+        @Param("title")String title,
+        @Param("label")String label,
+        @Param("classifyId")Integer classifyId,
+        @Param("state")Integer state
+    );
 
     /**
      * 根据限定条件搜索文章

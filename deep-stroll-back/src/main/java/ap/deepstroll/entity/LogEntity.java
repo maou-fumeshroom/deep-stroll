@@ -19,8 +19,6 @@ public class LogEntity {
 
     private Long id;
     private Integer adminId;
-    private Integer type;
-    private String tableName;
     private String content;
     private Timestamp createTime;
     

@@ -6,8 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import ap.deepstroll.entity.UserEntity;
+import org.springframework.stereotype.Repository;
 
 @Mapper
+@Repository
 public interface UserMapper {
 
     /**
@@ -50,8 +52,6 @@ public interface UserMapper {
      * @param nickname
      * @param state
      * @param vip
-     * @param startIndex
-     * @param pageSize
      * @return
      */
     public Integer queryUserNum(

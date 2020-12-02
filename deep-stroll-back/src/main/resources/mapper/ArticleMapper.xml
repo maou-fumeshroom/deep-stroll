@@ -15,7 +15,7 @@
         <result property="likeNum" column="like_num"/>
         <result property="state" column="state"/>
         <result property="createTime" column="create_time"/>
-        <result property="updateTIme" column="update_time"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <insert id="insertArticle" parameterType="ap.deepstroll.entity.ArticleEntity">
@@ -40,6 +40,56 @@
         )
     </insert>
 
+    <select id="queryArticleByAuthorId" resultMap="ArticleMap">
+        SELECT
+            id,
+            author_id,
+            title,
+            cover,
+            introduction,
+            url,
+            labels,
+            classify_id,
+            like_num,
+            state,
+            create_time,
+            update_time
+        FROM article
+        <where>
+            author_id = #{authorId}
+            <if test="title != null">
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
+            </if>
+            <if test="classifyId != null">
+                AND classify_id = #{classifyId}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="queryArticleNumByAuthorId" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM article
+        <where>
+            author_id = #{authorId}
+            <if test="title != null">
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
+            </if>
+            <if test="classifyId != null">
+                AND classify_id = #{classifyId}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+    </select>
+ 
     <select id="queryArticleById" resultMap="ArticleMap">
         SELECT
             id,
@@ -75,10 +125,8 @@
         FROM article
         <where>
             <if test="title != null">
-                OR title = #{title}
-            </if>
-            <if test="label != null">
-                OR labels like concat('%', #{label}, '%')
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
             </if>
             <if test="classifyId != null">
                 AND classify_id = #{classifyId}
@@ -99,10 +147,8 @@
         FROM article
         <where>
             <if test="title != null">
-                OR title = #{title}
-            </if>
-            <if test="label != null">
-                OR labels like concat('%', #{label}, '%')
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
             </if>
             <if test="classifyId != null">
                 AND classify_id = #{classifyId}

@@ -6,8 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import ap.deepstroll.entity.ClassifyDrawingEntity;
+import org.springframework.stereotype.Repository;
 
 @Mapper
+@Repository
 public interface ClassifyDrawingMapper {
     
     /**
@@ -17,6 +19,8 @@ public interface ClassifyDrawingMapper {
      * @return
      */
     public Integer insertClassifyDrawing(@Param("name")String name);
+
+    public ClassifyDrawingEntity queryClassifyById(@Param("id")Integer id);
     
     /**
      * 获取全部分类

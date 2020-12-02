@@ -5,8 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import ap.deepstroll.entity.AdminEntity;
+import org.springframework.stereotype.Repository;
 
 @Mapper
+@Repository
 public interface AdminMapper {
 
     /**

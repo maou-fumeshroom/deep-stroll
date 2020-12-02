@@ -6,8 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import ap.deepstroll.entity.DrawingEntity;
+import org.springframework.stereotype.Repository;
 
 @Mapper
+@Repository
 public interface DrawingMapper {
 
     /**
@@ -17,6 +19,24 @@ public interface DrawingMapper {
      * @return
      */
     public Integer insertDrawing(DrawingEntity drawingEntity);
+
+    public List<DrawingEntity> queryDrawingByAuthorId(
+        @Param("authorId")Long id,
+        @Param("title")String title,
+        @Param("label")String label,
+        @Param("classifyId")Integer classifyId,
+        @Param("state")Integer state,
+        @Param("startIndex")Integer startIndex,
+        @Param("pageSize")Integer pageSize
+    );
+
+    public Integer queryDrawingNumByAuthorId(
+        @Param("authorId")Long id,
+        @Param("title")String title,
+        @Param("label")String label,
+        @Param("classifyId")Integer classifyId,
+        @Param("state")Integer state
+    );
 
     /**
      * 查询指定id的手绘

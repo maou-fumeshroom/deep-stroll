@@ -7,8 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import ap.deepstroll.entity.LogEntity;
+import org.springframework.stereotype.Repository;
 
 @Mapper
+@Repository
 public interface LogMapper {
     
     /**
@@ -31,24 +33,6 @@ public interface LogMapper {
         @Param("pageSize")Integer pageSize
     );
 
-    /**
-     * 根据条件查询log
-     * @author mxf
-     * @param adminId
-     * @param type
-     * @param tableName
-     * @param startTime
-     * @param endTime
-     * @return
-     */
-    public List<LogEntity> queryLogByAdminIdTypeTableNameTime(
-        @Param("adminId")Integer adminId,
-        @Param("type")Integer type,
-        @Param("tableName")String tableName,
-        @Param("startTime")Timestamp startTime,
-        @Param("endTime")Timestamp endTime,
-        @Param("startIndex")Integer startIndex,
-        @Param("pageSize")Integer pageSize
-    );
+    public Integer queryLogNum();
 
 }

@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.http.HttpHeaders;
 
+import ap.deepstroll.annotation.OperationLogAnnotation;
 import ap.deepstroll.service.FileService;
 import ap.deepstroll.service.IdentityService;
 import ap.deepstroll.utils.JwtTokenUtil;
@@ -59,7 +58,8 @@ public class TestController {
     }
 
     @PostMapping("/api/admin/add")
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasAnyRole('chiefAdmin','rightAdmin')")
+    @OperationLogAnnotation(operName = "添加管理员")
     public ResponseVO adminRegister(@RequestBody AdminRegisterRequestVO adminRegisterRequestVO) {
         return identityService.adminRegister(adminRegisterRequestVO);
     }

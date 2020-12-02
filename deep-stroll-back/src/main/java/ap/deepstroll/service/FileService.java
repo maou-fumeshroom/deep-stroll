@@ -56,6 +56,7 @@ public class FileService {
 
     private String upload(File file){
         int index = file.getName().lastIndexOf(".");
+        // 上传到桶里的文件名
         String key = getKey() + file.getName().substring(index);
     	
         COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
