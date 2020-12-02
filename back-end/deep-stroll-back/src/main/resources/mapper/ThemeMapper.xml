@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ap.deepstroll.mapper.ThemeMapper">
+    
+    <resultMap id="ThemeMap" type="ap.deepstroll.entity.ThemeEntity">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="backgroundUrl" column="background_url"/>
+        <result property="bgmUrl" column="bgm_url"/>
+        <result property="isDefault" column="is_default"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <insert id="insertNewTheme" parameterType="ap.deepstroll.entity.ThemeEntity">
+        INSERT INTO
+        theme(
+            name,
+            background_url,
+            bgm_url
+        )
+        VALUES(
+            #{name},
+            #{backgroundUrl},
+            #{bgmUrl}
+        )
+    </insert>
+
+    <delete id="deleteThemeById">
+        DELETE FROM theme
+        WHERE id = #{id}
+    </delete>
+
+    <select id="queryTheme" resultMap="ThemeMap">
+        SELECT
+            id,
+            name,
+            background_url,
+            bgm_url,
+            is_default,
+            create_time
+        FROM theme
+    </select>
+
+    <select id="queryThemeById" resultMap="ThemeMap">
+        SELECT
+            id,
+            name,
+            background_url,
+            bgm_url,
+            is_default,
+            create_time
+        FROM theme
+        WHERE id = #{id}
+    </select>
+
+    <update id="setDefaultTheme">
+        UPDATE theme
+        SET is_default = 0
+        WHERE is_default = 1;
+        UPDATE theme
+        SET is_default = 1
+        WHERE id = #{id};
+    </update>
+
+</mapper>

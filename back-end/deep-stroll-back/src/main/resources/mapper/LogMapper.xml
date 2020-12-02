@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ap.deepstroll.mapper.LogMapper">
+
+    <resultMap id="LogMap" type="ap.deepstroll.entity.LogEntity">
+        <result property="id" column="id"/>
+        <result property="adminId" column="admin_id"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <insert id="insertLog" parameterType="ap.deepstroll.entity.LogEntity">
+        INSERT INTO 
+        log(
+            admin_id,
+            content 
+        )
+        VALUES(
+            #{adminId},
+            #{content} 
+        )
+    </insert>
+
+    <select id="queryLog" resultMap="LogMap">
+        SELECT
+            id,
+            admin_id,
+            content,
+            create_time
+        FROM log
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="queryLogNum" resultType="Integer">
+        SELECT
+        count(*)
+        FROM log
+    </select>
+
+</mapper>

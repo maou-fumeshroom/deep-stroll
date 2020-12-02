@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ap.deepstroll.mapper.RoleMapper">
+
+    <resultMap id="RoleMap" type="ap.deepstroll.entity.RoleEntity">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="introduction" column="introduction"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTIme" column="update_time"/>
+    </resultMap>
+
+    <insert id="insertRole" parameterType="ap.deepstroll.entity.RoleEntity">
+        INSERT INTO
+        role(
+            name,
+            introduction
+        )
+        VALUES(
+            #{name},
+            #{introduction}
+        )
+    </insert>
+
+    <select id="queryRole" resultMap="RoleMap">
+        SELECT
+            id,
+            name,
+            introduction,
+            state,
+            create_time,
+            update_time
+        FROM role
+        <where>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryRoleByIds" resultMap="RoleMap">
+        SELECT
+            id,
+            name,
+            introduction,
+            state,
+            create_time,
+            update_time
+        FROM role
+        <where>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            AND id in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+		        #{id}
+	        </foreach>
+        </where>
+    </select>
+    
+    <update id="updateRoleState">
+        UPDATE role
+        SET state = #{state}
+        WHERE id = #{id}
+    </update>
+    
+</mapper>
