@@ -36,6 +36,9 @@
           // content:""
           mdSrc:"111"
         },
+        // drawingsMsg:{
+        //   author:{},
+        // },
       }
     },
     components: {
@@ -48,7 +51,23 @@
         //   path:'/' + this.backPage,
         // })
       }
-    }
+    },
+    created() {
+      let that = this;
+      // console.log("id: "+ that.drawingsId);
+      //获取手绘详情
+      this.$http.get('/api/drawing/detail',{
+        params:{
+          // id:that.drawingsId,
+          id:1,
+        }
+      }).then(function(res){
+        // console.log("！！： "+JSON.stringify(res));
+        // that.drawingsMsg = res.data;
+      }).catch(function(){
+        console.log("服务器异常");
+      });
+    },
   };
 </script>
 

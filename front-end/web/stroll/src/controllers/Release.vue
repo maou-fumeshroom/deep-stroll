@@ -21,7 +21,7 @@
             :show-file-list="false"
             :http-request="UploadCover"
             :before-upload="beforeAvatarUpload">
-            <img v-if="msg.cover" :src=msg.cover class="cover"/>
+            <img v-if="articleMsg.cover" :src="articleMsg.cover" class="cover"/>
             <div v-else class="uploadLogo">
               <i  class="el-icon-upload msgCoverI"/>
               <div class="el-upload__text msgCoverText">将文件拖到此处，或<em>点击上传</em></div>
@@ -32,16 +32,16 @@
 
         <div class="pageRight">
           <span class="title">文章题目：</span>
-          <el-input class="inputBox" placeholder="请输入内容" v-model="msg.title" clearable/>
+          <el-input class="inputBox" placeholder="请输入内容" v-model="articleMsg.title" clearable/>
           <br/>
           <span>文章介绍：</span>
-          <el-input type="textarea" placeholder="请输入介绍" v-model="msg.introduce" maxlength="150" show-word-limit/>
-          <el-select class="select" v-model="msg.classify" filterable placeholder="请选择分类" clearable>
+          <el-input type="textarea" placeholder="请输入介绍" v-model="articleMsg.introduction" maxlength="150" show-word-limit/>
+          <el-select class="select" v-model="articleMsg.classify" filterable placeholder="请选择分类" clearable>
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
 
-          <el-select v-model="label" filterable placeholder="请选择标签" clearable>
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-select v-model="articleMsg.labels[0]" filterable placeholder="请选择标签" clearable>
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label"/>
           </el-select>
 
           <el-upload
@@ -59,8 +59,8 @@
       <div id="drawingRel" v-if="tag === '2'">
         <div class="pageLeft">
           <ul id="nineBox">
-            <li class="itemBox" v-for="(item,index) in drawings.slice(0,len)" :key="index">
-              <img v-if="item.src" :src="item.src" class="itemImg"/>
+            <li class="itemBox" v-for="(item,index) in drawingMsg.image.slice(0,len)" :key="index">
+              <img v-if="item" :src="item" class="itemImg"/>
             </li>
           </ul>
           <el-upload
@@ -77,16 +77,16 @@
 
         <div class="drawRight">
           <span class="title">手绘题目：</span>
-          <el-input class="inputBox" placeholder="请输入内容" v-model="msg.title" clearable/>
+          <el-input class="inputBox" placeholder="请输入内容" v-model="drawingMsg.title" clearable/>
           <br/>
           <span>手绘介绍：</span>
-          <el-input type="textarea" placeholder="请输入介绍" v-model="msg.introduce" maxlength="150" show-word-limit/>
-          <el-select class="select" v-model="sort" filterable placeholder="请选择分类" clearable>
+          <el-input type="textarea" placeholder="请输入介绍" v-model="drawingMsg.introduction" maxlength="150" show-word-limit/>
+          <el-select class="select" v-model="drawingMsg.classify" filterable placeholder="请选择分类" clearable>
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
           <br/>
-          <el-select class="select" v-model="label" filterable placeholder="请选择标签" clearable>
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-select class="select" v-model="drawingMsg.labels[0]" filterable placeholder="请选择标签" clearable>
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label"/>
           </el-select>
 
           <p>只能上传jpg/png/jpeg文件，且不超过500kb，最多上传9张</p>
@@ -110,13 +110,21 @@
       return{
         activeIndex: '1',
         tag:'1',
-        msg:{
-          cover:"",
-          title:"",
-          introduce:"",
-          fileUrl:"",
-          classify:"",
-          labels:[],
+        // msg:{
+        //   cover:"",
+        //   title:"",
+        //   introduce:"",
+        //   fileUrl:"",
+        //   classify:"",
+        //   labels:[],
+        // },
+        articleMsg:{
+            cover:"",
+            title:"",
+            introduction:"",
+            fileUrl:"",
+            classify:1,
+            labels:[],
         },
         options: [{
           value: '选项1',
@@ -147,12 +155,19 @@
           {id:'8', src:""},
           {id:'9', src:""},
         ],
-        draws:{
-          title:"",
-          classify:2,
-          labels:[],
-          introduction:"",
-          image:[]
+        // draws:{
+        //   title:"",
+        //   classify:2,
+        //   labels:[],
+        //   introduction:"",
+        //   image:[]
+        // },
+        drawingMsg:{
+            title:"",
+            classify:1,
+            labels:[],
+            introduction:"",
+            image:[]
         },
         len:0,
       }
@@ -162,14 +177,50 @@
         this.tag = keyPath[0] ;
       },
       release(){
+        if (this.tag === '1'){
+          // console.log("文章： "+ JSON.stringify(this.articleMsg));
+          //发布文章
+          this.$http.post('/api/person/article/add',{
+            cover:this.articleMsg.cover,
+            title:this.articleMsg.title,
+            classify:this.articleMsg.classify,
+            labels:this.articleMsg.labels,
+            introduction:this.articleMsg.introduction,
+            fileUrl:this.articleMsg.fileUrl
+          },{emulateJSON: true})
+            .then(function(res){
+              // console.log(res);
+              // console.log("！！： "+JSON.stringify(res));
+            });
+        }else{
+          console.log("手绘： "+JSON.stringify(this.drawingMsg));
+          this.$http.post('/api/person/drawing/add',{
+            title:this.drawingMsg.title,
+            classify:this.drawingMsg.classify,
+            labels:this.drawingMsg.labels,
+            introduction:this.drawingMsg.introduction,
+            image:this.drawingMsg.image
+          },{emulateJSON: true})
+            .then(function(res){
+              // console.log(res);
+              // console.log("！！： "+JSON.stringify(res));
+            });
+        }
+
+        this.$router.push({
+          path:'/mine',
+        })
       },
       cancel(){
+        this.$router.push({
+          path:'/mine',
+        })
       },
       uploadMd(file){
         var fileName = 'article' + `${Date.parse(new Date())}`+'.md';  //定义唯一的文件名
         client().multipartUpload(fileName, file.file).then(
           result => {
-            this.msg.fileUrl = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+            this.articleMsg.fileUrl = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
             $('.uploadOK').css('display', 'block');
           })
       },
@@ -178,7 +229,7 @@
         //定义唯一的文件名，打印出来的uid其实就是时间戳
         client().multipartUpload(fileName, file.file).then(
           result => {
-            this.msg.cover = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+            this.articleMsg.cover = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
           })
       },
       UploadImg(file) {
@@ -187,7 +238,9 @@
           //定义唯一的文件名，打印出来的uid其实就是时间戳
           client().multipartUpload(fileName, file.file).then(
             result => {
-              this.drawings[this.len].src = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+              // this.drawings[this.len].src = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+              // this.drawingMsg.image[this.len].src = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+              this.drawingMsg.image[this.len] = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
               this.len += 1;
               // uploadBannerPic(this.fileList).then(res => {
               //   console.log("lalala")
@@ -217,6 +270,7 @@
           this.$message.error('单张图片大小不能超过 500KB!');
         }
         return (isJPEG || isJPG || isPNG) && isLt500K;
+        // return (isJPEG || isJPG || isPNG);
       },
     }
   }
@@ -241,6 +295,7 @@
   .pageLeft{
     float: left;
     text-align: center;
+    margin-top: -1%;
   }
   /*文章页面左半*/
   .cover{
@@ -296,8 +351,8 @@
   }
   #nineBox{
     list-style-type: none;
-    width: 404px;
-    height: 404px;
+    width: 415px;
+    height: 415px;
     padding: 0;
     border: 1px solid #d9d9d9;
     border-radius: 5px;

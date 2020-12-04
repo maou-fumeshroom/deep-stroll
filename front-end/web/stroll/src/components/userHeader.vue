@@ -84,7 +84,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding:16px 5vw;
+    /*padding:16px 5vw;*/
+    padding-left: 15px;
     height: 62px;
     background-color: rgba(36,41,46,1);
     z-index:999;

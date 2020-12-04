@@ -25,7 +25,7 @@
     name: "articleBox",
     data () {
       return {
-        len: 6,
+        len: 10,
       }
     },
     // 拿到从父组件传来的值，动态更新子组件的信息，重复利用
@@ -36,7 +36,7 @@
     ],
     methods: {
       focus:function (item) {
-        // console.log(item.id);
+        // console.log("item.id: "+item.id);
         // console.log(this.page);
         this.$router.push({
           path:'/articleDetails',
@@ -53,7 +53,7 @@
     },
     created() {
       // this.$set(this.articleList);
-      console.log("zujian : "+this.articleList[0].id)
+      // console.log("zujian : "+this.articleList[0].id)
     },
     watch:{
       articleList: {
@@ -87,19 +87,20 @@
   /*}*/
   .articleCover{
     height: 100%;
-    margin-left: 5px;
+    /*margin-left: 5px;*/
   }
   .articleTitle{
     display: inline-block;
     position: absolute;
     top: 10%;
-    margin-left: 10px;
-    width: 85%;
-    height: 35%;
+    width: 80%;
+    height: 29%;
     overflow: hidden;
+    margin: 0;
+    margin-left: 10px;
   }
   .articleMsg{
-    width: 85%;
+    width: 75%;
     height: 30%;
     display: inline-block;
     position: absolute;

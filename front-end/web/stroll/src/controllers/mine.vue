@@ -84,46 +84,9 @@
     data () {
       return {
         page:"mine",
-        msg:{
-          // id:"0",
-          nickname:"王明明",
-          avatar:require("../assets/logo.png"),
-          article:26,
-          drawing:5,
-          likeNum:31,
-          sign:"好好学习，天天向上"
-        },
+        msg:{},
         activeIndex: '1',
-        articleList:[
-          {
-            id:1,
-            cover:require("../assets/logo.png"),
-            title:"Python之父，现在成为微软打工人",
-            nickname:"小明",
-            avatar:require("../assets/logo.png"),
-            dateTime:"2020-11-13",
-            likeNum:232,
-            comment:56,
-            introduction:"当程序员开始诉控996加班时，中国多款浏览器竟然匪夷所思地禁止访问",
-            status:0,
-            classifyName:"互联网",
-            // mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481592000.md"
-          },
-          {
-            id:2,
-            cover:require("../assets/logo.png"),
-            title:"如何看待马云 4 月 11 日在内外直播中将 996 称为「修来的福报」？",
-            nickname:"小红",
-            avatar:require("../assets/logo.png"),
-            dateTime:"2020-11-10",
-            likeNum:60,
-            comment:12,
-            introduction:"4月11日内外直播中，在被问及如何看待996.icu事件时，马云主要提出了一下三个观点： 马云谈996 1. 能996是你们的幸福 ",
-            status:0,
-            classifyName:"互联网",
-            // mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481596000.md"
-          },
-        ],
+        articleList:[],
         len: 8,
         tag: 1,
         tagPath: "1-1",
@@ -165,7 +128,7 @@
         }
       },
       initImgsArr (n, m) {   //初始化图片数组的方法，把要加载的图片装入
-        var arr = []
+        var arr = [];
         for (var i = n; i < m; i++) {
           arr.push({
             cover: require(`../assets/${i + 1}.jpg`),
@@ -178,6 +141,20 @@
             likeNum: 819358248421784,
             comment: -6653595630801168,
           })
+          // //获取我的手绘
+          // this.$http.get('/api/person/drawing',{
+          //   params:{
+          //     key:"",
+          //     classify:"",
+          //     page:1,
+          //   }
+          // }).then(function(res){
+          //   console.log("！！： "+JSON.stringify(res));
+          //   // that.articleList = res.data.drawing;
+          //   arr.push(res.data.drawing)
+          // }).catch(function(){
+          //   console.log("服务器异常");
+          // });
         }
         return arr
       },
@@ -196,6 +173,54 @@
           }
         })
       }
+    },
+    created() {
+      let that = this;
+
+      //得到个人信息
+      this.$http.get('/api/person/info')
+        .then(function(res){
+          // console.log("信息： "+JSON.stringify(res));
+          that.msg = res.data;
+        }).catch(function(){
+          console.log("服务器异常");
+        });
+
+      //获取我的文章列表
+      this.$http.get('/api/person/article',{
+        params:{
+          key:"",
+          classify:"",
+          page:1,
+        }
+      }).then(function(res){
+        // console.log("！！： "+JSON.stringify(res));
+        that.articleList = res.data.articles;
+      }).catch(function(){
+        console.log("服务器异常");
+      });
+
+
+      // fetch('/api/person/info',{
+      //   headers:{
+      //     'content-type': 'application/json',
+      //     'Access-Control-Allow-Origin': '*',
+      //     'Authorization': 'Bearer ' + localStorage.getItem('token')
+      //   },
+      //   method:'GET',
+      //   mode:'cors'
+      // }).then(function (response) {
+      //     console.log(response);
+      //     let json = response.json();
+      //   console.log("json: "+json)
+      //     return json;
+      //   }).then(function (data) {
+      //   console.log("data: "+data)
+      //   console.log("msg: "+that.msg)
+      //     that.msg = data.data;
+      //   console.log("msg2: "+that.msg)
+      //   })
+
     },
     mounted() {
       $("#Scroll").scroll(function(event){

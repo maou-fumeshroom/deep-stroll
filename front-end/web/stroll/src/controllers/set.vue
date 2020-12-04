@@ -20,9 +20,29 @@
       methods:{
         changeActive(mode){
           this.$emit('changeActive',mode);
-          localStorage.setItem("activeMode", mode)
+          localStorage.setItem("activeMode", mode);
+
+          //获取主题
+          this.$http.get('/api/config/theme',{
+            params:{
+              id:2,
+            }
+          }).then(function(res){
+            console.log("！！： "+JSON.stringify(res));
+          }).catch(function(){
+            console.log("服务器异常");
+          });
         }
-      }
+      },
+      created() {
+        let that = this;
+        //获取主题列表
+        this.$http.get('/api/config/themeList').then(function(res){
+          // console.log("！！： "+JSON.stringify(res));
+        }).catch(function(){
+          console.log("服务器异常");
+        });
+      },
     }
 </script>
 

@@ -7,8 +7,8 @@
         <el-input class="inputPass" placeholder="请输入旧密码" v-model="oldPassword" show-password/>
         <el-input class="inputPass" placeholder="请输入新密码" v-model="newPassword1" show-password/>
         <el-input class="inputPass" placeholder="确认新密码" v-model="newPassword2" show-password/>
-        <el-button type="primary" @click="savePass">保存</el-button>
-        <el-button @click="cancelPass">取消</el-button>
+        <el-button type="primary" @click="savePwd">保存</el-button>
+        <el-button @click="cancelPwd">取消</el-button>
       </div>
     </div>
 
@@ -20,13 +20,13 @@
       </div>
 
       <div id="pageRight">
-        <el-input class="inputBox" placeholder="请输入内容" v-model="msg.nickname" clearable/>
-        <el-radio class="radio" v-model="msg.sex" label="0">女</el-radio>
-        <el-radio v-model="msg.sex" label="1">男</el-radio>
+        <el-input class="inputBox" placeholder="请输入昵称" v-model="msg.nickname" clearable/>
+        <el-radio class="radio" v-model="msg.sex" :label = '0'>女</el-radio>
+        <el-radio v-model="msg.sex" :label = '1'>男</el-radio>
         <br/>
-        <el-input class="inputBox" placeholder="请输入内容" v-model="msg.telephone" clearable/>
-        <el-input class="inputBox" placeholder="请输入内容" v-model="msg.e_mail" clearable/>
-        <el-input class="inputBox" placeholder="请输入内容" v-model="msg.sign" clearable/>
+        <el-input class="inputBox" placeholder="请输入电话号码" v-model="msg.telephone" clearable/>
+        <el-input class="inputBox" placeholder="请输入邮箱" v-model="msg.email" clearable/>
+        <el-input class="inputBox" placeholder="请输入个性签名" v-model="msg.sign" clearable/>
         <el-button class="cancelButton" @click="cancel">取消</el-button>
       </div>
     </div>
@@ -39,15 +39,7 @@
     name: "EditInformation",
     data () {
       return {
-        msg:{
-          // id:"0",
-          nickname:"王明明",
-          avatar:require("../assets/logo.png"),
-          sex:'1',
-          telephone:"13313131133",
-          e_mail:"14259763@qq.com",
-          sign:"好好学习，天天向上",
-        },
+        msg:{},
         oldPassword:"",
         newPassword1:"",
         newPassword2:""
@@ -59,7 +51,20 @@
         mask.style.display = "block";
       },
       save(){
-        console.log(this.msg);
+        let that = this;
+        //修改个人信息接口
+        this.$http.post('/api/person/updateInfo',{
+          sex:this.msg.sex,
+          nickname:this.msg.nickname,
+          sign: this.msg.sign,
+          telephone: this.msg.telephone,
+          avatar:this.msg.avatar,
+          email: this.msg.email
+        },{emulateJSON: true})
+          .then(function(res){
+            // console.log(res);
+            // console.log("！！： "+JSON.stringify(res));
+          });
         this.$router.push({
           path:'/mine',
         })
@@ -69,15 +74,26 @@
           path:'/mine',
         })
       },
-      savePass(){
+      savePwd(){
         var mask = document.getElementById("mask");
         mask.style.display = "none";
       },
-      cancelPass(){
+      cancelPwd(){
         var mask = document.getElementById("mask");
         mask.style.display = "none";
       }
-    }
+    },
+    created() {
+      let that = this;
+      //得到个人全部信息
+      this.$http.get('/api/person/totalInfo')
+        .then(function(res){
+          // console.log("！！： "+JSON.stringify(res));
+          that.msg = res.data;
+        }).catch(function(){
+        console.log("服务器异常");
+      });
+    },
   }
 </script>
 

@@ -86,16 +86,32 @@
           }, 1000);
         },
         submitLogin(){
-          localStorage.setItem("token", "Smith")
-          this.$router.push({
-            path:'/article'
-          })
+          let that = this;
+          //登录接口
+          this.$http.post('/api/login',{
+            telephone:this.loginForm.account,
+            pwd:this.loginForm.password,
+          },{emulateJSON: true})
+            .then(function(res){
+              // console.log(res)
+              const token = res.data.token;
+              // console.log(token)
+              // localStorage.setItem("token", "Smith");
+              localStorage.setItem("token",token)
+              // console.log("????: "+localStorage.getItem('token'))
+              that.$router.push({
+                path:'/article'
+              })
+            })
+
         },
         submitRegister(){
           this.$http.post('1111',{
             a:this.a,
             b:this.b
           })
+
+
         }
       }
     }

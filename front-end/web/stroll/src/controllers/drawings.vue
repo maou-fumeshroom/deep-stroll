@@ -24,6 +24,30 @@
         vueWaterfallEasy
       },
       created () {
+        let that = this;
+        //获取手绘分类
+        this.$http.get('/api/drawing/classify')
+          .then(function(res){
+            // console.log("！！： "+JSON.stringify(res));
+            that.msg = res.data;
+          }).catch(function(){
+          console.log("服务器异常");
+        });
+
+        //获取手绘列表
+        this.$http.get('/api/drawing/search',{
+          params:{
+            key:"",
+            classify:"",
+            page:1,
+            status:0,
+          }
+        }).then(function(res){
+          // console.log("！！： "+JSON.stringify(res));
+        }).catch(function(){
+          console.log("服务器异常");
+        });
+
         this.imgsArr = this.initImgsArr(0, 10)       //初始化第一次（即页面加载完毕时）要加载的图片数据
         this.fetchImgsArr = this.initImgsArr(10, 18) // 模拟每次请求的下一批新的图片的数据数据
       },
