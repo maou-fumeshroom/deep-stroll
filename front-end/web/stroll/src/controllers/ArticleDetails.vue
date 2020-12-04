@@ -2,6 +2,7 @@
   <div id="articleDetails" v-if="loadingOK">
     <!--    文章详情页面上半部分，文章的信息-->
     <i class="el-icon-arrow-left" @click="back"/>
+    <i class="el-icon-delete delButton" @click="deleteArticle"></i>
     <div id="message">
       <h2 class="title">{{articleMsg.title}}</h2>
       <p class="introduction">{{articleMsg.introduction}}</p>
@@ -27,6 +28,7 @@
 </template>
 
 <script>
+  import {client} from "../utils/alioss"
   const axios = require('axios');
   import VueMarkdown from "vue-markdown";
   export default {
@@ -71,6 +73,57 @@
           // 返回点入的父页面
           path:'/' + this.backPage,
         })
+      },
+      deleteArticle(){
+        //删除文章
+        // this.$http.post('/api/person/works/delete',{
+        //   id:this.articleMsg.id,
+        //   type:0,
+        // }).then(function(res){
+        //   console.log("！！： "+JSON.stringify(res));
+        // }).catch(function(){
+        //   console.log("服务器异常");
+        // });
+
+        // this.$http.post('/api/person/works/delete',{
+        //     id:this.articleMsg.id,
+        //     type:0,
+        // },{emulateJSON: true})
+        //   .then(function(res){
+        //     console.log("！！： "+JSON.stringify(res));
+        //   });
+
+        //删除文章链接
+        // let temp = this.articleMsg.fileUrl.split("/");
+        // let urlName = temp[3];
+        // client().delete(urlName).then(
+        //   result=>{
+        //     console.log(result)
+        //   }
+        // )
+
+        //删除封面链接
+      },
+      getArticleContent(){
+        // this.$http.get(this.articleMsg.fileUrl).then((response) => {
+        //   this.htmlMD = response;
+        //   console.log("this.htmlMD: "+ this.htmlMD)
+        //   this.loadingOK = true;
+        // });
+        let that = this;
+        fetch(that.articleMsg.fileUrl,{
+          method:'GET',
+          mode:'cors'
+        }).then(function (response) {
+            // console.log(response);
+            let text = response.text();
+            // console.log("text: "+text)
+            return text;
+          }).then(function (data) {
+            // console.log(data)
+            that.htmlMD = data;
+            that.loadingOK = true;
+          })
       }
     },
     created() {
@@ -94,11 +147,12 @@
         that.articleMsg = res.data;
         // console.log("nickname: "+ that.articleMsg.author.nickname)
         // console.log("url: "+ that.articleMsg.fileUrl)
-        that.$http.get(that.articleMsg.fileUrl).then((response) => {
-          that.htmlMD = response;
-          console.log("this.htmlMD: "+ that.htmlMD)
-          that.loadingOK = true;
-        });
+        that.getArticleContent();
+        // that.$http.get(that.articleMsg.fileUrl).then((response) => {
+        //   that.htmlMD = response;
+        //   console.log("this.htmlMD: "+ that.htmlMD)
+        //   that.loadingOK = true;
+        // });
       }).catch(function(){
         console.log("服务器异常");
       });
@@ -114,6 +168,12 @@
     position:relative;
   }
   .el-icon-arrow-left{
+    cursor: pointer;
+    margin: 5px 10px 0;
+  }
+  .delButton{
+    float: right;
+    margin: 5px 15px 0;
     cursor: pointer;
   }
   /*文章详情页面上半部分，文章的信息*/

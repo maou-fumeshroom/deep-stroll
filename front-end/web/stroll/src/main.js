@@ -39,27 +39,21 @@ axios.interceptors.request.use((config) => {
 })
 
 
-// axios.interceptors.response.use(
-//   res => {
-//     if (res.data && res.data.result.code === 1){
-//       return res.data
-//     } else if (res.data && res.data.result.code === 0){
-//       Vue.prototype.$message.error(res.data.result.message)
-//     } else {
-//       Vue.prototype.$message.error('系统出错')
-//     }
-//   }, err => {
-//     console.log(err)
-//     Vue.prototype.$message.error('请求失败，请稍后重试');
-//     return Promise.resolve(err)
-//   })
 axios.interceptors.response.use(
   res => {
-    return res.data;
+    if (res.data && res.data.result.code === 1){
+      return res.data
+    } else if (res.data && res.data.result.code === 0){
+      Vue.prototype.$message.error(res.data.result.message)
+    } else {
+      Vue.prototype.$message.error('系统出错')
+    }
   }, err => {
-
+    console.log(err)
+    Vue.prototype.$message.error('请求失败，请稍后重试');
     return Promise.resolve(err)
   })
+
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
