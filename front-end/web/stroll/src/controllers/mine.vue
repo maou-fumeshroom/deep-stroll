@@ -66,7 +66,7 @@
 
     </div>
 
-    <img src="../assets/logo.png" id="addButton" @click="$router.push('/release')"/>
+    <img src="../assets/icon/addIcon.png" id="addButton" @click="$router.push('/release')"/>
   </div>
 </template>
 
@@ -115,7 +115,7 @@
         imgsArr: [],         //存放所有已加载图片的数组（即当前页面会加载的所有图片）
         fetchImgsArr: [],    //存放每次滚动时下一批要加载的图片的数组
         isbottom:false,
-
+        pageNum:1,
       }
     },
     methods: {
@@ -123,46 +123,43 @@
         this.tag = keyPath[0] ;
         this.tagPath = keyPath[1] ;
         if(this.tagPath  === '1-2'){
-          this.imgsArr = this.initImgsArr(0, 10)       //初始化第一次（即页面加载完毕时）要加载的图片数据
-          this.fetchImgsArr = this.initImgsArr(10, 18) // 模拟每次请求的下一批新的图片的数据数据
+          this.getlist()
         }
       },
-      initImgsArr (n, m) {   //初始化图片数组的方法，把要加载的图片装入
-        var arr = [];
-        for (var i = n; i < m; i++) {
-          arr.push({
-            cover: require(`../assets/${i + 1}.jpg`),
-            link: '',
-            info: '一些图片描述文字',
-            id: i+'0'+i,
-            title: "一些图片描述文字一些图片描述文字一些图片描述文字",
-            avatar: require(`../assets/logo.png`),
-            dateTime: "2000/08/20 10:10:10",
-            likeNum: 819358248421784,
-            comment: -6653595630801168,
-          })
-          // //获取我的手绘
-          // this.$http.get('/api/person/drawing',{
-          //   params:{
-          //     key:"",
-          //     classify:"",
-          //     page:1,
-          //   }
-          // }).then(function(res){
-          //   console.log("！！： "+JSON.stringify(res));
-          //   // that.articleList = res.data.drawing;
-          //   arr.push(res.data.drawing)
-          // }).catch(function(){
-          //   console.log("服务器异常");
-          // });
-        }
-        return arr
+      getlist(){
+        let _this = this
+        this.pageNum = 1
+        this.imgsArr = []
+        this.$http.get('/api/person/drawing',{
+          params:{
+            key:"",
+            classify:"",
+            page:1,
+          }
+        }).then(function(res){
+          _this.imgsArr = res.data.drawing
+        }).catch(function(){
+          console.log("服务器异常");
+        });
       },
       fetchImgsData () {    //获取新的图片数据的方法，用于页面滚动满足条件时调用
-        if (this.fetchImgsArr.length === 0){
-          this.isbottom=false;
-        }
-        this.imgsArr = this.imgsArr.concat(this.fetchImgsArr)   //数组拼接，把下一批要加载的图片放入所有图片的数组中
+        let _this = this
+        this.pageNum ++
+        this.$http.get('/api/person/drawing',{
+          params:{
+            key:"",
+            classify:"",
+            page:this.pageNum,
+          }
+        }).then(function(res){
+          _this.fetchImgsArr = res.data.drawing
+          if (_this.fetchImgsArr.length === 0){
+            _this.isbottom=false
+          }
+          _this.imgsArr = _this.imgsArr.concat(_this.fetchImgsArr)   //数组拼接，把下一批要加载的图片放入所有图片的数组中
+        }).catch(function(){
+          console.log("服务器异常");
+        });
       },
       gotoDetail(val){
         let drawingsId = this.imgsArr[val].id
@@ -172,6 +169,22 @@
             drawingsId:drawingsId
           }
         })
+      },
+      getArticleList(){
+        let that = this;
+        //获取我的文章列表
+        this.$http.get('/api/person/article',{
+          params:{
+            key:"",
+            classify:"",
+            page:1,
+          }
+        }).then(function(res){
+          // console.log("！！： "+JSON.stringify(res));
+          that.articleList = res.data.articles;
+        }).catch(function(){
+          console.log("服务器异常");
+        });
       }
     },
     created() {
@@ -183,22 +196,9 @@
           // console.log("信息： "+JSON.stringify(res));
           that.msg = res.data;
         }).catch(function(){
-          console.log("服务器异常");
-        });
-
-      //获取我的文章列表
-      this.$http.get('/api/person/article',{
-        params:{
-          key:"",
-          classify:"",
-          page:1,
-        }
-      }).then(function(res){
-        // console.log("！！： "+JSON.stringify(res));
-        that.articleList = res.data.articles;
-      }).catch(function(){
         console.log("服务器异常");
       });
+       that.getArticleList();
 
 
       // fetch('/api/person/info',{
@@ -237,21 +237,32 @@
         }
       });
     },
+    // watch:{
+    //   articleList: {
+    //     handler(newval, old) {
+    //       console.log("ArticleList更新");
+    //       this.getArticleList();
+    //     },
+    //     immediate: true,
+    //     deep: true,
+    //   }
+    // }
   }
 </script>
 
 <style scoped>
   #myPage{
-    height: 100%;
+    height: 99.9%;
     width: 76%;
     margin: 0 12% 0 12%;
-    background-color: #fff;
+    /*background-color: #fff;*/
+    background-color: #ffffff87;
     position: absolute;
   }
   /*页面左半部分，个人信息*/
   #myInformation{
     float: left;
-    height: 100%;
+    /*height: 100%;*/
     width: 30%;
     text-align: center;
     position:relative;
@@ -285,7 +296,8 @@
   .edit{
     width: 280px;
     cursor: pointer;
-    background: #f8f9fa;
+    /*background: #f8f9fa;*/
+    background: #f8f9fa91;
   }
   /*页面右半部分*/
   #myContainer{
@@ -295,20 +307,27 @@
     padding-top: 5%;
   }
 
+  /deep/ .el-menu{
+    background-color: rgba(255, 255, 255, 0);
+  }
+
   #Scroll{
-    height: 635px;
-    overflow: auto;
+    height: 627px;
+    /*overflow: auto;*/
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   #addButton{
     cursor: pointer;
-    border: 1px solid #cccccc;
+    border: 1px solid #cccccc96;
     border-radius: 100%;
     width: 70px;
     height: 70px;
     position: fixed;
     bottom: 5%;
     right: 15%;
+    background: #ffffff8c;
   }
 
   /deep/ #articleUl{

@@ -2,7 +2,7 @@
   <div id="articleDetails" v-if="loadingOK">
     <!--    文章详情页面上半部分，文章的信息-->
     <i class="el-icon-arrow-left" @click="back"/>
-    <i class="el-icon-delete delButton" @click="deleteArticle"></i>
+    <i class="el-icon-delete delButton" @click="deleteArticle"/>
     <div id="message">
       <h2 class="title">{{articleMsg.title}}</h2>
       <p class="introduction">{{articleMsg.introduction}}</p>
@@ -64,7 +64,8 @@
         userComment:"",
         backPage:"",
         htmlMD:"",
-        loadingOK:false
+        loadingOK:false,
+        articleID:"",
       }
     },
     methods: {
@@ -75,6 +76,7 @@
         })
       },
       deleteArticle(){
+
         //删除文章
         // this.$http.post('/api/person/works/delete',{
         //   id:this.articleMsg.id,
@@ -85,24 +87,40 @@
         //   console.log("服务器异常");
         // });
 
-        // this.$http.post('/api/person/works/delete',{
-        //     id:this.articleMsg.id,
-        //     type:0,
-        // },{emulateJSON: true})
-        //   .then(function(res){
-        //     console.log("！！： "+JSON.stringify(res));
-        //   });
+        console.log("idididi: "+ this.articleID)
+        this.$http.post('/api/person/works/delete',{
+            id:this.articleID,
+            type:0,
+        },{emulateJSON: true})
+          .then(function(res){
+            console.log("！！： "+JSON.stringify(res));
+          });
 
         //删除文章链接
-        // let temp = this.articleMsg.fileUrl.split("/");
-        // let urlName = temp[3];
-        // client().delete(urlName).then(
-        //   result=>{
-        //     console.log(result)
-        //   }
-        // )
+        let temp1 = this.articleMsg.fileUrl.split("/");
+        console.log(temp1[3])
+        let urlName1 = temp1[3];
+        client().delete(urlName1).then(
+          result=>{
+            console.log("1"+result)
+          }
+        )
 
         //删除封面链接
+        let temp2 = this.articleMsg.cover.split("/");
+        console.log(temp2[3])
+        let urlName2 = temp2[3];
+        client().delete(urlName2).then(
+          result=>{
+            console.log("2"+result)
+          }
+        )
+
+        this.$router.push({
+          // 返回点入的父页面
+          path:'/' + this.backPage,
+        })
+
       },
       getArticleContent(){
         // this.$http.get(this.articleMsg.fileUrl).then((response) => {
@@ -128,7 +146,8 @@
     },
     created() {
       //接收到传来的文章详情信息
-      this.articleMsg.id = this.$route.query.id;
+      // this.articleMsg.id = this.$route.query.id;
+      this.articleID = this.$route.query.id;
       // console.log(" 初始化id："+this.articleMsg.id);
       //接收到传来的返回路径
       this.backPage = this.$route.query.backpage;
@@ -138,15 +157,11 @@
       //获取文章详情
       this.$http.get('/api/article/detail',{
         params:{
-          id:that.articleMsg.id,
+          // id:that.articleMsg.id,
+          id:that.articleID,
         }
       }).then(function(res){
-        // console.log("！！： "+JSON.stringify(res));
-        // console.log("！！： "+JSON.stringify(res.data.author.avatar));
-        // console.log("！！： "+JSON.stringify(res.data.author.nickname));
         that.articleMsg = res.data;
-        // console.log("nickname: "+ that.articleMsg.author.nickname)
-        // console.log("url: "+ that.articleMsg.fileUrl)
         that.getArticleContent();
         // that.$http.get(that.articleMsg.fileUrl).then((response) => {
         //   that.htmlMD = response;
@@ -163,7 +178,8 @@
 <style scoped>
   #articleDetails{
     margin: 62px 15% 0 15%;
-    background-color: #fff;
+    /*background-color: #fff;*/
+    background-color: #ffffffa8;
     height: 100%;
     position:relative;
   }

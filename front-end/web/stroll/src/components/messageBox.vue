@@ -41,7 +41,8 @@
   .messageBox{
     height: 100px;
     position: relative;
-    background: #fff;
+    /*background: #fff;*/
+    background-color: #ffffffa8;
     box-shadow: 1px 3px 10px #65626285;
     cursor: pointer;
     list-style-type: none;

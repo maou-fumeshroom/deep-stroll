@@ -63,7 +63,20 @@
           path:'/'
         })
       }
-    }
+    },
+    created() {
+      let that = this;
+
+      //得到个人基本信息
+      this.$http.get('/api/person/basic')
+        .then(function(res){
+          console.log("信息： "+JSON.stringify(res));
+          console.log(res);
+          that.user = res.data;
+        }).catch(function(){
+        console.log("服务器异常");
+      });
+    },
   }
 </script>
 

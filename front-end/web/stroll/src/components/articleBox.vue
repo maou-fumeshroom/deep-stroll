@@ -26,6 +26,7 @@
     data () {
       return {
         len: 10,
+        deleteID:0,
       }
     },
     // 拿到从父组件传来的值，动态更新子组件的信息，重复利用
@@ -74,7 +75,8 @@
   .articleBox{
     height: 100px;
     position: relative;
-    background: #fff;
+    /*background: #fff;*/
+    background-color: #ffffffa8;
     box-shadow: 1px 3px 10px #65626285;
     cursor: pointer;
     list-style-type: none;

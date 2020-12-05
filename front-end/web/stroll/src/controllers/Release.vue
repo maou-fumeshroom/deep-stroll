@@ -281,7 +281,8 @@
     height: 100%;
     width: 76%;
     margin: 0 12% 0 12%;
-    background-color: #fff;
+    /*background-color: #fff;*/
+    background-color: #ffffffa8;
     position: absolute;
   }
   #nav{
@@ -328,7 +329,7 @@
   }
   /*手绘页面左半*/
   /deep/ .el-upload-dragger {
-    background-color: rgba(204, 204, 204, 0);
+    background-color: #ffffffbd;
     border: 0;
     width: 450px;
     height: 450px;
@@ -356,6 +357,7 @@
     padding: 0;
     border: 1px solid #d9d9d9;
     border-radius: 5px;
+    background-color: #ffffffbd;
   }
   .itemBox{
     width: 130px;
@@ -392,7 +394,17 @@
   }
   /deep/ .el-textarea__inner{
     height: 130px;
+    background-color: #ffffffbd;
   }
+
+  /deep/ .el-input__inner{
+    background-color: #ffffffbd;
+  }
+
+  /deep/ .el-menu{
+    background-color: rgba(255, 255, 255, 0);
+  }
+
   #Button{
     position: absolute;
     bottom: 10%;

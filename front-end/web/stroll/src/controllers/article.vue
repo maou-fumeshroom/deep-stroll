@@ -7,29 +7,29 @@
         <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
           <el-submenu index="1">
             <template slot="title">
-              <span>导航一</span>
+              <span>热门</span>
             </template>
             <el-menu-item-group>
-              <template slot="title">分组1</template>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
+              <template slot="title">我的分类</template>
+              <el-menu-item index="1-1">电影</el-menu-item>
+              <el-menu-item index="1-2">音乐</el-menu-item>
             </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="1-3">选项3</el-menu-item>
+            <el-menu-item-group title="热门">
+              <el-menu-item index="1-3">搞笑</el-menu-item>
             </el-menu-item-group>
             <el-submenu index="1-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="1-4-1">选项1</el-menu-item>
+              <template slot="title">综艺</template>
+              <el-menu-item index="1-4-1">舞蹈</el-menu-item>
             </el-submenu>
           </el-submenu>
           <el-menu-item index="2">
-            <span slot="title">导航二</span>
+            <span slot="title">美食</span>
           </el-menu-item>
           <el-menu-item index="3">
-            <span slot="title">导航三</span>
+            <span slot="title">摄影</span>
           </el-menu-item>
           <el-menu-item index="4">
-            <span slot="title">导航四</span>
+            <span slot="title">艺术</span>
           </el-menu-item>
         </el-menu>
       </el-col>
@@ -42,7 +42,7 @@
     </div>
 
     <div class="pagination">
-      <el-pagination layout="prev, pager, next" :page-count=totalPage @current-change="currentChange" :hide-on-single-page="totalPage === 1"/>
+      <el-pagination layout="prev, pager, next" :total=totalPage  @current-change="currentChange" />
     </div>
 
   </div>
@@ -55,6 +55,9 @@
     components:{
       articleBox,
     },
+    props:[
+      'isDelete'
+    ],
     data () {
       return {
         page:"article",
@@ -145,7 +148,7 @@
         //   }
         // ],
         articleList:[],
-        totalPage:2,
+        totalPage:1,
         currentPage:1,
         // testList:[],
         classifys:{}
@@ -205,6 +208,7 @@
           // console.log("！！： "+res);
             // console.log("！！： "+JSON.stringify(res));
             that.articleList = res.data.articles;
+            that.totalPage = res.data.totalPage
         that.totalPage = res.data.totalPage;
           // console.log("！！： "+that.articleList[0].title);
           console.log("！！： "+that.articleList.length);
@@ -225,6 +229,7 @@
       });
 
       that.getArticles();
+
     },
     mounted() {
       // 监听滑动条
@@ -267,10 +272,11 @@
 
 <style scoped>
   #article{
-    height: 98.9%;
+    height: 100%;
     width: 76%;
     margin: 0 12% 0 12%;
-    background-color: #fff;
+    /*background-color: #fff;*/
+    background-color: #ffffff87;
     position: absolute;
   }
   /*左侧分类选择菜单*/
@@ -281,6 +287,9 @@
   }
   /deep/ .el-col-12 {
     width: 100%;
+  }
+  /deep/ .el-menu{
+    background-color: rgba(204, 204, 204, 0);
   }
   /*右侧文章列表*/
   #articleContainer{
@@ -298,4 +307,16 @@
     left: 52%;
     bottom: 10px;
   }
+
+  /deep/ .el-pager li{
+    background: rgba(255, 255, 255, 0);
+  }
+
+  /deep/ .el-pagination button:disabled{
+    background: rgba(255, 255, 255, 0);
+  }
+
+  /deep/ .el-pagination .btn-next, .el-pagination .btn-prev{
+     background: rgba(255, 255, 255, 0);
+   }
 </style>
