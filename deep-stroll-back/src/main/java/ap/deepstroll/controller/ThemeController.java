@@ -1,13 +1,13 @@
 package ap.deepstroll.controller;
 
-import ap.deepstroll.bo.Result;
-import ap.deepstroll.entity.ThemeEntity;
 import ap.deepstroll.service.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 public class ThemeController {
     @Autowired
@@ -19,6 +19,7 @@ public class ThemeController {
      * @return
      */
     @GetMapping("/api/config/themeList")
+    @PreAuthorize("hasAnyRole('common')")
     public Map<String,Object> userBrowserThemeList(){
         return themeService.userBrowserThemeList();
     }
@@ -29,6 +30,7 @@ public class ThemeController {
      * @return
      */
     @GetMapping("/api/config/theme")
+    @PreAuthorize("hasAnyRole('common')")
     public Map<String,Object> getThemeById(@RequestParam Integer id){
         return themeService.getThemeById(id);
     }

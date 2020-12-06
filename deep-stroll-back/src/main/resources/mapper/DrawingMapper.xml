@@ -17,6 +17,11 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <delete id="realDelete">
+        DELETE FROM drawing
+        WHERE id = #{id} 
+    </delete>
+    
     <insert id="insertDrawing" parameterType="ap.deepstroll.entity.DrawingEntity">
         INSERT INTO
         drawing(

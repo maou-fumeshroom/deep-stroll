@@ -21,6 +21,7 @@ public class GetDetailArticleVO implements ViewObject {
     
     private DetailAuthorBO author;
     private String title;
+    private String cover;
     private String introduction;
     private String fileUrl;
     private Integer likeNum;
@@ -28,7 +29,7 @@ public class GetDetailArticleVO implements ViewObject {
     private Integer isCollect;
     private String[] labels;
     private Integer type = 0;
-    private Timestamp dateTime;
+    private String dateTime;
     private Integer status;
     private String classifyName;
     

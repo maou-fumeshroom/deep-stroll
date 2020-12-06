@@ -16,6 +16,7 @@ import ap.deepstroll.entity.*;
 import ap.deepstroll.mapper.ClassifyDrawingMapper;
 import ap.deepstroll.mapper.DrawingMapper;
 import ap.deepstroll.mapper.UserMapper;
+import ap.deepstroll.utils.DateFormatUtil;
 import ap.deepstroll.vo.request.DrawingVO;
 import ap.deepstroll.vo.request.WorkVO;
 import ap.deepstroll.vo.response.GetDetailDrawingVO;
@@ -89,7 +90,7 @@ public class DrawingService extends WorkService {
                                    .introduction(drawingEntity.getIntroduction())
                                    .avatar(author.getAvatar())
                                    .nickname(author.getNickname())
-                                   .dateTime(drawingEntity.getCreateTime())
+                                   .dateTime(DateFormatUtil.getDate(drawingEntity.getCreateTime()))
                                    .likeNum(0)
                                    .comment(0)
                                    .status(drawingEntity.getState())
@@ -104,7 +105,7 @@ public class DrawingService extends WorkService {
                                               classifyId, 
                                               state, 
                                               null);
-            Integer totalPage = (int)Math.ceil(totalLine.doubleValue() / pageSize.doubleValue());
+            Integer totalPage = totalLine;
             SearchWorkDrawingVO vo = SearchWorkDrawingVO.builder()
                                                         .drawing(drawingBOs.toArray(new SearchDrawingBO[drawingBOs.size()]))
                                                         .totalPage(totalPage)
@@ -125,6 +126,11 @@ public class DrawingService extends WorkService {
     public ResponseVO getDetail(Long id) {
         try {
             DrawingEntity drawingEntity = drawingMapper.queryDrawingById(id);
+            if (drawingEntity == null) {
+                return ResponseVO.builder()
+                             .result(new Result("手绘已删除或不存在"))
+                             .build();
+            }
             UserEntity authorEntity = userMapper.queryUserById(drawingEntity.getAuthorId());
             String classifyName = classifyDrawingMapper.queryClassifyById(drawingEntity.getClassifyId()).getName();
             String[] images = drawingEntity.getUrl().split(", ");
@@ -143,7 +149,7 @@ public class DrawingService extends WorkService {
                                                       .isCollect(0)
                                                       .labels(null)
                                                       .type(1)
-                                                      .dateTime(drawingEntity.getCreateTime())
+                                                      .dateTime(DateFormatUtil.getDate(drawingEntity.getCreateTime()))
                                                       .status(drawingEntity.getState())
                                                       .classifyName(classifyName)
                                                       .build();
@@ -174,7 +180,7 @@ public class DrawingService extends WorkService {
                                .cover(cover)
                                .title(drawingEntity.getTitle())
                                .introduction(drawingEntity.getIntroduction())
-                               .dateTime(drawingEntity.getCreateTime())
+                               .dateTime(DateFormatUtil.getDate(drawingEntity.getCreateTime()))
                                .likeNum(0)
                                .comment(0)
                                .status(drawingEntity.getState())
@@ -183,7 +189,7 @@ public class DrawingService extends WorkService {
             }
             
             Integer totalLine = drawingMapper.queryDrawingNumByAuthorId(id, title, labels, classifyId, null);
-            Integer totalPage = (int)Math.ceil(totalLine.doubleValue() / pageSize.doubleValue());
+            Integer totalPage = totalLine;
             MyWorksDrawingVO vo = MyWorksDrawingVO.builder()
                                                 .drawing(drawingBOs.toArray(new MyDrawingBO[drawingBOs.size()]))
                                                 .totalPage(totalPage)
@@ -252,7 +258,8 @@ public class DrawingService extends WorkService {
     public Map<String, Result> deleteWork(Long id, Integer type) {
         Map<String, Result> response = new HashMap<>();
         try {
-            drawingMapper.updateDrawingState(id, 1);
+            //drawingMapper.updateDrawingState(id, 1);
+            drawingMapper.realDelete(id);
             Result result = new Result();
             response.put("result", result);
         } catch (Exception e) {

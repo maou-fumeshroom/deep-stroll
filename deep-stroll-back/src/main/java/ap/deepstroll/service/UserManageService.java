@@ -69,7 +69,7 @@ public class UserManageService {
 //            }
             List<UserEntity> preusers = userMapper.queryUser(telephone, nickname, status, vip, page, PAGE_SIZE);
             List< UserBO>  users = UserBO.transToVo(preusers);
-            Integer totalPage = (userMapper.queryUserNum(telephone,nickname,status,vip)/PAGE_SIZE)+1;
+            Integer totalPage = userMapper.queryUserNum(telephone,nickname,status,vip);
             Result result = new Result();
             data.put("totalPage",totalPage);
             data.put("users",users);

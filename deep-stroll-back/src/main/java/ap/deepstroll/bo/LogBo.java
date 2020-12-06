@@ -1,6 +1,7 @@
 package ap.deepstroll.bo;
 
 import ap.deepstroll.entity.LogEntity;
+import ap.deepstroll.utils.DateFormatUtil;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class LogBo {
     public static List<LogBo> transLogEntityToBo(List<LogEntity> logs){
         ArrayList<LogBo> logBos = new ArrayList<>();
         for(LogEntity le: logs){
-            LogBo bo = LogBo.builder().dataTime(le.getCreateTime().toString())
+            LogBo bo = LogBo.builder().dataTime(DateFormatUtil.getDate(le.getCreateTime()))
                                         .content(le.getContent())
                                         .adminId(le.getAdminId().toString()).build();
             logBos.add(bo);

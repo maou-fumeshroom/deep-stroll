@@ -19,6 +19,8 @@ public interface AdminMapper {
      */
     public Integer insertAdmin(AdminEntity adminEntity);
 
+    public Integer deleteAdmin(@Param("id")Integer id);
+
     /**
      * 通过账户查询管理员
      * @author mxf

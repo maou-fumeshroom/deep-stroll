@@ -29,7 +29,7 @@ public class GetDetailDrawingVO implements ViewObject {
     private Integer isCollect;
     private String[] labels;
     private Integer type = 1;
-    private Timestamp dateTime;
+    private String dateTime;
     private Integer status;
     private String classifyName;
     

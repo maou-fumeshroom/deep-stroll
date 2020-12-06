@@ -178,8 +178,13 @@ public class AdminService {
      */
     public Map<String,Result> deleteAdmin(Map<String,Integer> req){
         Map<String,Result> response = new HashMap<>();
+        if (req.get("id") == Integer.valueOf(1)) {
+            Result result =  new Result("forbidden");
+                response.put("result",result);
+        }
         try{
-            int ans =  adminMapper.updateAdminState(req.get("id"),Admin_INVALID_STATE);
+            int ans = adminMapper.deleteAdmin(req.get("id"));
+            // int ans =  adminMapper.updateAdminState(req.get("id"),Admin_INVALID_STATE);
             if(ans==1){
                 Result result =  new Result();
                 response.put("result",result);

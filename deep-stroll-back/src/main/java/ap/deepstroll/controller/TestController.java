@@ -2,6 +2,7 @@ package ap.deepstroll.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,7 @@ import ap.deepstroll.vo.request.RegisterRequestVO;
 import ap.deepstroll.vo.request.UserLogInRequestVO;
 import ap.deepstroll.vo.response.ResponseVO;
 
+@CrossOrigin
 @RestController
 public class TestController {
 
@@ -47,7 +49,7 @@ public class TestController {
     }
     
     @PostMapping("/api/file")
-    @PreAuthorize("hasRole('common')")
+    @PreAuthorize("hasAnyRole('common','chiefAdmin','themeAdmin')")
     public ResponseVO uploadFile(@RequestParam MultipartFile file) {
         return fileService.uploadFile(file);
     }

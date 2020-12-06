@@ -2,7 +2,6 @@ package ap.deepstroll.controller;
 
 import ap.deepstroll.annotation.OperationLogAnnotation;
 import ap.deepstroll.bo.Result;
-import ap.deepstroll.entity.AdminEntity;
 import ap.deepstroll.service.AdminService;
 import ap.deepstroll.service.UserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 public class AdminController {//管理员管理
     @Autowired

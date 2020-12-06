@@ -1,23 +1,17 @@
 package ap.deepstroll.controller;
 
 import ap.deepstroll.bo.Result;
-import ap.deepstroll.bo.UserBO;
-import ap.deepstroll.entity.UserEntity;
 import ap.deepstroll.service.UserService;
 import ap.deepstroll.utils.JwtTokenUtil;
 import ap.deepstroll.vo.request.UserVo;
-import org.apache.http.Header;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-
+@CrossOrigin
 @RestController
 public class UserController {
     @Autowired

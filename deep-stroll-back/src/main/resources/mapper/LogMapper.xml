@@ -29,6 +29,7 @@
             content,
             create_time
         FROM log
+        ORDER BY id DESC
         LIMIT #{startIndex}, #{pageSize}
     </select>
 

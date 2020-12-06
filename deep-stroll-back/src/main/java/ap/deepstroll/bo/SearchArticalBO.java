@@ -23,7 +23,7 @@ public class SearchArticalBO implements BusinessObject {
     private String introduction;
     private String avatar;
     private String nickname;
-    private Timestamp dateTime;
+    private String dateTime;
     private Integer likeNum;
     private Integer comment;
     private Integer status;
