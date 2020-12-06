@@ -87,14 +87,14 @@
       submitLogin(){
         let that = this;
         //登录接口
-        console.log(this.loginForm)
+        // console.log(this.loginForm)
         this.$http.post('/api/login',{
           telephone:this.loginForm.account,
           // telephone:this.loginForm.phone,
           pwd:this.loginForm.password,
         },{emulateJSON: true})
           .then(function(res){
-            // console.log(res)
+            console.log(res)
             const token = res.data.token;
             localStorage.setItem("token",token)
             that.$http.get(`/api/config/themeList`).then(res => {
