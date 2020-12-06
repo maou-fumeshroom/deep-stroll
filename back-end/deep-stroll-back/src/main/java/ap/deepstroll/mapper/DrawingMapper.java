@@ -20,6 +20,8 @@ public interface DrawingMapper {
      */
     public Integer insertDrawing(DrawingEntity drawingEntity);
 
+    public Integer realDelete(@Param("id")Long id);
+
     public List<DrawingEntity> queryDrawingByAuthorId(
         @Param("authorId")Long id,
         @Param("title")String title,

@@ -1,8 +1,5 @@
 package ap.deepstroll.controller;
 
-
-import ap.deepstroll.bo.Result;
-import ap.deepstroll.entity.ArticleEntity;
 import ap.deepstroll.service.ArticleService;
 import ap.deepstroll.utils.JwtTokenUtil;
 import ap.deepstroll.vo.request.ArticleVO;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 public class ArticleController {
     @Autowired
@@ -33,7 +31,7 @@ public class ArticleController {
     public ResponseVO getDetail(@RequestParam Long id){return articleService.getDetail(id);}
 
     //分类浏览
-    @GetMapping("/api/artile/search")
+    @GetMapping("/api/article/search")
     @PreAuthorize("hasAnyRole('common','chiefAdmin','workAdmin')")
     public ResponseVO searchWork(@RequestParam Integer page,
                                          @RequestParam(required = false) String key,

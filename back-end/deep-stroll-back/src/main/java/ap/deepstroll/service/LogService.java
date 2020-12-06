@@ -41,7 +41,7 @@ public class LogService {
             page = (page-1)* PAGE_SIZE;
             List<LogEntity> preLogs = logMapper.queryLog(page,PAGE_SIZE);
             List<LogBo> logs =LogBo.transLogEntityToBo(preLogs);
-            Integer totalPage = (logMapper.queryLogNum()/PAGE_SIZE)+1;
+            Integer totalPage = logMapper.queryLogNum();
             data.put("log",logs);
             data.put("totalPage",totalPage);
             Result result = new Result();

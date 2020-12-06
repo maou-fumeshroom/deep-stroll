@@ -18,6 +18,11 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <delete id="realDelete">
+        DELETE FROM article
+        WHERE id = #{id} 
+    </delete>
+    
     <insert id="insertArticle" parameterType="ap.deepstroll.entity.ArticleEntity">
         INSERT INTO
         article(

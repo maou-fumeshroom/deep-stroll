@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import ap.deepstroll.bo.Result;
-import ap.deepstroll.bo.UserBO;
+
 import ap.deepstroll.entity.ArticleEntity;
 import ap.deepstroll.entity.DrawingEntity;
 import ap.deepstroll.entity.UserEntity;
@@ -13,7 +13,7 @@ import ap.deepstroll.mapper.ArticleMapper;
 import ap.deepstroll.mapper.DrawingMapper;
 import ap.deepstroll.mapper.UserMapper;
 import ap.deepstroll.vo.request.UserVo;
-import org.apache.ibatis.annotations.Param;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

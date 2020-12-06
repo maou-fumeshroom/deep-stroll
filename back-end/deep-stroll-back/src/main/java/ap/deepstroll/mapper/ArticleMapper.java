@@ -19,6 +19,8 @@ public interface ArticleMapper {
      */
     public Integer insertArticle(ArticleEntity articleEntity);
 
+    public Integer realDelete(@Param("id")Long id);
+
     /**
      * 查询指定id的文章信息
      * @author

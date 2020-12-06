@@ -21,7 +21,7 @@ public class MyArticleBO {
     private String cover;
     private String title;
     private String introduction;
-    private Timestamp dateTime;
+    private String dateTime;
     private Integer likeNum;
     private Integer comment;
     private Integer status;

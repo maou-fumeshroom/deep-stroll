@@ -149,6 +149,16 @@ public class IdentityService {
      */
     public ResponseVO getVerificationCode(GetVerificationCodeRequestVO getVerificationCodeRequestVO) {
         String telephone = getVerificationCodeRequestVO.getTelephone();
+        if (telephone == null) {
+            return ResponseVO.builder()
+                             .result(
+                                 Result.builder()
+                                       .code(0)
+                                       .message("no telephone")
+                                       .build()
+                             )
+                             .build();
+        }
         if (userMapper.queryUserByTel(telephone) == null) {
             String letterTable = Global.letterTable;
             String code = "";
@@ -207,6 +217,26 @@ public class IdentityService {
         String nickname = registerRequestVO.getNickname();
         String code = registerRequestVO.getCode();
         String pwd = registerRequestVO.getPwd();
+        if (telephone == null) {
+            return ResponseVO.builder()
+                             .result(
+                                 Result.builder()
+                                       .code(0)
+                                       .message("no telephone")
+                                       .build()
+                             )
+                             .build();
+        }
+        if (pwd == null) {
+            return ResponseVO.builder()
+                             .result(
+                                 Result.builder()
+                                       .code(0)
+                                       .message("no pwd")
+                                       .build()
+                             )
+                             .build();
+        }
         VerificationCodeMap verificationCodeMap = VerificationCodeMap.getInstance();
         VerificationCode verificationCode = verificationCodeMap.get(telephone);
         if (verificationCode != null) {
@@ -382,7 +412,7 @@ public class IdentityService {
      */
     public ResponseVO adminRegister(AdminRegisterRequestVO adminRegisterRequestVO) {
         String account = adminRegisterRequestVO.getAccount();
-        String password = adminRegisterRequestVO.getAccount();
+        String password = adminRegisterRequestVO.getPassword();
         Integer roleId = adminRegisterRequestVO.getRoleId();
         
         final Log logger = LogFactory.getLog(getClass());

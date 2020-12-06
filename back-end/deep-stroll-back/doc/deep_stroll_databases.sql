@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`drawing` (
   `title` VARCHAR(45) NOT NULL,
   `introduction` VARCHAR(100) NOT NULL,
   `labels` VARCHAR(255) NOT NULL,
-  `url` VARCHAR(540) NOT NULL,
+  `url` VARCHAR(1000) NOT NULL,
   `classify_id` INT NOT NULL,
   `state` INT NOT NULL DEFAULT 0 COMMENT '0:正常 1:下架',
   `like_num` INT NOT NULL DEFAULT 0,

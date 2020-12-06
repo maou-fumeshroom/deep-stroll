@@ -20,6 +20,7 @@ import ap.deepstroll.entity.UserEntity;
 import ap.deepstroll.mapper.ArticleMapper;
 import ap.deepstroll.mapper.ClassifyArticleMapper;
 import ap.deepstroll.mapper.UserMapper;
+import ap.deepstroll.utils.DateFormatUtil;
 import ap.deepstroll.vo.request.ArticleVO;
 import ap.deepstroll.vo.request.WorkVO;
 import ap.deepstroll.vo.response.GetDetailArticleVO;
@@ -93,7 +94,7 @@ public class ArticleService extends WorkService {
                                    .introduction(articleEntity.getIntroduction())
                                    .avatar(author.getAvatar())
                                    .nickname(author.getNickname())
-                                   .dateTime(articleEntity.getCreateTime())
+                                   .dateTime(DateFormatUtil.getDate(articleEntity.getCreateTime()))
                                    .likeNum(0)
                                    .comment(0)
                                    .status(articleEntity.getState())
@@ -108,7 +109,7 @@ public class ArticleService extends WorkService {
                                               classifyId, 
                                               state, 
                                               null);
-            Integer totalPage = (int)Math.ceil(totalLine.doubleValue() / pageSize.doubleValue());
+            Integer totalPage = totalLine;
             SearchWorkArticleVO vo = SearchWorkArticleVO.builder()
                                                         .articles(articalBOs.toArray(new SearchArticalBO[articalBOs.size()]))
                                                         .totalPage(totalPage)
@@ -128,6 +129,11 @@ public class ArticleService extends WorkService {
     public ResponseVO getDetail(Long id) {
         try {
             ArticleEntity articleEntity = articleMapper.queryArticleById(id);
+            if (articleEntity == null) {
+                return ResponseVO.builder()
+                             .result(new Result("文章已删除或不存在"))
+                             .build();
+            }
             UserEntity authorEntity = userMapper.queryUserById(articleEntity.getAuthorId());
             String classifyName = classifyArticleMapper.queryClassifyById(articleEntity.getClassifyId()).getName();
             DetailAuthorBO author = DetailAuthorBO.builder()
@@ -138,13 +144,14 @@ public class ArticleService extends WorkService {
             GetDetailArticleVO vo = GetDetailArticleVO.builder()
                                                       .author(author)
                                                       .title(articleEntity.getTitle())
+                                                      .cover(articleEntity.getCover())
                                                       .introduction(articleEntity.getIntroduction())
                                                       .fileUrl(articleEntity.getUrl())
                                                       .likeNum(0)
                                                       .isLike(0)
                                                       .isCollect(0)
                                                       .labels(null)
-                                                      .dateTime(articleEntity.getCreateTime())
+                                                      .dateTime(DateFormatUtil.getDate(articleEntity.getCreateTime()))
                                                       .status(articleEntity.getState())
                                                       .classifyName(classifyName)
                                                       .type(0)
@@ -173,9 +180,9 @@ public class ArticleService extends WorkService {
                     MyArticleBO.builder()
                                .id(articleEntity.getId())
                                .cover(articleEntity.getCover())
-                               .title(articleEntity.getIntroduction())
+                               .title(articleEntity.getTitle())
                                .introduction(articleEntity.getIntroduction())
-                               .dateTime(articleEntity.getCreateTime())
+                               .dateTime(DateFormatUtil.getDate(articleEntity.getCreateTime()))
                                .likeNum(0)
                                .comment(0)
                                .status(articleEntity.getState())
@@ -185,7 +192,7 @@ public class ArticleService extends WorkService {
             }
             
             Integer totalLine = articleMapper.queryArticleNumByAuthorId(id, title, labels, classifyId, null);
-            Integer totalPage = (int)Math.ceil(totalLine.doubleValue() / pageSize.doubleValue());
+            Integer totalPage = totalLine;
             MyWorksArticleVO vo = MyWorksArticleVO.builder()
                                                   .articles(articalBOs.toArray(new MyArticleBO[articalBOs.size()]))
                                                   .totalPage(totalPage)
@@ -260,7 +267,8 @@ public class ArticleService extends WorkService {
             return drawingService.deleteWork(id, type);
         Map<String, Result> response = new HashMap<>();
         try {
-            articleMapper.updateArticleState(id, 1);
+            //articleMapper.updateArticleState(id, 1);
+            articleMapper.realDelete(id);
             Result result = new Result();
             response.put("result", result);
             return response;
