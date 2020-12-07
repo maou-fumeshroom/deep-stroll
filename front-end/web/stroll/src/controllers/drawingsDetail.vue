@@ -3,6 +3,7 @@
 
     <div id="message">
       <i class="el-icon-arrow-left" style="margin:10px 0 0 10px;" @click="back"/>
+      <i class="el-icon-delete delButton" @click="deleteDraw"/>
       <h2 class="title">{{drawingsMsg.title}}</h2>
       <p class="introduction">{{drawingsMsg.introduction}}</p>
       <img :src = "drawingsMsg.author.avatar" class="avatar"/>
@@ -19,6 +20,7 @@
 
 <script>
   import drawingArray from '../components/drawingArray'
+  import {client} from "../utils/alioss";
   export default {
     data() {
       return{
@@ -33,7 +35,43 @@
     methods:{
       back(){
         this.$router.go(-1)
-      }
+      },
+      deleteDraw(){
+        //删除手绘
+        console.log("idididi: "+ this.drawingsId)
+        this.$http.post('/api/person/works/delete',{
+          id:this.drawingsId,
+          type:1,
+        },{emulateJSON: true})
+          .then(function(res){
+            console.log("deleteRes")
+            console.log(res);
+          });
+
+        //删除所有手绘链接
+        let len = this.drawingsMsg.images.length;
+        for(let i=0;i<len;i++){
+          let temp = this.drawingsMsg.images[i].split("/");
+          console.log(temp[3])
+          let urlName = temp[3];
+          client().delete(urlName).then(
+            result=>{
+              console.log("2"+result)
+            }
+          )
+        }
+        // let temp = this.drawingsMsg.cover.split("/");
+        // console.log(temp[3])
+        // let urlName2 = temp2[3];
+        // client().delete(urlName2).then(
+        //   result=>{
+        //     console.log("2"+result)
+        //   }
+        // )
+
+        this.$router.go(-1)
+
+      },
     },
     created() {
       let that = this;
@@ -62,6 +100,11 @@
     position:relative;
   }
   .el-icon-arrow-left{
+    cursor: pointer;
+  }
+  .delButton{
+    float: right;
+    margin: 10px 15px 0;
     cursor: pointer;
   }
   /*文章详情页面上半部分，文章的信息*/

@@ -93,20 +93,20 @@
         messageList:[
           {
             id:0,
-            imgSrc:require("../assets/logo.png"),
+            imgSrc:require("../assets/3.jpg"),
             title:"Python之父，现在成为微软打工人!",
             nickname:"小明",
-            avatarSrc:require("../assets/logo.png"),
+            avatarSrc:require("../assets/test/avatar1.jpg"),
             releaseTime:"11-13",
             comment:"这是一个好倡议",
             mode:"1-1"
           },
           {
             id:1,
-            imgSrc:require("../assets/logo.png"),
+            imgSrc:require("../assets/17.jpg"),
             title:"如何看待马云 4 月 11 日在内外直播中将 996 称为「修来的福报」？",
             nickname:"小红",
-            avatarSrc:require("../assets/logo.png"),
+            avatarSrc:require("../assets/test/avatar2.jpg"),
             releaseTime:"11-10",
             comment:"大大真棒！！！",
             mode:"2-2"

@@ -1,7 +1,7 @@
 <template>
   <nav>
     <div class="logo" @click="$router.push('/')">
-      <slot name="logo-icon"><img src="../assets/logo.png"></slot>
+      <slot name="logo-icon"><img src="../../static/logo.png"></slot>
       <slot name="logo-title">闲亭</slot>
     </div>
     <el-row class="nav-menu">

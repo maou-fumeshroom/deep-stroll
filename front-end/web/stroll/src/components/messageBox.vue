@@ -50,7 +50,7 @@
   }
   .messageCover{
     height: 100%;
-    margin-left: 5px;
+    /*margin-left: 5px;*/
   }
   .personMsg{
     display: inline-block;

@@ -76,17 +76,7 @@
         })
       },
       deleteArticle(){
-
         //删除文章
-        // this.$http.post('/api/person/works/delete',{
-        //   id:this.articleMsg.id,
-        //   type:0,
-        // }).then(function(res){
-        //   console.log("！！： "+JSON.stringify(res));
-        // }).catch(function(){
-        //   console.log("服务器异常");
-        // });
-
         console.log("idididi: "+ this.articleID)
         this.$http.post('/api/person/works/delete',{
             id:this.articleID,
