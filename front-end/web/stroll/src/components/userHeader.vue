@@ -62,21 +62,26 @@
         this.$router.push({
           path:'/'
         })
+      },
+      getUserMsg(){
+        let that = this;
+        //得到个人信息
+        this.$http.get('/api/person/basic')
+          .then(function(res){
+            console.log("信息： "+JSON.stringify(res));
+            that.user = res.data;
+          }).catch(function(){
+          console.log("服务器异常");
+        });
       }
     },
     created() {
       let that = this;
-
-      //得到个人基本信息
-      this.$http.get('/api/person/basic')
-        .then(function(res){
-          console.log("信息： "+JSON.stringify(res));
-          console.log(res);
-          that.user = res.data;
-        }).catch(function(){
-        console.log("服务器异常");
-      });
+      that.getUserMsg();
     },
+    mounted() {
+      this.getUserMsg()
+    }
   }
 </script>
 

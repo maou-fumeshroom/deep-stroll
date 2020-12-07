@@ -85,6 +85,9 @@
         })
       }
     },
+    mounted() {
+      this.getlist();
+    }
   }
 </script>
 

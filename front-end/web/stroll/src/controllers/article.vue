@@ -1,39 +1,39 @@
 <template>
   <div id = "article">
 
-    <!--    左侧分类选择菜单-->
-    <div id="articleTags">
-      <el-col :span="12">
-        <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
-          <el-submenu index="1">
-            <template slot="title">
-              <span>热门</span>
-            </template>
-            <el-menu-item-group>
-              <template slot="title">我的分类</template>
-              <el-menu-item index="1-1">电影</el-menu-item>
-              <el-menu-item index="1-2">音乐</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="热门">
-              <el-menu-item index="1-3">搞笑</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-4">
-              <template slot="title">综艺</template>
-              <el-menu-item index="1-4-1">舞蹈</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-menu-item index="2">
-            <span slot="title">美食</span>
-          </el-menu-item>
-          <el-menu-item index="3">
-            <span slot="title">摄影</span>
-          </el-menu-item>
-          <el-menu-item index="4">
-            <span slot="title">艺术</span>
-          </el-menu-item>
-        </el-menu>
-      </el-col>
-    </div>
+<!--    &lt;!&ndash;    左侧分类选择菜单&ndash;&gt;-->
+<!--    <div id="articleTags">-->
+<!--      <el-col :span="12">-->
+<!--        <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">-->
+<!--          <el-submenu index="1">-->
+<!--            <template slot="title">-->
+<!--              <span>热门</span>-->
+<!--            </template>-->
+<!--            <el-menu-item-group>-->
+<!--              <template slot="title">我的分类</template>-->
+<!--              <el-menu-item index="1-1">电影</el-menu-item>-->
+<!--              <el-menu-item index="1-2">音乐</el-menu-item>-->
+<!--            </el-menu-item-group>-->
+<!--            <el-menu-item-group title="热门">-->
+<!--              <el-menu-item index="1-3">搞笑</el-menu-item>-->
+<!--            </el-menu-item-group>-->
+<!--            <el-submenu index="1-4">-->
+<!--              <template slot="title">综艺</template>-->
+<!--              <el-menu-item index="1-4-1">舞蹈</el-menu-item>-->
+<!--            </el-submenu>-->
+<!--          </el-submenu>-->
+<!--          <el-menu-item index="2">-->
+<!--            <span slot="title">美食</span>-->
+<!--          </el-menu-item>-->
+<!--          <el-menu-item index="3">-->
+<!--            <span slot="title">摄影</span>-->
+<!--          </el-menu-item>-->
+<!--          <el-menu-item index="4">-->
+<!--            <span slot="title">艺术</span>-->
+<!--          </el-menu-item>-->
+<!--        </el-menu>-->
+<!--      </el-col>-->
+<!--    </div>-->
 
     <!--    右侧文章列表-->
     <div id="articleContainer">
@@ -58,95 +58,10 @@
     props:[
       'isDelete'
     ],
+    inject:['reload'],//注入依赖
     data () {
       return {
         page:"article",
-        // articleList:[
-        //   {
-        //     id:1,
-        //     cover:require("../assets/logo.png"),
-        //     title:"Python之父，现在成为微软打工人",
-        //     nickname:"小明",
-        //     avatar:require("../assets/logo.png"),
-        //     dateTime:"2020-11-13",
-        //     likeNum:232,
-        //     comment:56,
-        //     introduction:"当程序员开始诉控996加班时，中国多款浏览器竟然匪夷所思地禁止访问",
-        //     status:0,
-        //     classifyName:"互联网",
-        //     // mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481592000.md"
-        //   },
-        //   {
-        //     id:2,
-        //     cover:require("../assets/logo.png"),
-        //     title:"如何看待马云 4 月 11 日在内外直播中将 996 称为「修来的福报」？",
-        //     nickname:"小红",
-        //     avatar:require("../assets/logo.png"),
-        //     dateTime:"2020-11-10",
-        //     likeNum:60,
-        //     comment:12,
-        //     introduction:"4月11日内外直播中，在被问及如何看待996.icu事件时，马云主要提出了一下三个观点： 马云谈996 1. 能996是你们的幸福 ",
-        //     status:0,
-        //     classifyName:"互联网",
-        //     // mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481596000.md"
-        //   },
-        //   {
-        //     id:3,
-        //     cover:require("../assets/logo.png"),
-        //     title:"如何看待 Python 之父 Guido 加盟微软？？？",
-        //     nickname:"李华",
-        //     avatar:require("../assets/logo.png"),
-        //     dateTime:"2020-11-9",
-        //     likeNum:3,
-        //     comment:1,
-        //     introduction:"Python 之父 Guido van Rossum 在 Python 邮件组里发邮称，他将退出 Python 核心决策层，而转居幕后。",
-        //     status:0,
-        //     classifyName:"互联网",
-        //     // mdSrc: "http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481592000.md",
-        //   },
-        //   {
-        //     id:4,
-        //     cover:require("../assets/logo.png"),
-        //     title:"Python之父，现在成为微软打工人",
-        //     nickname:"小明",
-        //     avatar:require("../assets/logo.png"),
-        //     dateTime:"2020-11-13",
-        //     likeNum:232,
-        //     comment:56,
-        //     introduction:"当程序员开始诉控996加班时，中国多款浏览器竟然匪夷所思地禁止访问",
-        //     status:0,
-        //     classifyName:"互联网",
-        //     // mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481596000.md"
-        //   },
-        //   {
-        //     id:5,
-        //     cover:require("../assets/logo.png"),
-        //     title:"如何看待马云 4 月 11 日在内外直播中将 996 称为「修来的福报」？",
-        //     nickname:"小红",
-        //     avatar:require("../assets/logo.png"),
-        //     dateTime:"2020-11-10",
-        //     likeNum:60,
-        //     comment:12,
-        //     introduction:"当程序员开始诉控996加班时，中国多款浏览器竟然匪夷所思地禁止访问",
-        //     status:0,
-        //     classifyName:"互联网",
-        //     // mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481592000.md",
-        //   },
-        //   {
-        //     id:6,
-        //     cover:require("../assets/logo.png"),
-        //     title:"如何看待 Python 之父 Guido 加盟微软？",
-        //     nickname:"李华",
-        //     avatar:require("../assets/logo.png"),
-        //     dateTime:"2020-11-9",
-        //     likeNum:3,
-        //     comment:1,
-        //     introduction:"当程序员开始诉控996加班时，中国多款浏览器竟然匪夷所思地禁止访问",
-        //     status:0,
-        //     classifyName:"互联网",
-        //     // mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481596000.md",
-        //   }
-        // ],
         articleList:[],
         totalPage:1,
         currentPage:1,
@@ -205,11 +120,8 @@
             status:0,
           }
         }).then(function(res){
-          // console.log("！！： "+res);
-            // console.log("！！： "+JSON.stringify(res));
-            that.articleList = res.data.articles;
-            that.totalPage = res.data.totalPage
-        that.totalPage = res.data.totalPage;
+          that.articleList = res.data.articles;
+          that.totalPage = res.data.totalPage
           // console.log("！！： "+that.articleList[0].title);
           console.log("！！： "+that.articleList.length);
           }).catch(function(){
@@ -229,9 +141,11 @@
       });
 
       that.getArticles();
-
     },
     mounted() {
+      //每次路由跳转都更新文章列表
+      this.getArticles();
+
       // 监听滑动条
       window.addEventListener('scroll',()=>{
         // console.log("65555555555555555")
@@ -273,8 +187,8 @@
 <style scoped>
   #article{
     height: 100%;
-    width: 76%;
-    margin: 0 12% 0 12%;
+    width: 64%;
+    margin: 0 18% 0 18%;
     /*background-color: #fff;*/
     background-color: #ffffff87;
     position: absolute;
@@ -294,7 +208,7 @@
   /*右侧文章列表*/
   #articleContainer{
     padding-top: 5%;
-    width: 82%;
+    width: 96%;
     height: 85%;
     float: right;
     list-style-type: none;
@@ -304,7 +218,7 @@
   .pagination{
     position: absolute;
     /* top: 800px; */
-    left: 52%;
+    left: 45%;
     bottom: 10px;
   }
 

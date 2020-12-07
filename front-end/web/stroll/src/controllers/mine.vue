@@ -180,49 +180,33 @@
             page:1,
           }
         }).then(function(res){
-          // console.log("！！： "+JSON.stringify(res));
           that.articleList = res.data.articles;
         }).catch(function(){
+          console.log("服务器异常");
+        });
+      },
+      getUserMsg(){
+        let that = this;
+        //得到个人信息
+        this.$http.get('/api/person/info')
+          .then(function(res){
+            that.msg = res.data;
+          }).catch(function(){
           console.log("服务器异常");
         });
       }
     },
     created() {
       let that = this;
-
-      //得到个人信息
-      this.$http.get('/api/person/info')
-        .then(function(res){
-          // console.log("信息： "+JSON.stringify(res));
-          that.msg = res.data;
-        }).catch(function(){
-        console.log("服务器异常");
-      });
-       that.getArticleList();
-
-
-      // fetch('/api/person/info',{
-      //   headers:{
-      //     'content-type': 'application/json',
-      //     'Access-Control-Allow-Origin': '*',
-      //     'Authorization': 'Bearer ' + localStorage.getItem('token')
-      //   },
-      //   method:'GET',
-      //   mode:'cors'
-      // }).then(function (response) {
-      //     console.log(response);
-      //     let json = response.json();
-      //   console.log("json: "+json)
-      //     return json;
-      //   }).then(function (data) {
-      //   console.log("data: "+data)
-      //   console.log("msg: "+that.msg)
-      //     that.msg = data.data;
-      //   console.log("msg2: "+that.msg)
-      //   })
-
+      that.getUserMsg();
+      that.getArticleList();
     },
     mounted() {
+      //每次路由跳转都更新文章列表
+      this.getUserMsg();
+      this.getArticleList();
+      this.getlist();
+
       $("#Scroll").scroll(function(event){
         console.log("!!!!!!Scroll")
         var scrollTop = document.getElementById("Scroll").scrollTop;
@@ -237,16 +221,7 @@
         }
       });
     },
-    // watch:{
-    //   articleList: {
-    //     handler(newval, old) {
-    //       console.log("ArticleList更新");
-    //       this.getArticleList();
-    //     },
-    //     immediate: true,
-    //     deep: true,
-    //   }
-    // }
+
   }
 </script>
 

@@ -101,6 +101,17 @@
         mask.style.display = "none";
       },
       UploadAvatar(file) {
+        //先删除旧头像
+        let temp = this.msg.avatar.split("/");
+        console.log(temp[3]);
+        let urlName = temp[3];
+        client().delete(urlName).then(
+          result=>{
+            console.log("2"+result)
+          }
+        );
+
+        //再上传新头像
         var fileName = 'avatar' + `${Date.parse(new Date())}`;  //定义唯一的文件名
         //定义唯一的文件名，打印出来的uid其实就是时间戳
         client().multipartUpload(fileName, file.file).then(

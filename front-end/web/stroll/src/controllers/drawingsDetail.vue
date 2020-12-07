@@ -26,7 +26,8 @@
       return{
         drawingsId: this.$route.query.drawingsId,
         drawingsMsg:{},
-        loadingOK:false
+        loadingOK:false,
+        userMsg:{},
       }
     },
     components: {
@@ -37,41 +38,52 @@
         this.$router.go(-1)
       },
       deleteDraw(){
-        //删除手绘
-        console.log("idididi: "+ this.drawingsId)
-        this.$http.post('/api/person/works/delete',{
-          id:this.drawingsId,
-          type:1,
-        },{emulateJSON: true})
-          .then(function(res){
-            console.log("deleteRes")
-            console.log(res);
-          });
+        //只有作者本人才能删除
+        if(this.userMsg.nickename === this.drawingsMsg.author.nickname){
+          //删除手绘
+          console.log("idididi: "+ this.drawingsId)
+          this.$http.post('/api/person/works/delete',{
+            id:this.drawingsId,
+            type:1,
+          },{emulateJSON: true})
+            .then(function(res){
+              console.log("deleteRes")
+              console.log(res);
+            });
 
-        //删除所有手绘链接
-        let len = this.drawingsMsg.images.length;
-        for(let i=0;i<len;i++){
-          let temp = this.drawingsMsg.images[i].split("/");
-          console.log(temp[3])
-          let urlName = temp[3];
-          client().delete(urlName).then(
-            result=>{
-              console.log("2"+result)
-            }
-          )
+          //删除所有手绘链接
+          let len = this.drawingsMsg.images.length;
+          for(let i=0;i<len;i++){
+            let temp = this.drawingsMsg.images[i].split("/");
+            console.log(temp[3])
+            let urlName = temp[3];
+            client().delete(urlName).then(
+              result=>{
+                console.log("2"+result)
+              }
+            )
+          }
+
+          this.$router.go(-1)
+        }else{
+          //警告⚠
+          alert("你不能删除这套手绘");
         }
-        // let temp = this.drawingsMsg.cover.split("/");
-        // console.log(temp[3])
-        // let urlName2 = temp2[3];
-        // client().delete(urlName2).then(
-        //   result=>{
-        //     console.log("2"+result)
-        //   }
-        // )
-
-        this.$router.go(-1)
 
       },
+      getUser(){
+        let that = this;
+        //得到个人基本信息
+        this.$http.get('/api/person/basic')
+          .then(function(res){
+            console.log(res.data);
+            that.userMsg = res.data;
+            console.log("我的信息")
+            console.log(that.userMsg)
+          }).catch(function(){
+          console.log("服务器异常");
+        });
+      }
     },
     created() {
       let that = this;
@@ -87,6 +99,8 @@
       }).catch(function(){
         console.log("服务器异常");
       });
+
+      that.getUser();
     },
   };
 </script>

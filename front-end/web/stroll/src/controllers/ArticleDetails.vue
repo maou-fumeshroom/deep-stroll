@@ -66,6 +66,7 @@
         htmlMD:"",
         loadingOK:false,
         articleID:"",
+        userMsg:{},
       }
     },
     methods: {
@@ -76,48 +77,49 @@
         })
       },
       deleteArticle(){
-        //删除文章
-        console.log("idididi: "+ this.articleID)
-        this.$http.post('/api/person/works/delete',{
+        //只有作者本人才能删除
+        if(this.userMsg.nickename === this.articleMsg.author.nickname){
+          //删除文章
+          console.log("idididi: "+ this.articleID)
+          this.$http.post('/api/person/works/delete',{
             id:this.articleID,
             type:0,
-        },{emulateJSON: true})
-          .then(function(res){
-            console.log("！！： "+JSON.stringify(res));
-          });
+          },{emulateJSON: true})
+            .then(function(res){
+              console.log("！！： "+JSON.stringify(res));
+            });
 
-        //删除文章链接
-        let temp1 = this.articleMsg.fileUrl.split("/");
-        console.log(temp1[3])
-        let urlName1 = temp1[3];
-        client().delete(urlName1).then(
-          result=>{
-            console.log("1"+result)
-          }
-        )
+          //删除文章链接
+          let temp1 = this.articleMsg.fileUrl.split("/");
+          console.log(temp1[3])
+          let urlName1 = temp1[3];
+          client().delete(urlName1).then(
+            result=>{
+              console.log("1"+result)
+            }
+          );
 
-        //删除封面链接
-        let temp2 = this.articleMsg.cover.split("/");
-        console.log(temp2[3])
-        let urlName2 = temp2[3];
-        client().delete(urlName2).then(
-          result=>{
-            console.log("2"+result)
-          }
-        )
+          //删除封面链接
+          let temp2 = this.articleMsg.cover.split("/");
+          console.log(temp2[3])
+          let urlName2 = temp2[3];
+          client().delete(urlName2).then(
+            result=>{
+              console.log("2"+result)
+            }
+          );
 
-        this.$router.push({
-          // 返回点入的父页面
-          path:'/' + this.backPage,
-        })
-
+          this.$router.push({
+            // 返回点入的父页面
+            path:'/' + this.backPage,
+          })
+        }else{
+          //警告⚠
+          alert("你不能删除这篇文章");
+        }
       },
       getArticleContent(){
-        // this.$http.get(this.articleMsg.fileUrl).then((response) => {
-        //   this.htmlMD = response;
-        //   console.log("this.htmlMD: "+ this.htmlMD)
-        //   this.loadingOK = true;
-        // });
+        //得到文章内容
         let that = this;
         fetch(that.articleMsg.fileUrl,{
           method:'GET',
@@ -132,6 +134,18 @@
             that.htmlMD = data;
             that.loadingOK = true;
           })
+      },
+      getUser(){
+        let that = this;
+        //得到个人基本信息
+        this.$http.get('/api/person/basic')
+          .then(function(res){
+            console.log(res.data);
+            that.userMsg = res.data;
+            console.log(this.userMsg)
+          }).catch(function(){
+          console.log("服务器异常");
+        });
       }
     },
     created() {
@@ -151,16 +165,14 @@
           id:that.articleID,
         }
       }).then(function(res){
+        console.log(res);
         that.articleMsg = res.data;
         that.getArticleContent();
-        // that.$http.get(that.articleMsg.fileUrl).then((response) => {
-        //   that.htmlMD = response;
-        //   console.log("this.htmlMD: "+ that.htmlMD)
-        //   that.loadingOK = true;
-        // });
       }).catch(function(){
         console.log("服务器异常");
       });
+
+      that.getUser();
     },
   }
 </script>
