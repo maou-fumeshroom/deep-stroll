@@ -19,6 +19,8 @@ public interface ClassifyArticleMapper {
      */
     public Integer insertClassifyArticle(@Param("name")String name);
 
+    public Integer queryClassifyArticleByName(@Param("name")String name);
+
     public ClassifyArticleEntity queryClassifyById(@Param("id")Integer id);
     
     /**
@@ -29,6 +31,15 @@ public interface ClassifyArticleMapper {
      */
     public List<ClassifyArticleEntity> queryAllClassifyArticle(@Param("state")Integer state);
 
+    public List<ClassifyArticleEntity> queryClassifyArticleByPage(
+        @Param("startIndex")Integer startIndex,
+        @Param("pageSize")Integer pageSize,
+        @Param("state")Integer state
+    );
+
+    public Integer queryClassifyNumArticleByPage(
+        @Param("state")Integer state
+    );
     /**
      * 修改分类状态
      * @author mxf

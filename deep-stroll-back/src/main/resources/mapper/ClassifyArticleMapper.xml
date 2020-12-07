@@ -21,6 +21,13 @@
         )
     </insert>
 
+    <select id="queryClassifyArticleByName" resultType="java.lang.Integer">
+        SELECT 
+            count(*)
+        FROM classify_article
+        WHERE name = #{name}
+    </select>
+
     <select id="queryClassifyById" resultMap="ClassifyArticleMap">
         SELECT 
             classify_article_id,
@@ -39,6 +46,33 @@
             state,
             create_time,
             update_time
+        FROM classify_article
+        <where>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryClassifyArticleByPage" resultMap="ClassifyArticleMap">
+        SELECT 
+            classify_article_id,
+            name,
+            state,
+            create_time,
+            update_time
+        FROM classify_article
+        <where>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="queryClassifyNumArticleByPage" resultType="java.lang.Integer">
+        SELECT 
+            count(*)
         FROM classify_article
         <where>
             <if test="state != null">
