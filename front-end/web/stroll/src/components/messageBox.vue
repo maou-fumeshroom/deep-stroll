@@ -41,15 +41,19 @@
   .messageBox{
     height: 100px;
     position: relative;
-    background: #fff;
+    /*background: #fff;*/
+    background-color: #ffffffa8;
     box-shadow: 1px 3px 10px #65626285;
     cursor: pointer;
     list-style-type: none;
     margin: 45px 20px 45px 0;
+    -webkit-transition-duration: 1s;
+  }
+  .messageBox:hover{
+    height: 120px;
   }
   .messageCover{
     height: 100%;
-    margin-left: 5px;
   }
   .personMsg{
     display: inline-block;

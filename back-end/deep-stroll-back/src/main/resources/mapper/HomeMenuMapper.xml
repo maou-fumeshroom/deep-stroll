@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ap.deepstroll.mapper.HomeMenuMapper">
+
+    <resultMap id="HomeMenuMap" type="ap.deepstroll.entity.HomeMenuEntity">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="path" column="path"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <insert id="insertMenu" parameterType="ap.deepstroll.entity.HomeMenuEntity">
+        INSERT INTO
+        home_menu(
+            name,
+            path,
+            parent_id
+        )
+        VALUES(
+            #{name},
+            #{path},
+            #{parentId} 
+        )
+    </insert>
+
+    <select id="queryMenuByState" resultMap="HomeMenuMap">
+        SELECT
+            id,
+            name,
+            path,
+            parent_id,
+            state,
+            create_time,
+            update_time
+        FROM home_menu
+        <where>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where> 
+    </select>
+
+    <update id="updateMenuState">
+        UPDATE home_menu
+        SET state = #{state}
+        WHERE  id = #{id}
+    </update>
+    
+</mapper>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ap.deepstroll.mapper.ArticleMapper">
+
+    <resultMap id="ArticleMap" type="ap.deepstroll.entity.ArticleEntity">
+        <result property="id" column="id"/>
+        <result property="authorId" column="author_id"/>
+        <result property="title" column="title"/>
+        <result property="cover" column="cover"/>
+        <result property="introduction" column="introduction"/>
+        <result property="url" column="url"/>
+        <result property="labels" column="labels"/>
+        <result property="classifyId" column="classify_id"/>
+        <result property="likeNum" column="like_num"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <delete id="realDelete">
+        DELETE FROM article
+        WHERE id = #{id} 
+    </delete>
+    
+    <insert id="insertArticle" parameterType="ap.deepstroll.entity.ArticleEntity">
+        INSERT INTO
+        article(
+            author_id,
+            title,
+            cover,
+            introduction,
+            url,
+            labels,
+            classify_id
+        )
+        VALUES(
+            #{authorId},
+            #{title},
+            #{cover},
+            #{introduction},
+            #{url},
+            #{labels},
+            #{classifyId}
+        )
+    </insert>
+
+    <select id="queryArticleByAuthorId" resultMap="ArticleMap">
+        SELECT
+            id,
+            author_id,
+            title,
+            cover,
+            introduction,
+            url,
+            labels,
+            classify_id,
+            like_num,
+            state,
+            create_time,
+            update_time
+        FROM article
+        <where>
+            author_id = #{authorId}
+            <if test="title != null">
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
+            </if>
+            <if test="classifyId != null">
+                AND classify_id = #{classifyId}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="queryArticleNumByAuthorId" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM article
+        <where>
+            author_id = #{authorId}
+            <if test="title != null">
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
+            </if>
+            <if test="classifyId != null">
+                AND classify_id = #{classifyId}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+    </select>
+ 
+    <select id="queryArticleById" resultMap="ArticleMap">
+        SELECT
+            id,
+            author_id,
+            title,
+            cover,
+            introduction,
+            url,
+            labels,
+            classify_id,
+            like_num,
+            state,
+            create_time,
+            update_time
+        FROM article
+        WHERE id = #{id}
+    </select>
+
+    <select id="queryArticleByTitleLabClassifyState" resultMap="ArticleMap">
+        SELECT
+            id,
+            author_id,
+            title,
+            cover,
+            introduction,
+            url,
+            labels,
+            classify_id,
+            like_num,
+            state,
+            create_time,
+            update_time
+        FROM article
+        <where>
+            <if test="title != null">
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
+            </if>
+            <if test="classifyId != null">
+                AND classify_id = #{classifyId}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            <if test="likeNum != null">
+                AND like_num &gt;= #{likeNum}
+            </if>
+        </where>
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="queryArticleNumByTitleLabClassifyState" resultType="Integer">
+        SELECT
+            count(*)
+        FROM article
+        <where>
+            <if test="title != null">
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
+            </if>
+            <if test="classifyId != null">
+                AND classify_id = #{classifyId}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            <if test="likeNum != null">
+                AND like_num &gt;= #{likeNum}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateArticleState">
+        UPDATE article
+        SET state = #{state}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateLikeNumById">
+        UPDATE article
+        SET like_num = like_num + #{num}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

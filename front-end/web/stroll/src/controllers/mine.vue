@@ -3,17 +3,17 @@
     <!--    页面左半部分，个人信息-->
     <div id="myInformation">
       <div id="inforBox">
-        <img :src=msg.avatarSrc class="myAvatar"/>
+        <img :src=msg.avatar class="myAvatar"/>
         <p class="myName">{{msg.nickname}}</p>
         <div class="allNum">
           <span>文章数</span>
-          <span class="vertical">{{msg.worksNum}}</span>
+          <span class="vertical">{{msg.article}}</span>
           <span>手绘数</span>
-          <span class="vertical">{{msg.paintNum}}</span>
+          <span class="vertical">{{msg.drawing}}</span>
           <span>点赞数</span>
-          <span>{{msg.likes}}</span>
+          <span>{{msg.likeNum}}</span>
         </div>
-        <p class="myIntroduce">{{msg.introduce}}</p>
+        <p class="myIntroduce">{{msg.sign}}</p>
         <el-button class="edit" @click="$router.push('/editInformation')">编辑</el-button>
       </div>
     </div>
@@ -39,25 +39,37 @@
 
       <!--子组件，显示我的作品-文章-->
       <!--我的作品-->
-      <div id="Scroll" styly="height: 100%;">
-        <article-box v-if="tagPath === '1-1'" :articleList="articleList" :page="page"/>
-        <vue-waterfall-easy v-if="tagPath  === '1-2'" style="width: 98%;" :imgsArr="imgsArr" :isBottom="isbottom" :page="page" @scrollReachBottom="fetchImgsData" @clickItem="gotoDetail">
-          <template slot-scope="props">
-            <img :src="props.value.avatar" class="avatarImg"/>
-            <div class="titleP">{{props.value.title}}</div>
-            <div class="time">{{props.value.dateTime}}</div>
-          </template>
-        </vue-waterfall-easy>
+      <div id="Scroll" >
+        <div v-if="tagPath === '1-1'">
+          <article-box :articleList="articleList" :page="page"/>
+
+          <div class="pagination">
+            <el-pagination layout="prev, pager, next" :total=totalLenth  @current-change="currentChange" />
+          </div>
+        </div>
+
+        <div v-if="tagPath  === '1-2'" class="waterfall_box">
+          <vue-waterfall-easy :imgsArr="imgsArr" :isBottom="isbottom" :page="page" @scrollReachBottom="fetchImgsData" @clickItem="gotoDetail">
+            <template slot-scope="props">
+              <img :src="props.value.avatar" class="avatarImg"/>
+              <div class="titleP">{{props.value.title}}</div>
+              <div class="time">{{props.value.dateTime}}</div>
+            </template>
+          </vue-waterfall-easy>
+        </div>
 
         <!--我的收藏-->
         <article-box v-if="tagPath === '2-1'" :articleList="articleList" :page="page"/>
-        <vue-waterfall-easy v-if="tagPath  === '2-2'" style="width: 98%;" :imgsArr="imgsArr" :isBottom="isbottom" :page="page" @scrollReachBottom="fetchImgsData" @clickItem="gotoDetail">
+        <div v-if="tagPath  === '2-2'" class="waterfall_box">
+          <vue-waterfall-easy :imgsArr="imgsArr" :isBottom="isbottom" :page="page" @scrollReachBottom="fetchImgsData" @clickItem="gotoDetail">
           <template slot-scope="props">
             <img :src="props.value.avatar" class="avatarImg"/>
             <div class="titleP">{{props.value.title}}</div>
             <div class="time">{{props.value.dateTime}}</div>
           </template>
         </vue-waterfall-easy>
+        </div>
+
 
         <!--消息-->
         <message-box v-if="tag === '3'" :messageList="messageList"/>
@@ -66,7 +78,7 @@
 
     </div>
 
-    <img src="../assets/logo.png" id="addButton" @click="$router.push('/release')"/>
+    <img src="../assets/icon/addIcon.png" id="addButton" @click="$router.push('/release')"/>
   </div>
 </template>
 
@@ -74,6 +86,8 @@
   import articleBox from "../components/articleBox";
   import messageBox from "../components/messageBox";
   import vueWaterfallEasy from '../components/vue-waterfall-easy'
+  import { Loading } from 'element-ui';
+
   export default {
     name: 'mine',
     components:{
@@ -84,69 +98,30 @@
     data () {
       return {
         page:"mine",
-        msg:{
-          id:"0",
-          nickname:"王明明",
-          avatarSrc:require("../assets/logo.png"),
-          worksNum:"26",
-          paintNum:"5",
-          likes:"31",
-          introduce:"好好学习，天天向上"
-        },
+        msg:{},
         activeIndex: '1',
-        articleList:[
-          {
-            id:1,
-            imgSrc:require("../assets/logo.png"),
-            title:"Python之父，现在成为微软打工人",
-            nickname:"小明",
-            avatarSrc:require("../assets/logo.png"),
-            releaseTime:"11-13",
-            likes:"232",
-            commentsNum:"56",
-            introduction:"当程序员开始诉控996加班时，中国多款浏览器竟然匪夷所思地禁止访问",
-            // content:"Python之父加入微软干什么？\n" +
-            //   "几个小时前，Guido Van Rossum本人发推宣布了这个消息，他说：「退休生活太无聊了，我决定加入微软的开发者部门！」"
-            mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481592000.md"
-          },
-          {
-            id:2,
-            imgSrc:require("../assets/logo.png"),
-            title:"如何看待马云 4 月 11 日在内外直播中将 996 称为「修来的福报」？",
-            nickname:"小红",
-            avatarSrc:require("../assets/logo.png"),
-            releaseTime:"11-10",
-            likes:"60",
-            commentsNum:"12",
-            introduction:"4月11日内外直播中，在被问及如何看待996.icu事件时，马云主要提出了一下三个观点： 马云谈996 1. 能996是你们的幸福 ",
-            // content:"1. 能996是你们的幸福\n" +
-            //   "\n" +
-            //   "2. 我本人从很久开始就不止996，简直007\n" +
-            //   "\n" +
-            //   "3. 不要扯法律什么的，法律也没规定公司要给你们提供这么好的工作环境这么高的工资，法律也没规定公司要给你们股票，但是我不也给你们了吗（阿里巴巴对外发布的演讲稿中未提及该条，真实性存疑）"
-            mdSrc:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481596000.md"
-          },
-        ],
-        len: 8,
+        articleList:[],
+        totalLenth:1,
+        currentPage:1,
         tag: 1,
         tagPath: "1-1",
         messageList:[
           {
             id:0,
-            imgSrc:require("../assets/logo.png"),
+            imgSrc:require("../assets/3.jpg"),
             title:"Python之父，现在成为微软打工人!",
             nickname:"小明",
-            avatarSrc:require("../assets/logo.png"),
+            avatarSrc:require("../assets/test/avatar1.jpg"),
             releaseTime:"11-13",
             comment:"这是一个好倡议",
             mode:"1-1"
           },
           {
             id:1,
-            imgSrc:require("../assets/logo.png"),
+            imgSrc:require("../assets/17.jpg"),
             title:"如何看待马云 4 月 11 日在内外直播中将 996 称为「修来的福报」？",
             nickname:"小红",
-            avatarSrc:require("../assets/logo.png"),
+            avatarSrc:require("../assets/test/avatar2.jpg"),
             releaseTime:"11-10",
             comment:"大大真棒！！！",
             mode:"2-2"
@@ -155,7 +130,7 @@
         imgsArr: [],         //存放所有已加载图片的数组（即当前页面会加载的所有图片）
         fetchImgsArr: [],    //存放每次滚动时下一批要加载的图片的数组
         isbottom:false,
-
+        pageNum:1,
       }
     },
     methods: {
@@ -163,32 +138,43 @@
         this.tag = keyPath[0] ;
         this.tagPath = keyPath[1] ;
         if(this.tagPath  === '1-2'){
-          this.imgsArr = this.initImgsArr(0, 10)       //初始化第一次（即页面加载完毕时）要加载的图片数据
-          this.fetchImgsArr = this.initImgsArr(10, 18) // 模拟每次请求的下一批新的图片的数据数据
+          this.getlist()
         }
       },
-      initImgsArr (n, m) {   //初始化图片数组的方法，把要加载的图片装入
-        var arr = []
-        for (var i = n; i < m; i++) {
-          arr.push({
-            cover: require(`../assets/${i + 1}.jpg`),
-            link: '',
-            info: '一些图片描述文字',
-            id: i+'0'+i,
-            title: "一些图片描述文字一些图片描述文字一些图片描述文字",
-            avatar: require(`../assets/logo.png`),
-            dateTime: "2000/08/20 10:10:10",
-            likeNum: 819358248421784,
-            comment: -6653595630801168,
-          })
-        }
-        return arr
+      getlist(){
+        let _this = this
+        this.pageNum = 1
+        this.imgsArr = []
+        this.$http.get('/api/person/drawing',{
+          params:{
+            key:"",
+            classify:"",
+            page:1,
+          }
+        }).then(function(res){
+          _this.imgsArr = res.data.drawing
+        }).catch(function(){
+          console.log("服务器异常");
+        });
       },
       fetchImgsData () {    //获取新的图片数据的方法，用于页面滚动满足条件时调用
-        if (this.fetchImgsArr.length === 0){
-          this.isbottom=false;
-        }
-        this.imgsArr = this.imgsArr.concat(this.fetchImgsArr)   //数组拼接，把下一批要加载的图片放入所有图片的数组中
+        let _this = this
+        this.pageNum ++
+        this.$http.get('/api/person/drawing',{
+          params:{
+            key:"",
+            classify:"",
+            page:this.pageNum,
+          }
+        }).then(function(res){
+          _this.fetchImgsArr = res.data.drawing
+          if (_this.fetchImgsArr.length === 0){
+            _this.isbottom=false
+          }
+          _this.imgsArr = _this.imgsArr.concat(_this.fetchImgsArr)   //数组拼接，把下一批要加载的图片放入所有图片的数组中
+        }).catch(function(){
+          console.log("服务器异常");
+        });
       },
       gotoDetail(val){
         let drawingsId = this.imgsArr[val].id
@@ -198,9 +184,62 @@
             drawingsId:drawingsId
           }
         })
-      }
+      },
+      getArticleList(){
+        //加个遮罩层至加载完成
+        let loadingInstance = Loading.service({
+          fullscreen:true,
+          lock:true,
+          text:"加载一下马上就好😊",
+          spinner:'el-icon-loading',
+          background:'rgba(0, 0, 0, 0.8)'
+        });
+
+        let that = this;
+        //获取我的文章列表
+        this.$http.get('/api/person/article',{
+          params:{
+            key:"",
+            classify:"",
+            page:that.currentPage,
+          }
+        }).then(function(res){
+          that.articleList = res.data.articles;
+          that.totalLenth = res.data.totalPage;
+          that.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+            loadingInstance.close();
+          });
+        }).catch(function(){
+          console.log("服务器异常");
+        });
+      },
+      getUserMsg(){
+        let that = this;
+        //得到个人信息
+        this.$http.get('/api/person/info')
+          .then(function(res){
+            that.msg = res.data;
+          }).catch(function(){
+          console.log("服务器异常");
+        });
+      },
+      //当前页
+      currentChange(val){
+        this.currentPage = val;
+        this.getArticleList();
+      },
+    },
+    created() {
+
+      let that = this;
+      that.getUserMsg();
+      that.getArticleList();
     },
     mounted() {
+      //每次路由跳转都更新文章列表
+      this.getUserMsg();
+      this.getArticleList();
+      this.getlist();
       $("#Scroll").scroll(function(event){
         console.log("!!!!!!Scroll")
         var scrollTop = document.getElementById("Scroll").scrollTop;
@@ -211,7 +250,7 @@
         // console.log("scrollTop: "+scrollTop+" divHeight: "+divHeight+" scrollHeight: "+scrollHeight)
         if(scrollTop+divHeight >= scrollHeight && scrollTop+divHeight <= scrollHeight){
           //加载新图片，并加锁等待图片加载完成
-          console.log('scrollReachBottom')
+          console.log('到底啦！！！')
         }
       });
     },
@@ -220,17 +259,18 @@
 
 <style scoped>
   #myPage{
-    height: 100%;
-    width: 76%;
-    margin: 0 12% 0 12%;
-    background-color: #fff;
+    height:calc(100% - 62px);
+    min-width: 76%;
+    margin: 62px 12% 0 12%;
+    /*background-color: #fff;*/
+    background-color: #ffffff87;
     position: absolute;
   }
   /*页面左半部分，个人信息*/
   #myInformation{
     float: left;
-    height: 100%;
-    width: 30%;
+    /*height: 100%;*/
+    width: 33%;
     text-align: center;
     position:relative;
     padding-top: 8%;
@@ -244,8 +284,8 @@
   .myAvatar{
     border-radius: 100%;
     border: 1px solid #000;
-    width: 280px;
-    height: 280px;
+    width: 250px;
+    height: 250px;
   }
   .myName{
     font-size: 1.5em;
@@ -261,32 +301,43 @@
     margin-top: 10px;
   }
   .edit{
-    width: 280px;
+    width: 250px;
     cursor: pointer;
-    background: #f8f9fa;
+    /*background: #f8f9fa;*/
+    background: #f8f9fa91;
   }
   /*页面右半部分*/
   #myContainer{
     float: right;
     width: 67%;
     /*margin-right: 5%;*/
-    padding-top: 5%;
+  }
+
+  /deep/ .el-menu{
+    background-color: rgba(255, 255, 255, 0);
   }
 
   #Scroll{
-    height: 635px;
-    overflow: auto;
+    height: 627px;
+    /*overflow: auto;*/
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   #addButton{
     cursor: pointer;
-    border: 1px solid #cccccc;
+    border: 1px solid #cccccc96;
     border-radius: 100%;
     width: 70px;
     height: 70px;
     position: fixed;
     bottom: 5%;
     right: 15%;
+    background: #ffffff8c;
+  }
+
+  #addButton:hover{
+    border: 1px solid #00a0e9;
   }
 
   /deep/ #articleUl{
@@ -317,5 +368,77 @@
     font-size:0.5em;
     color: #bfbfbf;
   }
+  .waterfall_box{
+    width:98%;
+  }
+
+  /deep/ #articleUl{
+    padding-left: 5px;
+  }
+
+  /*手绘部分*/
+  .avatarImg{
+    margin:5px 5px 5px 15px;
+    width:30px;
+    height:30px;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    float:left;
+  }
+  .titleP{
+    font-size:0.8em;
+    line-height:30px;
+    margin:5px 0 5px 5px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+    width:calc(100% - 65px);
+  }
+  .time{
+    float:right;
+    margin:0 15px 5px 0;
+    font-size:0.5em;
+    color: #bfbfbf;
+  }
+
+  .pagination{
+    margin-left: 40%;
+    margin-top: -10px;
+  }
+
+  /deep/ .el-pager li{
+    background: rgba(255, 255, 255, 0);
+  }
+
+  /deep/ .el-pagination button:disabled{
+    background: rgba(255, 255, 255, 0);
+  }
+
+  /deep/ .el-pagination .btn-next, .el-pagination .btn-prev{
+    background: rgba(255, 255, 255, 0);
+  }
+
+  /deep/ .el-pagination .btn-prev{
+    background: rgba(255, 255, 255, 0);
+  }
+
+  #Scroll::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+    scrollbar-arrow-color:red;
+
+  }
+  #Scroll::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+    scrollbar-arrow-color:red;
+  }
+  #Scroll::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+  }
+
 
 </style>

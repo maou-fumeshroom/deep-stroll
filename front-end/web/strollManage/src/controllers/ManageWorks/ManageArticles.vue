@@ -4,14 +4,14 @@
       <p style="color:#707070;padding:15px 40px;">查询</p>
       <div style="margin:0 20px;border-top:1px solid #EFEEEE">
         <div style="margin:15px 20px;">
-          <el-input v-model="key" placeholder="标题/标签" style="width: 200px;height: 19px;" size="mini" round></el-input>
+          <el-input v-model="key" placeholder="标题" style="width: 200px;height: 19px;" size="mini" round></el-input>
           <el-button size="mini" round style="margin-left: 15px;" @click="search()">搜索</el-button>
         </div>
         <div style="margin:15px 20px;">
 
           <span style="color:#707070;font-size:14px;">文章类别：</span>
           <el-select v-model="type" placeholder="全部" @change="changetype" style="width: 120px;height: 19px;" size="mini">
-            <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value">
+            <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
 
@@ -45,10 +45,10 @@
           </el-table-column>
           <el-table-column label="发布时间" prop="dateTime" align="center">
           </el-table-column>
-          <el-table-column label="操作" align="center" width="172">
+          <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button @click="change(scope.row.id,0)" size="mini" round v-if="scope.row.status===0">下架</el-button>
-              <el-button @click="change(scope.row.id,1)" size="mini" round v-else>上架</el-button>
+              <!--<el-button @click="change(scope.row.id,1)" size="mini" round v-if="scope.row.status===0">下架</el-button>-->
+              <!--<el-button @click="change(scope.row.id,0)" size="mini" round v-else>上架</el-button>-->
               <el-button @click="detail(scope.row.id)" size="mini" round>查看详情</el-button>
             </template>
           </el-table-column>
@@ -63,7 +63,7 @@
     </div>
 
     <el-dialog title="文章详情" :visible.sync="dialogDetail" :center="true" :before-close="handleClose" width="1000px">
-      <articledetail :id="id" @closeUsermsg1="closeUsermsg1"></articledetail>
+      <articledetail :id="id" :data="data" @closeUsermsg1="closeUsermsg1"></articledetail>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取消</el-button>
       </span>
@@ -79,13 +79,7 @@
     data() {
       return {
         dialogDetail:false,
-        options:[{
-          name:"随笔",
-          value:0
-        },{
-          name:"散文",
-          value:1
-        }],
+        options:[],
         states:[{
           name:"正常",
           value:0
@@ -93,24 +87,7 @@
           name:"下架",
           value:1
         }],
-        tableData: [
-          {
-            "id": "123",
-            "title": "做梦",
-            "nickname": "李青颖",
-            "status": 0,
-            "classifyName": "随笔",
-            "dateTime":"2020/11/7 01:00"
-          },
-          {
-            "id": "144",
-            "title": "白日做梦",
-            "nickname": "白嘉欣",
-            "status": 1,
-            "classifyName": "散文",
-            "dateTime":"2020/11/7 01:00"
-          }
-        ],
+        tableData: [],
         type:"",
         state:"",
         key:"",
@@ -118,7 +95,8 @@
         page: 1,
         pageSize: 10,
         currentPage1: 1,
-        id:''
+        data:{},
+        id:'',
       }
     },
     components: {
@@ -135,19 +113,25 @@
     },
     created() {
       this.getlist()
+      this.getClass()
     },
     methods: {
       search(){
         this.getlist()
       },
-      //已完成订单
+      getClass() {
+        let _this = this
+        this.$http.get(`/api/article/classify`).then(res => {
+          if (res.result.code === 1){
+            _this.options = res.data.classifys
+          }
+        }).catch(err =>{})
+      },
       changetype(val){
-        console.log(val)
         this.type=val;
         this.getlist()
       },
       changestatus(val){
-        console.log(val)
         this.state=val
         this.getlist()
       },
@@ -163,35 +147,49 @@
         this.getlist();
       },
       getlist() {
-        // this.$http.get(`/api/admin/user`,{
-        //   page: this.page,
-        //   key: this.key,
-        //   classify:this.type,
-        //   status:this.status
-        // }).then(response => {
-        //   this.tableData = data.articles
-        //   this.total = data.totalPage
-        // })
+        this.$http.get(`/api/article/search`,{params: {
+            page: this.page,
+            key: this.key,
+            classify: this.type,
+            status: this.state
+          }
+        }).then(res => {
+          if (res.result.code === 1){
+            this.tableData = res.data.articles
+          }
+        }).catch(err =>{})
       },
-      change(a,b,c){
-        // this.$http.post('/api/admin/user/status', {
-        //   id: a,
-        //   vip: b,
-        //   status: c
-        // }).then(response => {
-        //   console.log(data)
-        // })
+      change(a,b){
+        let _this = this
+        this.$http.post('/api/admin/work/status',{
+          id: a,
+          type:0,
+          status:b
+        }).then(res=>{
+          if (res.result.code === 1){
+            _this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+            _this.getlist()
+          }
+        }).catch(() => {})
       },
       closeUsermsg1() {
-
         this.dialogDetail = false;
         this.getlist()
-
       },
       detail(id) {
-        this.id = id;
-        console.log(this.id)
-        this.dialogDetail = true
+        this.id = id
+        this.$http.get(`/api/article/detail`,{params: {
+            id:id
+          }
+        }).then(res => {
+          if (res.result.code === 1){
+            this.data = res.data
+            this.dialogDetail = true
+          }
+        }).catch(err =>{})
       },
       handleClose() {
         this.dialogDetail = false

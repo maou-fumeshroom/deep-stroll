@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ap.deepstroll.mapper.RoleMenuMapper">
+
+    <resultMap id="RoleMenuMap" type="ap.deepstroll.entity.RoleMenuEntity">
+        <result property="roleMenuId" column="role_menu_id"/>
+        <result property="roleId" column="role_id"/>
+        <result property="menuId" column="menu_id"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <insert id="insertRoleMenu">
+        INSERT INTO 
+        role_menu( 
+            role_id,
+            menu_id
+        ) 
+        VALUES
+        <foreach collection="menuIds" item="menuId" separator=",">
+            (#{roleId}, 
+             #{menuId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRoleMenuByRoleMenuId">
+        DELETE FROM role_menu
+        WHERE role_menu_id = #{roleMenuId}
+    </delete>
+
+    <select id="queryByRoleIds" resultMap="RoleMenuMap">
+        SELECT
+            role_menu_id,
+            role_id,
+            menu_id,
+            create_time
+        FROM role_menu
+        WHERE role_id in
+        <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
+		    #{roleId}
+	    </foreach>
+    </select>
+
+    <select id="queryMenuIdByRoleIds" resultType="java.lang.Integer">
+        SELECT
+            menu_id 
+        FROM role_menu 
+        WHERE role_id in
+        <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </select>
+
+</mapper>

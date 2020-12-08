@@ -21,7 +21,7 @@
             :show-file-list="false"
             :http-request="UploadCover"
             :before-upload="beforeAvatarUpload">
-            <img v-if="msg.coverSrc" :src=msg.coverSrc class="cover"/>
+            <img v-if="articleMsg.cover" :src="articleMsg.cover" class="cover"/>
             <div v-else class="uploadLogo">
               <i  class="el-icon-upload msgCoverI"/>
               <div class="el-upload__text msgCoverText">将文件拖到此处，或<em>点击上传</em></div>
@@ -32,20 +32,16 @@
 
         <div class="pageRight">
           <span class="title">文章题目：</span>
-          <el-input class="inputBox" placeholder="请输入内容" v-model="msg.title" clearable/>
+          <el-input class="inputBox" placeholder="请输入内容" v-model="articleMsg.title" clearable/>
           <br/>
           <span>文章介绍：</span>
-          <!--          <el-input class="inputBox" placeholder="请输入内容" v-model="msg.introduce" clearable/>-->
-          <el-input type="textarea" placeholder="请输入介绍" v-model="msg.introduce" maxlength="150" show-word-limit/>
-          <el-select class="select" v-model="sort" filterable placeholder="请选择分类" clearable>
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-input style="margin-top:10px;" type="textarea" placeholder="请输入介绍" v-model="articleMsg.introduction" maxlength="150" show-word-limit/>
+          <el-select class="select" v-model="articleMsg.classify" filterable placeholder="请选择分类" clearable>
+            <el-option v-for="item in articleOptions" :key="item.id" :label="item.name" :value="item.id"/>
           </el-select>
 
-          <el-select v-model="label" filterable placeholder="请选择标签" clearable>
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
-          </el-select>
 
-          <!--          <el-button class="uploadButton" @click="uploadMd">上传文档</el-button>-->
+
           <el-upload
             action=""
             :show-file-list="false"
@@ -60,14 +56,9 @@
       <!--      手绘发布-->
       <div id="drawingRel" v-if="tag === '2'">
         <div class="pageLeft">
-          <!--          <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>-->
-          <!--            <i class="el-icon-upload"/>-->
-          <!--            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
-          <!--            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
-          <!--          </el-upload>-->
           <ul id="nineBox">
-            <li class="itemBox" v-for="(item,index) in drawings.slice(0,len)" :key="index">
-              <img v-if="item.src" :src="item.src" class="itemImg"/>
+            <li class="itemBox" v-for="(item,index) in drawingMsg.image.slice(0,len)" :key="index">
+              <img v-if="item" :src="item" class="itemImg"/>
             </li>
           </ul>
           <el-upload
@@ -78,25 +69,21 @@
             :before-upload="beforeAvatarUpload"
             multiple>
             <el-button>上传</el-button>
-            <!--            <img v-if="msg.coverSrc" :src=msg.coverSrc class="cover"/>-->
-            <!--            <i v-else class="el-icon-plus avatar-uploader-icon"/>-->
           </el-upload>
         </div>
 
 
         <div class="drawRight">
           <span class="title">手绘题目：</span>
-          <el-input class="inputBox" placeholder="请输入内容" v-model="msg.title" clearable/>
+          <el-input class="inputBox" placeholder="请输入内容" v-model="drawingMsg.title" clearable/>
           <br/>
           <span>手绘介绍：</span>
-          <el-input type="textarea" placeholder="请输入介绍" v-model="msg.introduce" maxlength="150" show-word-limit/>
-          <el-select class="select" v-model="sort" filterable placeholder="请选择分类" clearable>
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-input style="margin-top:10px;"  type="textarea" placeholder="请输入介绍" v-model="drawingMsg.introduction" maxlength="150" show-word-limit/>
+          <el-select class="select" v-model="drawingMsg.classify" filterable placeholder="请选择分类" clearable>
+            <el-option v-for="item in drawingOptions" :key="item.id" :label="item.name" :value="item.id"/>
           </el-select>
           <br/>
-          <el-select class="select" v-model="label" filterable placeholder="请选择标签" clearable>
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
-          </el-select>
+
 
           <p>只能上传jpg/png/jpeg文件，且不超过500kb，最多上传9张</p>
         </div>
@@ -119,32 +106,19 @@
       return{
         activeIndex: '1',
         tag:'1',
-        msg:{
-          coverSrc:"",
-          title:"",
-          introduce:"",
-          mdSrc:""
+        articleMsg:{
+            cover:"",
+            title:"",
+            introduction:"",
+            fileUrl:"",
+            classify:null,
+            labels:[],
         },
-        options: [{
-          value: '选项1',
-          label: '电影'
-        }, {
-          value: '选项2',
-          label: '新闻'
-        }, {
-          value: '选项3',
-          label: '财经'
-        }, {
-          value: '选项4',
-          label: '动漫'
-        }, {
-          value: '选项5',
-          label: '风景'
-        }],
+        drawingOptions: [],
+        articleOptions:[],
         sort:"",
         label:"",
         drawings:[
-          // {id:'1', src:"../../static/images/logo.png"},
           {id:'1', src:""},
           {id:'2', src:""},
           {id:'3', src:""},
@@ -155,26 +129,136 @@
           {id:'8', src:""},
           {id:'9', src:""},
         ],
+        drawingMsg:{
+            title:"",
+            classify:null,
+            labels:[],
+            introduction:"",
+            image:[]
+        },
         len:0,
+        isComplete:false,
       }
+    },
+    created(){
+      this.getClassify()
     },
     methods: {
       handleSelect(key, keyPath) {
         this.tag = keyPath[0] ;
       },
+      getClassify(){
+        this.$http.get(`/api/article/classify`).then(res => {
+            if (res.result.code === 1){
+              this.articleOptions = res.data.classifys
+            }
+        }).catch(err =>{})
+        this.$http.get(`/api/drawing/classify`).then(res => {
+          if (res.result.code === 1){
+            this.drawingOptions = res.data.classifys
+          }
+        }).catch(err =>{})
+      },
       release(){
+        let _this = this
+
+        //文章上传
+        if (this.tag === '1'){
+          //先判断有无未填信息
+          if(this.articleMsg.cover !== "" &&
+            this.articleMsg.title !== "" &&
+            this.articleMsg.classify !== null &&
+            this.articleMsg.introduction !== "" &&
+            this.articleMsg.fileUrl !== ""){
+            this.isComplete = true;
+          }
+
+          //如果全部填写，才能发布成功
+          if(this.isComplete){
+            // console.log("文章： "+ JSON.stringify(this.articleMsg));
+            //发布文章
+            this.$http.post('/api/person/article/add',{
+              cover:this.articleMsg.cover,
+              title:this.articleMsg.title,
+              classify:this.articleMsg.classify,
+              labels:this.articleMsg.labels,
+              introduction:this.articleMsg.introduction,
+              fileUrl:this.articleMsg.fileUrl
+            },{emulateJSON: true})
+              .then(function(res){
+                if (res.result.code === 1){
+                  _this.$message.success("发布成功")
+                  _this.$router.push({
+                    path:'/mine',
+                  })
+                }
+              }).catch(err =>{});
+          }else{
+            this.$notify({
+              title: '警告',
+              message: '请完整填写文章信息后再上传',
+              type: 'warning',
+              duration:1000
+            });
+          }
+
+        }else{
+          //手绘上传
+
+          //先判断有无未填信息
+          if(this.drawingMsg.title !== "" &&
+            this.drawingMsg.classify !== null &&
+            this.drawingMsg.introduction !== "" &&
+            this.drawingMsg.image.length !== 0){
+            this.isComplete = true;
+          }
+
+          //如果全部填写，才能发布成功
+          if(this.isComplete){
+            console.log("手绘： "+JSON.stringify(this.drawingMsg));
+            this.$http.post('/api/person/drawing/add',{
+              title:this.drawingMsg.title,
+              classify:this.drawingMsg.classify,
+              labels:this.drawingMsg.labels,
+              introduction:this.drawingMsg.introduction,
+              image:this.drawingMsg.image
+            },{emulateJSON: true})
+              .then(function(res){
+                if (res.result.code === 1){
+                  _this.$message.success("发布成功")
+                  _this.$router.push({
+                    path:'/mine',
+                  })
+                }
+              }).catch(err =>{});
+          }else{
+            this.$notify({
+              title: '警告',
+              message: '请完整填写手绘信息后再上传',
+              type: 'warning',
+              duration:1000
+            });
+          }
+
+        }
       },
       cancel(){
+        this.$router.push({
+          path:'/mine',
+        })
       },
       uploadMd(file){
         var fileName = 'article' + `${Date.parse(new Date())}`+'.md';  //定义唯一的文件名
         client().multipartUpload(fileName, file.file).then(
           result => {
-            this.msg.mdSrc = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+            this.articleMsg.fileUrl = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
             $('.uploadOK').css('display', 'block');
-            // var temp = document.getElementsByClassName("uploadOK");
-            // temp.style = "display:block";
-            // temp.style.display = block;
+            this.$notify({
+              title: '成功',
+              message: '您已成功上传文件😊！',
+              type: 'success',
+              duration: 1000
+            });
           })
       },
       UploadCover(file) {
@@ -182,7 +266,7 @@
         //定义唯一的文件名，打印出来的uid其实就是时间戳
         client().multipartUpload(fileName, file.file).then(
           result => {
-            this.msg.coverSrc = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+            this.articleMsg.cover = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
           })
       },
       UploadImg(file) {
@@ -191,7 +275,9 @@
           //定义唯一的文件名，打印出来的uid其实就是时间戳
           client().multipartUpload(fileName, file.file).then(
             result => {
-              this.drawings[this.len].src = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+              // this.drawings[this.len].src = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+              // this.drawingMsg.image[this.len].src = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
+              this.drawingMsg.image[this.len] = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
               this.len += 1;
               // uploadBannerPic(this.fileList).then(res => {
               //   console.log("lalala")
@@ -210,9 +296,9 @@
        * 上传图片切记不要过大，可能会导致上传失败
        */
       beforeAvatarUpload (file) {
-        const isJPEG = file.name.split('.')[1] === 'jpeg';
-        const isJPG = file.name.split('.')[1] === 'jpg';
-        const isPNG = file.name.split('.')[1] === 'png';
+        const isJPEG = file.name.substring(file.name.lastIndexOf(".") + 1).toLowerCase() === 'jpeg';
+        const isJPG = file.name.substring(file.name.lastIndexOf(".") + 1).toLowerCase() === 'jpg';
+        const isPNG = file.name.substring(file.name.lastIndexOf(".") + 1).toLowerCase() === 'png';
         const isLt500K = file.size / 1024 / 500 < 2;
         if (!isJPG && !isJPEG && !isPNG) {
           this.$message.error('上传图片只能是 JPEG/JPG/PNG 格式!');
@@ -221,6 +307,7 @@
           this.$message.error('单张图片大小不能超过 500KB!');
         }
         return (isJPEG || isJPG || isPNG) && isLt500K;
+        // return (isJPEG || isJPG || isPNG);
       },
     }
   }
@@ -228,23 +315,35 @@
 
 <style scoped>
   #release{
-    height: 100%;
+    height:calc(100% - 62px);
     width: 76%;
-    margin: 0 12% 0 12%;
-    background-color: #fff;
+    margin: 62px 12% 0 12%;
+    /*background-color: #fff;*/
+    background-color: #ffffffa8;
     position: absolute;
   }
   #nav{
-    padding: 6% 5% 0 5%;
+    padding: 0 5%;
   }
   #releaseBox{
-    margin: 3% 12%;
+    margin: 3% auto;
     position: relative;
+  }
+  #articleRel{
+    width:100%;
+    display:flex;
+    justify-content: center;
+  }
+  #drawingRel{
+    width:100%;
+    display:flex;
+    justify-content: center;
   }
   /*页面左半*/
   .pageLeft{
-    float: left;
+    margin:0 20px;
     text-align: center;
+    margin-top: -1%;
   }
   /*文章页面左半*/
   .cover{
@@ -254,9 +353,7 @@
   .uploadButton{
     display: inline-block;
     width: 150px;
-    background: #f8f9fa;
-    margin-top: 50px;
-    margin-bottom: 9px;
+    background: #f8f9fa
   }
   .uploadCover{
     border: 1px dashed #d9d9d9;
@@ -277,7 +374,7 @@
   }
   /*手绘页面左半*/
   /deep/ .el-upload-dragger {
-    background-color: rgba(204, 204, 204, 0);
+    background-color: #ffffffbd;
     border: 0;
     width: 450px;
     height: 450px;
@@ -300,11 +397,12 @@
   }
   #nineBox{
     list-style-type: none;
-    width: 404px;
-    height: 404px;
+    width: 415px;
+    height: 415px;
     padding: 0;
     border: 1px solid #d9d9d9;
     border-radius: 5px;
+    background-color: #ffffffbd;
   }
   .itemBox{
     width: 130px;
@@ -321,8 +419,8 @@
   }
   /*页面右半*/
   .pageRight{
-    float: right;
-    width: 55%;
+    max-width: 400px;
+    margin:0 20px;
   }
   .inputBox{
     display: inline-block;
@@ -333,15 +431,28 @@
     display: inline-block;
   }
   .select{
-    margin: 30px 50px 10px 0;
+    margin: 30px 50px 90px 0;
   }
   .uploadOK{
     display: none;
+    font-size: 12px;
+    color: #606266;
+    margin-top: 9px;
     /*display: block;*/
   }
   /deep/ .el-textarea__inner{
     height: 130px;
+    background-color: #ffffffbd;
   }
+
+  /deep/ .el-input__inner{
+    background-color: #ffffffbd;
+  }
+
+  /deep/ .el-menu{
+    background-color: rgba(255, 255, 255, 0);
+  }
+
   #Button{
     position: absolute;
     bottom: 10%;
@@ -358,11 +469,12 @@
     width: 100px;
   }
   .drawRight{
-    float: right;
-    width: 43%;
+    max-width:400px;
+    margin:0 20px
   }
   .drawRight p{
     font-size: 10px;
-    color: #c0c4cc;
+    /*color: #c0c4cc;*/
+    color: #84878b;
   }
 </style>

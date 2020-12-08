@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ap.deepstroll.mapper.ClassifyDrawingMapper">
+
+    <resultMap id="ClassifyDrawingMap" type="ap.deepstroll.entity.ClassifyDrawingEntity">
+        <result property="id" column="classify_drawing_id"/>
+        <result property="name" column="name"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <insert id="insertClassifyDrawing">
+        INSERT INTO
+        classify_drawing(
+            name
+        )
+        VALUES(
+            #{name}
+        )
+    </insert>
+
+    <select id="queryClassifyDrawingByName" resultType="java.lang.Integer">
+        SELECT 
+            count(*)
+        FROM classify_drawing
+        WHERE name = #{name}
+    </select>
+
+    <select id="queryClassifyById" resultMap="ClassifyDrawingMap">
+        SELECT 
+            classify_drawing_id,
+            name,
+            state,
+            create_time,
+            update_time
+        FROM classify_drawing
+        WHERE classify_drawing_id = #{id}
+    </select>
+
+    <select id="queryAllClassifyDrawing" resultMap="ClassifyDrawingMap">
+        SELECT 
+            classify_drawing_id,
+            name,
+            state,
+            create_time,
+            update_time
+        FROM classify_drawing
+        <where>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryClassifyDrawingByPage" resultMap="ClassifyDrawingMap">
+        SELECT 
+            classify_drawing_id,
+            name,
+            state,
+            create_time,
+            update_time
+        FROM classify_drawing
+        <where>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="queryClassifyNumDrawingByPage" resultType="java.lang.Integer">
+        SELECT 
+            count(*)
+        FROM classify_drawing
+        <where>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateClassifyDrawingState">
+        UPDATE classify_drawing
+        SET
+            state = #{state}
+        WHERE
+            classify_drawing_id = #{id}
+    </update>
+
+</mapper>

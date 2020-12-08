@@ -1,0 +1,48 @@
+# Server configuration
+server:
+  port: 8080
+
+# Spring configuration
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+  datasource:  
+    url : jdbc:mysql://localhost:3306/deep_stroll?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2b8&allowMultiQueries=true
+    username : root
+    password : rootaliyun
+    driverClassName : com.mysql.cj.jdbc.Driver
+    
+#Mybatis
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  typeAliasesPackage: com.mbry.IronMan.entity
+
+# JWT
+jwt:
+  header: Authorization
+  secret: mySecret
+  expiration: 604800
+  tokenHead: "Bearer "
+  supercode: "99999"
+  route:
+    authentication:
+      path: /api/login/
+      register: /api/user/register/
+
+# Tencent Cos
+tencent:
+  cos:
+    secretId: "AKIDlHvyxiLXdVBfyUgDTdcWJxPcaJn4upL0"
+    secretKey: "jfaHky2pMdexzpQWOSEl11lEPN7fxvf9"
+    region: "ap-beijing"
+    bucket:  "deep-stroll-1303131952"
+
+# 
+aliyun:
+  access-key-id: "LTAI4G6FyZvxaLiCy4bcKhte"
+  access-key-secret: "lRW9PP5WzmZcgpX9BPEwkblH8wcFPm"
+  sign-name: "闲亭社区"
+  template-code: "SMS_206547566"

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ap.deepstroll.mapper.UserMapper">
+
+    <resultMap id="UserMap" type="ap.deepstroll.entity.UserEntity">
+        <result property="id" column="id"/>
+        <result property="telephone" column="telephone"/>
+        <result property="password" column="password"/>
+        <result property="nickname" column="nickname"/>
+        <result property="gender" column="gender"/>
+        <result property="eMail" column="e_mail"/>
+        <result property="sign" column="sign"/>
+        <result property="vip" column="vip"/>
+        <result property="avatar" column="avatar"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <insert id="insertUser" parameterType="ap.deepstroll.entity.UserEntity">
+        INSERT INTO
+        user(
+            telephone,
+            password,
+            nickname,
+            gender,
+            e_mail,
+            sign,
+            avatar
+        )
+        VALUES(
+            #{telephone},
+            #{password},
+            #{nickname},
+            #{gender},
+            #{eMail},
+            #{sign},
+            #{avatar}
+        )
+    </insert>
+
+    <select id="queryUser" resultMap="UserMap">
+        SELECT
+            id,
+            telephone,
+            password,
+            nickname,
+            gender,
+            e_mail,
+            sign,
+            avatar,
+            vip,
+            state,
+            create_time,
+            update_time
+        FROM user
+        <where> 
+			<if test="telephone != null">
+				OR telephone = #{telephone} 
+			</if>
+            <if test="nickname != null">
+                OR nickname like concat('%', #{nickname}, '%')
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            <if test="vip != null">
+                AND vip = #{vip}
+            </if>
+        </where>
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="queryUserNum" resultType="Integer">
+        SELECT
+            count(*)
+        FROM user
+        <where> 
+			<if test="telephone != null">
+				OR telephone = #{telephone} 
+			</if>
+            <if test="nickname != null">
+                OR nickname like concat('%', #{nickname}, '%')
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            <if test="vip != null">
+                AND vip = #{vip}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryUserById" resultMap="UserMap">
+        SElECT
+            id,
+            telephone,
+            password,
+            nickname,
+            gender,
+            e_mail,
+            sign,
+            avatar,
+            vip,
+            state,
+            create_time,
+            update_time
+        FROM user
+        WHERE id = #{id}
+    </select>
+
+    <select id="queryUserByTel" resultMap="UserMap">
+        SELECT
+            id,
+            telephone,
+            password,
+            nickname,
+            gender,
+            e_mail,
+            sign,
+            avatar,
+            vip,
+            state,
+            create_time,
+            update_time
+        FROM user
+        WHERE telephone = #{telephone}
+    </select>
+
+    <update id="updateUser" parameterType="ap.deepstroll.entity.UserEntity">
+        UPDATE user
+        <set>
+            <if test="telephone != null">
+                telephone = #{telephone},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="eMail != null">
+                e_mail = #{eMail},
+            </if>
+            <if test="sign != null">
+                sign = #{sign},
+            </if>
+            <if test="avatar != null">
+                avatar = #{avatar},
+            </if>
+            <if test="state != null">
+                state = #{state}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateUserState">
+        UPDATE user
+        SET state = #{state}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateUserVip">
+        UPDATE user
+        SET vip = #{vip}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

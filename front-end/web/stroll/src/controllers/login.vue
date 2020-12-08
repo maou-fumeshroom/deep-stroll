@@ -8,8 +8,10 @@
             .choose_item.register_choose(@click="toRegister()") 注册
           .container
             el-form.form_box(ref="loginForm" :model="loginForm" :rules="rules" label-width="60px")
-              el-form-item(label="账号")
-                el-input(v-model="loginForm.account" placeholder="请输入手机号")
+              el-form-item(label="昵称" v-if="islogin!==1")
+                el-input(v-model="loginForm.account" placeholder="请输入昵称")
+              el-form-item(label="账号" v-else)
+                el-input(v-model="loginForm.phone" placeholder="请输入手机号")
               el-form-item(label="密码")
                 el-input(type="password" v-model="loginForm.password" placeholder="请输入密码")
               el-form-item(label="手机号" v-if="islogin!==1")
@@ -22,83 +24,115 @@
 </template>
 
 <script>
-    export default {
-        name: "login",
-      data () {
-        return {
-          loginForm:{
-            account:'',
-            password:'',
-            phone:'',
-            sms:''
-          },
-          rules:{},
-          islogin:1,
-          CodeStatus: false,
-          CodeBtn: '获取验证码',
-          a:null,
-          b:'1',
+  export default {
+    name: "login",
+    data () {
+      return {
+        loginForm:{
+          account:'',
+          password:'',
+          phone:'',
+          sms:''
+        },
+        rules:{},
+        islogin:1,
+        CodeStatus: false,
+        CodeBtn: '获取验证码',
+        menus:[],
+      }
+    },
+    methods:{
+      toLogin(){
+        this.islogin = 1
+      },
+      toRegister(){
+        this.islogin = 2
+      },
+      handlegetcode() {
+        let _this =this
+        const mobile = /^[1][3,4,5,7,8,6][0-9]{9}$/;
+        if (/^1(3|4|5|6|7|8|9)\d{9}$/.test(this.loginForm.phone)) {
+          console.log("电话："+ this.loginForm.phone)
+          this.$http.post('/api/ssm', {
+              telephone: this.loginForm.phone
+            })
+            .then(res => {
+              _this.timeOut();
+              _this.$message('获取验证码成功');
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        } else {
+          _this.$message.warning('手机号格式错误');
         }
       },
-      methods:{
-        toLogin(){
-          this.islogin = 1
-        },
-        toRegister(){
-          this.islogin = 2
-        },
-        handlegetcode() {
-          let _this =this
-          const mobile = /^[1][3,4,5,7,8,6][0-9]{9}$/;
-          if (/^1(3|4|5|6|7|8|9)\d{9}$/.test(this.loginForm.phone)) {
-            this.timeOut();
-            // this.$http
-            //   .post('', {
-            //     number: this.phone
-            //   })
-            //   .then(res => {
-            //     this.timeOut();
-            //     _this.$message({
-            //       title: '获取验证码成功',
-            //       icon: 'none'
-            //     });
-            //   })
-            //   .catch(err => {
-            //     console.log(err);
-            //   });
-          } else {
-            _this.$message.warning('手机号格式错误');
+      timeOut() {
+        // 获取验证码按钮倒计时
+        let t = 60000;
+        this.CodeStatus = true;
+        let _this = this;
+        let timeOut = setInterval(function() {
+          t -= 1000;
+          _this.CodeBtn = t / 1000;
+          if (t <= 0) {
+            clearTimeout(timeOut);
+            _this.CodeBtn = '获取验证码';
+            _this.CodeStatus = false;
           }
-        },
-        timeOut() {
-          // 获取验证码按钮倒计时
-          let t = 60000;
-          this.CodeStatus = true;
-          let _this = this;
-          let timeOut = setInterval(function() {
-            t -= 1000;
-            _this.CodeBtn = t / 1000;
-            if (t <= 0) {
-              clearTimeout(timeOut);
-              _this.CodeBtn = '获取验证码';
-              _this.CodeStatus = false;
+        }, 1000);
+      },
+      submitLogin(){
+        let that = this;
+        //登录接口
+        // console.log(this.loginForm)
+        this.$http.post('/api/login',{
+          telephone:this.loginForm.phone,
+          pwd:this.loginForm.password,
+        },{emulateJSON: true})
+          .then(function(res){
+            console.log(res)
+            const token = res.data.token;
+            localStorage.setItem("token",token)
+            that.menus = res.data.menus;
+            that.$emit('onSetMenus',that.menus);
+            localStorage.setItem("userId",res.data.id)
+            // if(!localStorage.getItem("bg")){
+              that.getDefaultTheme();
+            // }
+            that.$router.push({
+              path:that.menus[0].path
+            })
+          })
+      },
+      getDefaultTheme(){
+        let that = this
+        this.$http.get(`/api/config/themeList`).then(res => {
+          if (res.result.code === 1){
+            let theme = res.data.default
+            that.$emit('onSetTheme',theme);
+          }
+        }).catch(err =>{})
+      },
+      submitRegister(){
+        //注册
+        console.log(this.loginForm)
+        let _this = this
+        this.$http.post('/api/register',{
+          nickname:this.loginForm.account,
+          pwd:this.loginForm.password,
+          telephone:this.loginForm.phone,
+          code:this.loginForm.sms,
+        },{emulateJSON: true})
+          .then(function(res){
+            if (res.result.code === 1) {
+              _this.$message.success('注册成功');
+              _this.islogin = 1
             }
-          }, 1000);
-        },
-        submitLogin(){
-          localStorage.setItem("token", "Smith")
-          this.$router.push({
-            path:'/article'
-          })
-        },
-        submitRegister(){
-          this.$http.post('1111',{
-            a:this.a,
-            b:this.b
-          })
-        }
+          });
       }
     }
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -221,4 +255,3 @@
     margin-left:calc(50% - 47px);
   }
 </style>
-
