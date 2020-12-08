@@ -255,10 +255,16 @@ public class DrawingService extends WorkService {
         return null;
     }
 
-    public Map<String, Result> deleteWork(Long id, Integer type) {
+    public Map<String, Result> deleteWork(Long id, Integer type, Long authorId) {
         Map<String, Result> response = new HashMap<>();
         try {
             //drawingMapper.updateDrawingState(id, 1);
+            DrawingEntity drawingEntity = drawingMapper.queryDrawingById(id);
+            if (drawingEntity.getAuthorId() != authorId) {
+                Result result = new Result("not author");
+                response.put("result", result);
+                return response;
+            }
             drawingMapper.realDelete(id);
             Result result = new Result();
             response.put("result", result);

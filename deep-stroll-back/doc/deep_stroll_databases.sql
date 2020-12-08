@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`classify_article` (
   `update_time` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`classify_article_id`));
   
-  INSERT INTO `deep_stroll`.`classify_article` (`name`) VALUES ('defaultArticleClassify');
+  INSERT INTO `deep_stroll`.`classify_article` (`name`) VALUES ('综合');
 
 CREATE TABLE IF NOT EXISTS `deep_stroll`.`classify_drawing` (
   `classify_drawing_id` INT NOT NULL AUTO_INCREMENT,
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`classify_drawing` (
   `update_time` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`classify_drawing_id`));
   
-  INSERT INTO `deep_stroll`.`classify_drawing` (`name`) VALUES ('defaultDrawingClassify');
+  INSERT INTO `deep_stroll`.`classify_drawing` (`name`) VALUES ('综合');
 
 CREATE TABLE IF NOT EXISTS `deep_stroll`.`theme` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`theme` (
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
   
-  INSERT INTO `deep_stroll`.`theme` (`name`, `background_url`, `bgm_url`, `is_default`) VALUES ('defaultTheme', 'defaultBackgroundUrl', 'defaultBgmUrl', '1');
+  INSERT INTO `deep_stroll`.`theme` (`name`, `background_url`, `bgm_url`, `is_default`) VALUES ('默认主题', 'https://deep-stroll-1303131952.cos.ap-beijing.myqcloud.com/defaultTheme.jpg', 'defaultBgmUrl', '1');
 
 CREATE TABLE IF NOT EXISTS `deep_stroll`.`admin` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -173,8 +173,8 @@ CREATE TABLE IF NOT EXISTS `deep_stroll`.`home_menu` (
   `update_time` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
   
-INSERT INTO `deep_stroll`.`home_menu` (`id`, `name`, `path`) VALUES ('1', 'article', '/article');
-INSERT INTO `deep_stroll`.`home_menu` (`id`, `name`, `path`) VALUES ('2', 'drawing', '/drawings');
+INSERT INTO `deep_stroll`.`home_menu` (`id`, `name`, `path`) VALUES ('1', '文章', '/article');
+INSERT INTO `deep_stroll`.`home_menu` (`id`, `name`, `path`) VALUES ('2', '手绘', '/drawings');
 
 CREATE TABLE IF NOT EXISTS `deep_stroll`.`log` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
