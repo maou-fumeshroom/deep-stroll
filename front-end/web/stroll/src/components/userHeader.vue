@@ -1,21 +1,22 @@
 <template>
   <nav>
     <div class="logo" @click="$router.push('/')">
-      <slot name="logo-icon"><img src="../assets/logo.png"></slot>
-      <slot name="logo-title">闲亭</slot>
+      <img class="logoImg" src="../../static/logo.png">
+      <img class="name" src="../../static/name.png">
     </div>
     <el-row class="nav-menu">
       <div class="search">
         <el-input
           placeholder="请输入内容"
+          v-model="key"
           size="small"
-          class="input_search">
+          class="input_search"
+          @keyup.enter.native="search">
           <i slot="prefix" class="el-input__icon el-icon-search"></i>
         </el-input>
       </div>
-      <router-link to="/article" exact tag="li" class="header-item">文章</router-link>
-      <router-link to="/drawings" tag="li" class="header-item">手绘</router-link>
-      <div class="avatarBox" @click="$router.push('/mine')">
+      <router-link v-for="(route,index) in menus" :key="index" :to=route.path exact tag="li" class="header-item">{{route.name}}</router-link>
+      <div v-if="user" class="avatarBox" @click="$router.push('/mine')">
         <img :src="user.avatar"/>
       </div>
       <img :src="setIcon" @click="$router.push('/set')" class="setIcon"/>
@@ -30,11 +31,13 @@
 </template>
 
 <script>
+  import bus from '@/utils/bus'
   export default {
     data(){
       return{
         setIcon: require('../../static/set.png'),
         logoutIcon: require('../../static/logout.png'),
+        key:''
       }
     },
     props: {
@@ -46,6 +49,14 @@
             nickname:'baozilong',
           }
         }
+      },
+      menus:{
+        type: Array,
+        default: () => [{
+          id: 1,
+          name: '文章',
+          path: '/article'
+        }]
       }
     },
     methods:{
@@ -62,8 +73,14 @@
         this.$router.push({
           path:'/'
         })
+      },
+      search(){
+        bus.$emit('search',this.key)
       }
-    }
+    },
+    created() {
+
+    },
   }
 </script>
 
@@ -84,7 +101,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding:16px 5vw;
+    /*padding:16px 5vw;*/
+    padding-left: 15px;
     height: 62px;
     background-color: rgba(36,41,46,1);
     z-index:999;
@@ -96,11 +114,21 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     cursor:pointer;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
   }
-  .logo img{
+  .logoImg{
     width:30px;
     height:30px;
     border-radius: 5px;
+    flex: 1;
+    vertical-align: center;
+    margin-right:5px;
+  }
+  .name{
+    width:auto;
+    height:30px;
     flex: 1;
     vertical-align: center;
   }

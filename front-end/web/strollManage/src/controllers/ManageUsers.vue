@@ -32,7 +32,7 @@
         <el-table :data="tableData" style="width: 100%;margin:20px auto 10px auto;" stripe >
           <el-table-column label="用户编号" prop="id" align="center">
           </el-table-column>
-          <el-table-column label="昵称" prop="nickname" align="center">
+          <el-table-column label="昵称" prop="nickName" align="center">
           </el-table-column>
           <el-table-column label="性别" prop="sex" align="center">
             <template slot-scope="scope">
@@ -59,14 +59,14 @@
             <template slot-scope="scope">
               <el-button @click="change(scope.row.id,1,scope.row.status)" size="mini" round v-if="scope.row.vip===0">设为VIP</el-button>
               <el-button @click="change(scope.row.id,0,scope.row.status)" size="mini" round v-else>取消VIP</el-button>
-              <el-button @click="change(scope.row.id,scope.row.vip,0)" size="mini" round v-if="scope.row.status===0">冻结</el-button>
-              <el-button @click="change(scope.row.id,scope.row.vip,1)" size="mini" round v-else>解冻</el-button>
+              <el-button @click="change(scope.row.id,scope.row.vip,1)" size="mini" round v-if="scope.row.status===0">冻结</el-button>
+              <el-button @click="change(scope.row.id,scope.row.vip,0)" size="mini" round v-else>解冻</el-button>
             </template>
           </el-table-column>
         </el-table>
 
         <div class="block pageBox" style="text-align: center;">
-          <el-pagination @current-change="handleCurrentChange" :current-page="currentPage1" :page-size="10" layout="total, prev, pager, next, jumper" :total='total'>
+          <el-pagination @current-change="handleCurrentChange" :current-page="currentPage1" :page-size="10" layout="total,prev, pager, next, jumper" :total='total'>
           </el-pagination>
         </div>
       </div>
@@ -129,9 +129,9 @@
     filters: {
       filters: function(arg) {
         if(arg == 0) {
-          return "男"
-        } else if(arg == 1) {
           return "女"
+        } else if(arg == 1) {
+          return "男"
         }
       },
       filters1: function(arg) {
@@ -156,12 +156,11 @@
       search(){
         this.getlist()
       },
-      //已完成订单
+
       changetype(val){
         console.log(val)
         this.type=val;
         this.getlist()
-
       },
       changestatus(val){
         console.log(val)
@@ -180,29 +179,40 @@
         this.getlist();
       },
       getlist() {
-        // this.$http.get(`/api/admin/user`,{
-        //   page: this.page,
-        //   key: this.key,
-        //   vip:this.type,
-        //   status:this.status
-        // }).then(response => {
-        //   this.tableData = data.users
-        //   this.total = data.totalPage
-        // })
+        this.$http.get(`/api/admin/user`,{params:{
+            page: this.page,
+            key: this.key,
+            vip:this.type,
+            status:this.state
+          }
+        }).then(res => {
+          if (res.result.code === 1){
+            console.log(res)
+            this.tableData = res.data.users
+            this.total = res.data.totalPage
+          }
+        }).catch(err =>{})
       },
       change(a,b,c){
-        // this.$http.post('/api/admin/user/status', {
-        //   id: a,
-        //   vip: b,
-        //   status: c
-        // }).then(response => {
-        //   console.log(data)
-        // })
+        let _this = this
+        this.$http.post('/api/admin/user/status', {
+          id: parseInt(a),
+          vip: b,
+          status: c
+        }).then(res => {
+          if (res.result.code === 1){
+            _this.$message({
+              message: '操作成功',
+              type: 'success'
+            });
+            this.getlist()
+          }
+        }).catch(err =>{})
       }
     }
   }
 </script>
-
+re's
 <style scoped>
   .oder {
     width: 100%;

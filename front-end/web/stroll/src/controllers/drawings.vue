@@ -12,56 +12,91 @@
 
 <script>
   import vueWaterfallEasy from '../components/vue-waterfall-easy'
-    export default {
-      data () {
-        return {
-          imgsArr: [],         //存放所有已加载图片的数组（即当前页面会加载的所有图片）
-          fetchImgsArr: [],    //存放每次滚动时下一批要加载的图片的数组
-          isbottom:false,
-        }
-      },
-      components: {
-        vueWaterfallEasy
-      },
-      created () {
-        this.imgsArr = this.initImgsArr(0, 10)       //初始化第一次（即页面加载完毕时）要加载的图片数据
-        this.fetchImgsArr = this.initImgsArr(10, 18) // 模拟每次请求的下一批新的图片的数据数据
-      },
-      methods: {
-        initImgsArr (n, m) {   //初始化图片数组的方法，把要加载的图片装入
-          var arr = []
-          for (var i = n; i < m; i++) {
-            arr.push({
-              cover: require(`../assets/${i + 1}.jpg`),
-              link: '',
-              info: '一些图片描述文字',
-              id: i+'0'+i,
-              title: "一些图片描述文字一些图片描述文字一些图片描述文字",
-              avatar: require(`../assets/logo.png`),
-              dateTime: "2000/08/20 10:10:10",
-              likeNum: 819358248421784,
-              comment: -6653595630801168,
-            })
+  import bus from '../utils/bus'
+  export default {
+    data () {
+      return {
+        imgsArr: [],         //存放所有已加载图片的数组（即当前页面会加载的所有图片）
+        fetchImgsArr: [],    //存放每次滚动时下一批要加载的图片的数组
+        isbottom:false,
+        page:1,
+        key:''
+      }
+    },
+    components: {
+      vueWaterfallEasy
+    },
+    created () {
+      let that = this;
+      //获取手绘分类
+      this.$http.get('/api/drawing/classify')
+        .then(function(res){
+          // console.log("！！： "+JSON.stringify(res));
+          that.msg = res.data;
+        }).catch(function(){
+        console.log("服务器异常");
+      });
+      this.getlist()
+      bus.$on('search', res=>{
+        this.key = res
+        that.getlist()
+      })
+    },
+    mounted() {
+      this.getlist();
+    },
+    methods: {
+      getlist(){
+        let _this = this
+        this.page = 1
+        this.imgsArr = []
+        this.$http.get('/api/drawing/search',{
+          params:{
+            key:_this.key,
+            classify:"",
+            page:1,
+            status:0,
           }
-          return arr
-        },
-        fetchImgsData () {    //获取新的图片数据的方法，用于页面滚动满足条件时调用
-          if (this.fetchImgsArr.length === 0){
-            this.isbottom=false
+        }).then(function(res){
+          _this.imgsArr = res.data.drawing
+          if (res.data.drawing.length===0){
+            _this.isbottom=false
           }
-          this.imgsArr = this.imgsArr.concat(this.fetchImgsArr)   //数组拼接，把下一批要加载的图片放入所有图片的数组中
-        },
-        gotoDetail(val){
-          let drawingsId = this.imgsArr[val].id
-          this.$router.push({
-            path:'/drawingsDetail',
-            query:{
-              drawingsId:drawingsId
-            }
-          })
-        }
+        }).catch(function(){
+          console.log("服务器异常");
+        });
       },
-    }
+      fetchImgsData () {    //获取新的图片数据的方法，用于页面滚动满足条件时调用
+        let _this = this
+        this.page ++
+        this.$http.get('/api/drawing/search',{
+          params:{
+            key:_this.key,
+            classify:"",
+            page:this.page,
+            status:0,
+          }
+        }).then(function(res){
+          _this.fetchImgsArr = res.data.drawing
+          if (_this.fetchImgsArr.length === 0){
+            _this.isbottom=false
+          }
+          _this.imgsArr = _this.imgsArr.concat(_this.fetchImgsArr)   //数组拼接，把下一批要加载的图片放入所有图片的数组中
+        }).catch(function(){
+          console.log("服务器异常");
+        });
+      },
+      gotoDetail(val){
+        let drawingsId = this.imgsArr[val].id
+        this.$router.push({
+          path:'/drawingsDetail',
+          query:{
+            drawingsId:drawingsId
+          }
+        })
+      }
+    },
+  }
 </script>
 
 <style scoped>
@@ -93,6 +128,6 @@
     float:right;
     margin:0 15px 5px 0;
     font-size:0.5em;
-    color: #bfbfbf;
+    color: #515151;
   }
 </style>

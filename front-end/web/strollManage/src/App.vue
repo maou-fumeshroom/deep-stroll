@@ -20,7 +20,7 @@
                   <el-submenu :index="route.id+''" v-else>
                     <span slot="title">{{route.name}}</span>
                     <div v-for="(menu,index) in route.sonMenu" :key="index">
-                      <el-menu-item :index="menu.path">
+                      <el-menu-item :index="menu.path" v-if="menu.id === 4 || menu.id === 5|| menu.id ===6">
                         <span slot="title" style="font-size:12px;">{{menu.name}}</span>
                       </el-menu-item>
                     </div>
@@ -59,7 +59,6 @@ export default {
   watch: {
     $route: {
       handler (val, oldVal) {
-        console.log('route')
         this.$root.mine = !((val.path).indexOf('mine') === -1)
       },
       immediate: true
@@ -82,9 +81,15 @@ export default {
       sessionStorage.setItem('routes',JSON.stringify(e))
       this.routes = e;
       console.log(e)
-      this.$router.push({
-        path:this.routes[0].path
-      })
+      if (this.routes[0].sonMenu===null) {
+        this.$router.push({
+          path: this.routes[0].path
+        })
+      } else {
+        this.$router.push({
+          path: this.routes[0].sonMenu[0].path
+        })
+      }
     }
   }
 }
@@ -119,7 +124,7 @@ export default {
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 151px;
-  min-height: calc(100vh - 68px);
+  min-height: 100% ;
   text-align: center;
 }
 

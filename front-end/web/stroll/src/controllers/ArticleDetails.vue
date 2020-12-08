@@ -1,13 +1,14 @@
 <template>
-  <div id="articleDetails">
+  <div id="articleDetails" v-if="loadingOK">
     <!--    文章详情页面上半部分，文章的信息-->
     <i class="el-icon-arrow-left" @click="back"/>
+    <i v-if="userId == articleMsg.author.id" class="el-icon-delete delButton" @click="deleteArticle"/>
     <div id="message">
       <h2 class="title">{{articleMsg.title}}</h2>
       <p class="introduction">{{articleMsg.introduction}}</p>
-      <img :src = "articleMsg.avatarSrc" class="avatar"/>
-      <span class="nickname">{{articleMsg.nickname}}</span>
-      <span class="time">{{articleMsg.releaseTime}}</span>
+      <img :src="articleMsg.author.avatar" class="avatar"/>
+      <span class="nickname">{{articleMsg.author.nickname}}</span>
+      <span class="time">{{articleMsg.dateTime}}</span>
       <hr/>
     </div>
 
@@ -19,14 +20,15 @@
     </div>
 
     <!--文章详情页面下半部分，评论-->
-    <div id="comment">
-      <el-input class="inputCom" type="textarea" placeholder="请输入评论" v-model="userComment" maxlength="150" show-word-limit/>
-      <el-button class="publish" type="primary">发布</el-button>
-    </div>
+    <!--<div id="comment">-->
+      <!--<el-input class="inputCom" type="textarea" placeholder="请输入评论" v-model="userComment" rows="5" maxlength="150" show-word-limit/>-->
+      <!--<el-button class="publish" type="primary">发布</el-button>-->
+    <!--</div>-->
   </div>
 </template>
 
 <script>
+  import {client} from "../utils/alioss"
   const axios = require('axios');
   import VueMarkdown from "vue-markdown";
   export default {
@@ -36,36 +38,36 @@
     },
     data () {
       return {
+        // articleMsg:{
+        //   id:"",
+        //   autor:{
+        //     id:"1",
+        //     nickname:"李华",
+        //     avatar:require("../assets/logo.png"),
+        //   },
+        //   title:"如何看待 Python 之父 Guido 加盟微软？？？",
+        //   introduction:"Python 之父 Guido van Rossum 在 Python 邮件组里发邮称，他将退出 Python 核心决策层，而转居幕后。",
+        //   fileUrl:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481592000.md",
+        //   likeNum:3,
+        //   isLike:0,
+        //   isCollect:1,
+        //   labels:["python","程序员"],
+        //   type:0,
+        //   dateTime:"2020-11-20",
+        //   status:0,
+        //   classifyName:"互联网"
+        // },
         articleMsg:{
-          id:"",
-          imgSrc:require("../assets/logo.png"),
-          title:"",
-          nickname:"",
-          avatarSrc:require("../assets/logo.png"),
-          releaseTime:"",
-          likes:"",
-          commentsNum:"",
-          introduction:"",
-          // content:""
-          mdSrc:""
+          author:{}
         },
+        // authorMsg:{},
         userComment:"",
         backPage:"",
         htmlMD:"",
+        loadingOK:false,
+        articleID:"",
+        userId:0,
       }
-    },
-    mounted () {
-      //接收到传来的文章详情信息
-      this.articleMsg = JSON.parse(this.$route.query.articleMsg);
-      console.log(this.articleMsg);
-      //接收到传来的返回路径
-      this.backPage = this.$route.query.backpage;
-      console.log(this.backPage);
-      const url = this.articleMsg.mdSrc;
-      console.log("url: "+ url)
-      this.$http.get(url).then((response) => {
-        this.htmlMD = response.data;
-      });
     },
     methods: {
       back(){
@@ -73,6 +75,87 @@
           // 返回点入的父页面
           path:'/' + this.backPage,
         })
+      },
+      deleteArticle(){
+        //只有作者本人才能删除
+
+          //删除文章
+          console.log("idididi: "+ this.articleID)
+          this.$http.post('/api/person/works/delete',{
+            id:this.articleID,
+            type:0,
+          },{emulateJSON: true})
+            .then(function(res){
+              console.log("！！： "+JSON.stringify(res));
+            });
+
+          //删除文章链接
+          let temp1 = this.articleMsg.fileUrl.split("/");
+          console.log(temp1[3])
+          let urlName1 = temp1[3];
+          client().delete(urlName1).then(
+            result=>{
+              console.log("1"+result)
+            }
+          );
+
+          //删除封面链接
+          let temp2 = this.articleMsg.cover.split("/");
+          console.log(temp2[3])
+          let urlName2 = temp2[3];
+          client().delete(urlName2).then(
+            result=>{
+              console.log("2"+result)
+            }
+          );
+
+          this.$router.push({
+            // 返回点入的父页面
+            path:'/' + this.backPage,
+          })
+      },
+      getArticleContent(){
+        let that = this;
+        fetch(that.articleMsg.fileUrl,{
+          method:'GET',
+          mode:'cors'
+        }).then(function (response) {
+            // console.log(response);
+            let text = response.text();
+            // console.log("text: "+text)
+            return text;
+          }).then(function (data) {
+            // console.log(data)
+            that.htmlMD = data;
+            that.loadingOK = true;
+          })
+      }
+    },
+    created() {
+      //接收到传来的文章详情信息
+      // this.articleMsg.id = this.$route.query.id;
+      this.articleID = this.$route.query.id;
+      // console.log(" 初始化id："+this.articleMsg.id);
+      //接收到传来的返回路径
+      this.backPage = this.$route.query.backpage;
+      console.log(this.backPage);
+
+      let that = this;
+      //获取文章详情
+      this.$http.get('/api/article/detail',{
+        params:{
+          // id:that.articleMsg.id,
+          id:that.articleID,
+        }
+      }).then(function(res){
+        that.articleMsg = res.data;
+        that.getArticleContent();
+      }).catch(function(){
+        console.log("服务器异常");
+      });
+
+      if (localStorage.getItem("userId")){
+        this.userId = localStorage.getItem("userId")
       }
     },
   }
@@ -81,11 +164,18 @@
 <style scoped>
   #articleDetails{
     margin: 62px 15% 0 15%;
-    /*background:#e5e6ee26;*/
-    height: 100%;
+    /*background-color: #fff;*/
+    background-color: #ffffffa8;
+    min-height: calc(100vh - 62px);
     position:relative;
   }
   .el-icon-arrow-left{
+    cursor: pointer;
+    margin: 5px 10px 0;
+  }
+  .delButton{
+    float: right;
+    margin: 5px 15px 0;
     cursor: pointer;
   }
   /*文章详情页面上半部分，文章的信息*/
@@ -106,6 +196,10 @@
     height: 25px;
     border-radius: 100%;
     margin-left: 40px;
+    margin-right: 10px;
+  }
+  .nickname{
+    position: absolute;
   }
   .time{
     float: right;
@@ -117,15 +211,22 @@
   /*文章详情页面中部，文章的内容*/
   #container{
     margin: 0 5%;
+    padding:5px 0;
   }
   /*文章详情页面下半部分，评论*/
+  #comment{
+    height: 180px;
+  }
   .inputCom{
     margin-left: 2.5%;
     width: 95%;
   }
+  /*/deep/ .el-textarea__inner{*/
+  /*  min-height: 120px;*/
+  /*}*/
   .publish{
-    float: right;
-    margin-right: 2.5%;
-    margin-top: -15px;
+    position: absolute;
+    right: 25px;
+    bottom: 20px;
   }
 </style>

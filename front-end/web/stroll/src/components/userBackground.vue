@@ -28,7 +28,8 @@
       props: {
         imgSrc: {             // 背景图片
           type: String,
-          default: "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=289489236,794389348&fm=26&gp=0.jpg"
+          // default: "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=289489236,794389348&fm=26&gp=0.jpg"
+          default: "../../static/bg/4.jpg"
         },
         audioSrc: {           // bgm
           type: String,

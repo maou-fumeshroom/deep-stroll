@@ -13,7 +13,7 @@
         </el-table>
 
         <div class="block pageBox" style="text-align: center;">
-          <el-pagination @current-change="handleCurrentChange" :current-page="currentPage1" :page-size="10" layout="total, prev, pager, next, jumper" :total='total'>
+          <el-pagination @current-change="handleCurrentChange" :current-page="currentPage1" :page-size="pageSize" layout="total,prev, pager, next, jumper" :total='total'>
           </el-pagination>
         </div>
       </div>
@@ -27,18 +27,7 @@
   export default {
     data() {
       return {
-        tableData: [
-          {
-            "content": "删除了一个用户",
-            "adminId": "111",
-            "dataTime": "2020/11/09 05:00"
-          },
-          {
-            "content": "下架了一个文章",
-            "adminId": "222",
-            "dataTime": "2020/11/07 12:00"
-          }
-        ],
+        tableData: [],
         total: 0,
         page: 1,
         pageSize: 10,
@@ -55,12 +44,15 @@
         this.getlist();
       },
       getlist() {
-        // this.$http.get(`/api/admin/list`,{
-        //   page: this.page
-        // }).then(response => {
-        //   this.tableData = data.users
-        //   this.total = data.totalPage
-        // })
+        this.$http.get(`/api/admin/log`,{params:{
+            page: this.page
+          }
+        }).then(res => {
+          if (res.result.code === 1){
+            this.tableData = res.data.log
+            this.total = res.data.totalPage
+          }
+        }).catch(err =>{})
       },
     }
   }

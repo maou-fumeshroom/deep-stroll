@@ -15,13 +15,14 @@
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button @click="deleteAdmin(scope.row.id)" size="mini" round>删除</el-button>
+              <el-button v-if="scope.row.id>1" @click="deleteAdmin(scope.row.id)" size="mini" round>删除</el-button>
+              <el-button v-else @click="deleteAdmin(scope.row.id)" size="mini" round disabled>删除</el-button>
             </template>
           </el-table-column>
         </el-table>
 
         <div class="block pageBox" style="text-align: center;">
-          <el-pagination @current-change="handleCurrentChange" :current-page="currentPage1" :page-size="10" layout="total, prev, pager, next, jumper" :total='total'>
+          <el-pagination @current-change="handleCurrentChange" :current-page="currentPage1" :page-size="10" layout="total,prev, pager, next, jumper" :total='total'>
           </el-pagination>
         </div>
       </div>
@@ -36,7 +37,7 @@
           </el-form-item>
           <el-form-item label="类别" label-width="140px">
             <el-select v-model="add.type" placeholder="请选择类别" style="width:220px;">
-              <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value">
+              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -57,26 +58,10 @@
       data() {
         return {
           options:[{
-            name:"普通管理员",
-            value:0
-          },{
-            name:"功能管理员",
-            value:1
+            name:'',
+            id:''
           }],
-          tableData: [
-            {
-              "id": "123",
-              "account": "1256984",
-              "password": "13323332333",
-              "roleName": "普通管理员"
-            },
-            {
-              "id": "123",
-              "account": "1256984",
-              "password": "13323332333",
-              "roleName": "用户管理员"
-            }
-          ],
+          tableData: [],
           type:"",
           state:"",
           key:"",
@@ -94,6 +79,7 @@
       },
       created() {
         this.getlist()
+        this.getrole()
       },
       methods: {
         handleCurrentChange(val) {
@@ -101,30 +87,43 @@
           this.page = val;
           this.getlist();
         },
+        getrole(){
+          this.$http.get(`/api/admin/role`).then(res => {
+            if (res.result.code === 1){
+              this.options = res.data.roles
+            }
+          }).catch(err =>{})
+        },
         getlist() {
-          // this.$http.get(`/api/admin/list`,{
-          //   page: this.page
-          // }).then(response => {
-          //   this.tableData = data.users
-          //   this.total = data.totalPage
-          // })
+          this.$http.get(`/api/admin/list`,{params:{
+              page:this.page
+            }
+          }).then(res => {
+            if (res.result.code === 1){
+              this.tableData = res.data.admins
+              this.total = res.data.totalPage
+            }
+          }).catch(err =>{})
         },
         deleteAdmin(a){
+          let _this = this
           this.$confirm('是否确认删除该管理员?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            // this.$http.post('/api/admin/delete', {
-            //   id: a
-            // }).then(response => {
-            //   console.log(data)
-            // })
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
-          }).catch(() => {});
+            this.$http.post('/api/admin/delete',{
+              id: a
+            }).then(res=>{
+              if (res.result.code === 1){
+                _this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                });
+                _this.getlist()
+              }
+            }).catch(() => {})
+          })
         },
         handled(){
           if (this.add.account == ''||this.add.password == ''||this.add.type == ''){
@@ -136,21 +135,23 @@
           }
           console.log(this.add);
           let that =this;
-          that.postData('/api/admin/add',{
+          this.$http.post('/api/admin/add',{
             roleId:that.add.type,
             password:that.add.password,
             account:that.add.account
-          },res=>{
-            that.$message({
-              message: '操作成功',
-              type: 'success'
-            });
-            that.dialogFormVisible = false
-            that.add.type = ''
-            that.add.password = ''
-            that.add.account = ''
-            that.getlist()
-          })
+          }).then(res=>{
+            if (res.result.code === 1){
+              that.$message({
+                message: '操作成功',
+                type: 'success'
+              });
+              that.dialogFormVisible = false
+              that.add.type = ''
+              that.add.password = ''
+              that.add.account = ''
+              that.getlist()
+            }
+          }).catch(err =>{})
         }
       }
     }
@@ -160,10 +161,6 @@
   .oder {
     width: 100%;
     background-color:#EFEEEE;
-  }
-  .btn {
-    background-color: #909399 !important;
-    color: #FFFFFF!important;
   }
 
   .addbtn{
