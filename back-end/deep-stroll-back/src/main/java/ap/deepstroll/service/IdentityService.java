@@ -26,7 +26,6 @@ import ap.deepstroll.mapper.RoleMenuMapper;
 // import ap.deepstroll.mapper.RoleMapper;
 import ap.deepstroll.mapper.UserMapper;
 import ap.deepstroll.utils.JwtTokenUtil;
-import ap.deepstroll.utils.SMSMessageUtil;
 import ap.deepstroll.vo.request.AdminLogInRequestVO;
 import ap.deepstroll.vo.request.AdminRegisterRequestVO;
 import ap.deepstroll.vo.request.GetVerificationCodeRequestVO;
@@ -49,7 +48,7 @@ public class IdentityService {
     AdminRoleMapper adminRoleMapper;
 
     @Autowired
-    SMSMessageUtil sMSMessageUtil;
+    SMSService sMSService;
 
     @Autowired
     RoleMenuMapper roleMenuMapper;
@@ -166,11 +165,10 @@ public class IdentityService {
                 int index = (int)(Math.random()*letterTable.length());
                 code += letterTable.charAt(index);
             }
-            code = "123456";
-            VerificationCodeMap verificationCodeMap = VerificationCodeMap.getInstance();
-            verificationCodeMap.put(telephone, code);
-            if (sMSMessageUtil.sendSMSMessage(telephone, code)) {
-                System.out.println(code);
+            String result = sMSService.sendSMS(telephone, code);
+            if (result.equals("OK")) {
+                VerificationCodeMap verificationCodeMap = VerificationCodeMap.getInstance();
+                verificationCodeMap.put(telephone, code);
                 return ResponseVO.builder()
                                  .result(
                                      Result.builder()
@@ -184,7 +182,7 @@ public class IdentityService {
                                  .result(
                                      Result.builder()
                                          .code(0)
-                                         .message("SMSMessage server error")
+                                         .message(result)
                                          .build()
                                  )
                                  .build();

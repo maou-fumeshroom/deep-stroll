@@ -39,3 +39,10 @@ tencent:
     secretKey: "jfaHky2pMdexzpQWOSEl11lEPN7fxvf9"
     region: "ap-beijing"
     bucket:  "deep-stroll-1303131952"
+
+# 
+aliyun:
+  access-key-id: "LTAI4G6FyZvxaLiCy4bcKhte"
+  access-key-secret: "lRW9PP5WzmZcgpX9BPEwkblH8wcFPm"
+  sign-name: "闲亭社区"
+  template-code: "SMS_206547566"

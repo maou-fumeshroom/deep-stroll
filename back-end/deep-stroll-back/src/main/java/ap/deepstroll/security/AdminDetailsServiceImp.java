@@ -37,7 +37,12 @@ public class AdminDetailsServiceImp implements UserDetailsService {
         if ((adminEntity = adminMapper.queryAdminById(Integer.valueOf(id))) != null) {
 
             List<Integer> roleIds = new ArrayList<Integer>();
-            List<AdminRoleEntity> adminRoleEntitys = adminRoleMapper.queryByAdminId(adminEntity.getId());
+            List<AdminRoleEntity> adminRoleEntitys;
+            try {
+                adminRoleEntitys = adminRoleMapper.queryByAdminId(adminEntity.getId());
+            } catch(Exception e) {
+                return null;
+            }
             if (adminRoleEntitys == null) { return null; }
             for (AdminRoleEntity adminRoleEntity: adminRoleEntitys) {
                 roleIds.add(adminRoleEntity.getRoleId());

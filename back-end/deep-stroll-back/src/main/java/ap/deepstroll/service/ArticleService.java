@@ -262,12 +262,18 @@ public class ArticleService extends WorkService {
      * @param type
      * @return
      */
-    public Map<String, Result> deleteWork(Long id, Integer type) {
+    public Map<String, Result> deleteWork(Long id, Integer type, Long authorId) {
         if (type == 1)
-            return drawingService.deleteWork(id, type);
+            return drawingService.deleteWork(id, type, authorId);
         Map<String, Result> response = new HashMap<>();
         try {
             //articleMapper.updateArticleState(id, 1);
+            ArticleEntity articleEntity = articleMapper.queryArticleById(id);
+            if (articleEntity.getAuthorId() != authorId) {
+                Result result = new Result("not author");
+                response.put("result", result);
+                return response;
+            }
             articleMapper.realDelete(id);
             Result result = new Result();
             response.put("result", result);
