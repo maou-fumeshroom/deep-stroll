@@ -3,7 +3,7 @@
     <div v-for="(item,index) in menu" :key="index">
       <div style="width:96%;margin: 20px auto;background-color:#FFFFFF;position:relative">
         <p style="color:#707070;padding:15px 40px">{{item.name}}</p>
-        <el-checkbox v-model="item.status===0" class="check">用户是否可见</el-checkbox>
+        <el-checkbox v-model="item.state===0" class="check" @change="setState(item.id,item.state)">用户是否可见</el-checkbox>
       </div>
     </div>
   </div>
@@ -13,22 +13,36 @@
     export default {
         data(){
           return{
-            "menu": [
-              {
-                "path": "5w^W",
-                "status": 0,
-                "name": "文章",
-                "id": -3023255962316768
-              },
-              {
-                "path": "5w^W",
-                "status": 1,
-                "name": "手绘",
-                "id": -3023255962316768
-              },
-            ]
+            "menu": []
           }
+        },
+      created() {
+        this.getlist()
+      },
+      methods: {
+        getlist() {
+          this.$http.get(`/api/admin/menu`).then(res => {
+            if (res.result.code === 1){
+              this.menu = res.data.menu
+            }
+          }).catch(err =>{})
+        },
+        setState(id , state){
+          let _this = this
+          this.$http.post('/api/admin/menu/status',{
+            id: id,
+            status: 1-state
+          }).then(res=>{
+            if (res.result.code === 1){
+              _this.$message({
+                type: 'success',
+                message: '操作成功!'
+              });
+              _this.getlist()
+            }
+          }).catch(() => {})
         }
+      }
     }
 </script>
 

@@ -80,12 +80,17 @@
           email: this.msg.email
         },{emulateJSON: true})
           .then(function(res){
-            // console.log(res);
-            // console.log("！！： "+JSON.stringify(res));
-          });
+          }).catch(err =>{});
         this.$router.push({
           path:'/mine',
-        })
+        });
+
+        this.$notify({
+          title: '成功',
+          message: '个人信息修改成功！',
+          type: 'success',
+          duration: 1000
+        });
       },
       cancel(){
         this.$router.push({
@@ -101,15 +106,19 @@
         mask.style.display = "none";
       },
       UploadAvatar(file) {
-        //先删除旧头像
-        let temp = this.msg.avatar.split("/");
-        console.log(temp[3]);
-        let urlName = temp[3];
-        client().delete(urlName).then(
-          result=>{
-            console.log("2"+result)
-          }
-        );
+        //先判断是新用户还是老用户，新用户则不用删除旧头像
+        if(this.msg.avatar !== null){
+          console.log("我是老用户")
+          //先删除旧头像
+          let temp = this.msg.avatar.split("/");
+          console.log(temp[3]);
+          let urlName = temp[3];
+          client().delete(urlName).then(
+            result=>{
+              console.log("2"+result)
+            }
+          );
+        }
 
         //再上传新头像
         var fileName = 'avatar' + `${Date.parse(new Date())}`;  //定义唯一的文件名
@@ -155,9 +164,9 @@
 
 <style scoped>
   #edit{
-    height: 100%;
-    width: 54%;
-    margin: 0 23% 0 23%;
+    height:calc(100% - 62px);
+    width: 76%;
+    margin: 62px 12% 0 12%;
     /*background-color: #fff;*/
     background-color: #ffffffa8;
     position: absolute;
@@ -166,20 +175,23 @@
     display: none;
     height: 100%;
     width: 100%;
+    margin: 0;
+    margin-left: -12%;
     background: #58535369;
     position: fixed;
     z-index: 2;
-    margin: 0;
   }
   #changeBox{
     height: 300px;
     width: 350px;
     position: absolute;
-    left: 27%;
+    left: 50%;
     top: 50%;
     /* margin: -175px 0 0 -150px; */
-    background: #fff;
+    background: #ffffffeb;
     text-align: center;
+    margin-top: -50px;
+    -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
   }
   h4{
@@ -193,11 +205,13 @@
   }
   #editBox{
     /*padding: 5% 25%;*/
-    padding: 20% 10%;
+    padding-top:100px;
+    display:flex;
+    justify-content: center;
   }
   /*页面左半*/
   #pageLeft{
-    float: left;
+    margin:0 40px;
     text-align: center;
     position: relative;
   }
@@ -231,11 +245,11 @@
   cursor: pointer;
   /*background: #f8f9fa;*/
   background: #f8f9fa91;
-  margin: 49px 0 50px 0;
+  margin: 48px 0 47px 0;
 }
 /*页面右半*/
   #pageRight{
-    float: right;
+    margin:0 40px;
     text-align: center;
     position: relative;
   }

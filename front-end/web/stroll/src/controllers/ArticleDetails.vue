@@ -2,7 +2,7 @@
   <div id="articleDetails" v-if="loadingOK">
     <!--    文章详情页面上半部分，文章的信息-->
     <i class="el-icon-arrow-left" @click="back"/>
-    <i class="el-icon-delete delButton" @click="deleteArticle"/>
+    <i v-if="userId == articleMsg.author.id" class="el-icon-delete delButton" @click="deleteArticle"/>
     <div id="message">
       <h2 class="title">{{articleMsg.title}}</h2>
       <p class="introduction">{{articleMsg.introduction}}</p>
@@ -20,10 +20,10 @@
     </div>
 
     <!--文章详情页面下半部分，评论-->
-    <div id="comment">
-      <el-input class="inputCom" type="textarea" placeholder="请输入评论" v-model="userComment" rows="5" maxlength="150" show-word-limit/>
-      <el-button class="publish" type="primary">发布</el-button>
-    </div>
+    <!--<div id="comment">-->
+      <!--<el-input class="inputCom" type="textarea" placeholder="请输入评论" v-model="userComment" rows="5" maxlength="150" show-word-limit/>-->
+      <!--<el-button class="publish" type="primary">发布</el-button>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -31,6 +31,8 @@
   import {client} from "../utils/alioss"
   const axios = require('axios');
   import VueMarkdown from "vue-markdown";
+  import { Loading } from 'element-ui';
+
   export default {
     name: "ArticleDetails",
     components:{
@@ -38,35 +40,15 @@
     },
     data () {
       return {
-        // articleMsg:{
-        //   id:"",
-        //   autor:{
-        //     id:"1",
-        //     nickname:"李华",
-        //     avatar:require("../assets/logo.png"),
-        //   },
-        //   title:"如何看待 Python 之父 Guido 加盟微软？？？",
-        //   introduction:"Python 之父 Guido van Rossum 在 Python 邮件组里发邮称，他将退出 Python 核心决策层，而转居幕后。",
-        //   fileUrl:"http://bai111111.oss-cn-beijing.aliyuncs.com/article1606481592000.md",
-        //   likeNum:3,
-        //   isLike:0,
-        //   isCollect:1,
-        //   labels:["python","程序员"],
-        //   type:0,
-        //   dateTime:"2020-11-20",
-        //   status:0,
-        //   classifyName:"互联网"
-        // },
         articleMsg:{
           author:{}
         },
-        // authorMsg:{},
         userComment:"",
         backPage:"",
         htmlMD:"",
         loadingOK:false,
         articleID:"",
-        userMsg:{},
+        userId:0,
       }
     },
     methods: {
@@ -77,17 +59,24 @@
         })
       },
       deleteArticle(){
+        let that = this;
         //只有作者本人才能删除
-        if(this.userMsg.nickename === this.articleMsg.author.nickname){
           //删除文章
           console.log("idididi: "+ this.articleID)
           this.$http.post('/api/person/works/delete',{
-            id:this.articleID,
+            id:that.articleID,
             type:0,
           },{emulateJSON: true})
             .then(function(res){
-              console.log("！！： "+JSON.stringify(res));
-            });
+              if(res.result.code === 1){
+                that.$notify({
+                  title: '成功',
+                  message: '删除文章成功！',
+                  type: 'success',
+                  duration:1000
+                });
+              }
+            }).catch(err =>{});
 
           //删除文章链接
           let temp1 = this.articleMsg.fileUrl.split("/");
@@ -112,14 +101,10 @@
           this.$router.push({
             // 返回点入的父页面
             path:'/' + this.backPage,
-          })
-        }else{
-          //警告⚠
-          alert("你不能删除这篇文章");
-        }
+          });
+
       },
       getArticleContent(){
-        //得到文章内容
         let that = this;
         fetch(that.articleMsg.fileUrl,{
           method:'GET',
@@ -135,24 +120,19 @@
             that.loadingOK = true;
           })
       },
-      getUser(){
-        let that = this;
-        //得到个人基本信息
-        this.$http.get('/api/person/basic')
-          .then(function(res){
-            console.log(res.data);
-            that.userMsg = res.data;
-            console.log(this.userMsg)
-          }).catch(function(){
-          console.log("服务器异常");
-        });
-      }
     },
     created() {
+      //因为加载云上文章太慢所以加个遮罩层至加载完成
+      let loadingInstance = Loading.service({
+        fullscreen:true,
+        lock:true,
+        text:"加载一下马上就好😊",
+        spinner:'el-icon-loading',
+        background:'rgba(0, 0, 0, 0.8)'
+      });
+
       //接收到传来的文章详情信息
-      // this.articleMsg.id = this.$route.query.id;
       this.articleID = this.$route.query.id;
-      // console.log(" 初始化id："+this.articleMsg.id);
       //接收到传来的返回路径
       this.backPage = this.$route.query.backpage;
       console.log(this.backPage);
@@ -165,14 +145,18 @@
           id:that.articleID,
         }
       }).then(function(res){
-        console.log(res);
         that.articleMsg = res.data;
         that.getArticleContent();
+        that.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+          loadingInstance.close();
+        });
       }).catch(function(){
         console.log("服务器异常");
       });
 
-      that.getUser();
+      if (localStorage.getItem("userId")){
+        this.userId = localStorage.getItem("userId")
+      }
     },
   }
 </script>
@@ -182,7 +166,7 @@
     margin: 62px 15% 0 15%;
     /*background-color: #fff;*/
     background-color: #ffffffa8;
-    height: 100%;
+    min-height: calc(100vh - 62px);
     position:relative;
   }
   .el-icon-arrow-left{
@@ -227,6 +211,7 @@
   /*文章详情页面中部，文章的内容*/
   #container{
     margin: 0 5%;
+    padding:5px 0;
   }
   /*文章详情页面下半部分，评论*/
   #comment{

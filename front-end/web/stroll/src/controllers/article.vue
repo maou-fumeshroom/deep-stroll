@@ -1,39 +1,39 @@
 <template>
   <div id = "article">
 
-<!--    &lt;!&ndash;    左侧分类选择菜单&ndash;&gt;-->
-<!--    <div id="articleTags">-->
-<!--      <el-col :span="12">-->
-<!--        <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">-->
-<!--          <el-submenu index="1">-->
-<!--            <template slot="title">-->
-<!--              <span>热门</span>-->
-<!--            </template>-->
-<!--            <el-menu-item-group>-->
-<!--              <template slot="title">我的分类</template>-->
-<!--              <el-menu-item index="1-1">电影</el-menu-item>-->
-<!--              <el-menu-item index="1-2">音乐</el-menu-item>-->
-<!--            </el-menu-item-group>-->
-<!--            <el-menu-item-group title="热门">-->
-<!--              <el-menu-item index="1-3">搞笑</el-menu-item>-->
-<!--            </el-menu-item-group>-->
-<!--            <el-submenu index="1-4">-->
-<!--              <template slot="title">综艺</template>-->
-<!--              <el-menu-item index="1-4-1">舞蹈</el-menu-item>-->
-<!--            </el-submenu>-->
-<!--          </el-submenu>-->
-<!--          <el-menu-item index="2">-->
-<!--            <span slot="title">美食</span>-->
-<!--          </el-menu-item>-->
-<!--          <el-menu-item index="3">-->
-<!--            <span slot="title">摄影</span>-->
-<!--          </el-menu-item>-->
-<!--          <el-menu-item index="4">-->
-<!--            <span slot="title">艺术</span>-->
-<!--          </el-menu-item>-->
-<!--        </el-menu>-->
-<!--      </el-col>-->
-<!--    </div>-->
+    <!--&lt;!&ndash;    左侧分类选择菜单&ndash;&gt;-->
+    <!--<div id="articleTags">-->
+      <!--<el-col :span="12">-->
+        <!--<el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">-->
+          <!--<el-submenu index="1">-->
+            <!--<template slot="title">-->
+              <!--<span>热门</span>-->
+            <!--</template>-->
+            <!--<el-menu-item-group>-->
+              <!--<template slot="title">我的分类</template>-->
+              <!--<el-menu-item index="1-1">电影</el-menu-item>-->
+              <!--<el-menu-item index="1-2">音乐</el-menu-item>-->
+            <!--</el-menu-item-group>-->
+            <!--<el-menu-item-group title="热门">-->
+              <!--<el-menu-item index="1-3">搞笑</el-menu-item>-->
+            <!--</el-menu-item-group>-->
+            <!--<el-submenu index="1-4">-->
+              <!--<template slot="title">综艺</template>-->
+              <!--<el-menu-item index="1-4-1">舞蹈</el-menu-item>-->
+            <!--</el-submenu>-->
+          <!--</el-submenu>-->
+          <!--<el-menu-item index="2">-->
+            <!--<span slot="title">美食</span>-->
+          <!--</el-menu-item>-->
+          <!--<el-menu-item index="3">-->
+            <!--<span slot="title">摄影</span>-->
+          <!--</el-menu-item>-->
+          <!--<el-menu-item index="4">-->
+            <!--<span slot="title">艺术</span>-->
+          <!--</el-menu-item>-->
+        <!--</el-menu>-->
+      <!--</el-col>-->
+    <!--</div>-->
 
     <!--    右侧文章列表-->
     <div id="articleContainer">
@@ -42,7 +42,7 @@
     </div>
 
     <div class="pagination">
-      <el-pagination layout="prev, pager, next" :total=totalPage  @current-change="currentChange" />
+      <el-pagination layout="prev, pager, next" :total=totalLenth  @current-change="currentChange" />
     </div>
 
   </div>
@@ -50,6 +50,9 @@
 
 <script>
   import articleBox from "../components/articleBox";
+  import bus from '../utils/bus';
+  import { Loading } from 'element-ui';
+
   export default {
     name: 'Article',
     components:{
@@ -63,7 +66,8 @@
       return {
         page:"article",
         articleList:[],
-        totalPage:1,
+        key:'',
+        totalLenth:1,
         currentPage:1,
         // testList:[],
         classifys:{}
@@ -80,50 +84,35 @@
       },
       //当前页
       currentChange(val){
-        if(this.currentPage+1 < this.totalPage){
-          this.currentPage += 1;
-          this.getArticles();
-        }
-
-        // let curNum = (val-1)*10;
-        // let len = this.articleList.length;
-        // let temp = len - curNum;
-        // let current = 0;
-        // if(temp >= 10){
-        //   current = curNum + 10;
-        //   for(let i=curNum,j=0;i<current;i++,j++){
-        //     let obj = this.articleList[i];
-        //     this.$set(this.testList,j,obj)
-        //   }
-        // }
-        // else{
-        //   current = curNum + temp;
-        //   for(let i=curNum,j=0;i<current;i++,j++){
-        //     let obj = this.articleList[i];
-        //     this.$set(this.testList,j,obj)
-        //   }
-        //   // for(let i=len-current,j=temp;i<len;i++,j++){
-        //   //   let obj = {};
-        //   //   this.$set(this.testList,j,obj)
-        //   // }
-        // }
-        // console.log("2 test: "+this.testList[0].title);
+        this.currentPage = val;
+        this.getArticles();
       },
       getArticles(){
+        //加个遮罩层至加载完成
+        let loadingInstance = Loading.service({
+          fullscreen:true,
+          lock:true,
+          text:"加载一下马上就好😊",
+          spinner:'el-icon-loading',
+          background:'rgba(0, 0, 0, 0.8)'
+        });
+
         let that = this;
         //获取文章列表
         this.$http.get('/api/article/search',{
           params:{
-            key:"",
+            key:that.key,
             classify:"",
             page:that.currentPage,
             status:0,
           }
         }).then(function(res){
           that.articleList = res.data.articles;
-          that.totalPage = res.data.totalPage
-          // console.log("！！： "+that.articleList[0].title);
+          that.totalLenth = res.data.totalPage;
           console.log("！！： "+that.articleList.length);
+          that.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+            loadingInstance.close();
+          });
           }).catch(function(){
           console.log("服务器异常");
         });
@@ -134,13 +123,15 @@
       //获取文章分类
       this.$http.get('/api/article/classify')
         .then(function(res){
-          // console.log("！！： "+JSON.stringify(res));
           that.msg = res.data;
         }).catch(function(){
         console.log("服务器异常");
       });
-
-      that.getArticles();
+      this.getArticles();
+      bus.$on('search', res=>{
+        this.key = res;
+        that.getArticles()
+      })
     },
     mounted() {
       //每次路由跳转都更新文章列表
@@ -169,29 +160,31 @@
         // console.log("=========================");
       })
     },
-    watch:{
-      testList: {
-        handler(newValue, oldValue) {
-          console.log("baba1: "+newValue)
-          for (let i = 0; i < newValue.length; i++) {
-            if (oldValue[i] !== newValue[i]) {
-              console.log("baba2: "+newValue)
-            }
-          }
-        },
-      },
-    }
+    // watch:{
+    //   testList: {
+    //     handler(newValue, oldValue) {
+    //       console.log("baba1: "+newValue)
+    //       for (let i = 0; i < newValue.length; i++) {
+    //         if (oldValue[i] !== newValue[i]) {
+    //           console.log("baba2: "+newValue)
+    //         }
+    //       }
+    //     },
+    //   },
+    // }
   }
 </script>
 
 <style scoped>
   #article{
-    height: 100%;
+    /*height:calc(100vh - 62px);*/
     width: 64%;
-    margin: 0 18% 0 18%;
+    margin: 62px 18% 0 18%;
     /*background-color: #fff;*/
     background-color: #ffffff87;
     position: absolute;
+    /*overflow-y: auto;*/
+    /*overflow-x: hidden;*/
   }
   /*左侧分类选择菜单*/
   #articleTags{
@@ -207,19 +200,17 @@
   }
   /*右侧文章列表*/
   #articleContainer{
-    padding-top: 5%;
     width: 96%;
     height: 85%;
-    float: right;
+    margin:0 auto;
     list-style-type: none;
-    margin-right: 15px;
-    overflow: auto;
   }
-  .pagination{
+   .pagination{
     position: absolute;
     /* top: 800px; */
     left: 45%;
-    bottom: 10px;
+    /*bottom: 10px;*/
+    bottom: 5px;
   }
 
   /deep/ .el-pager li{
@@ -231,6 +222,11 @@
   }
 
   /deep/ .el-pagination .btn-next, .el-pagination .btn-prev{
-     background: rgba(255, 255, 255, 0);
-   }
+    background: rgba(255, 255, 255, 0);
+  }
+
+  /deep/ .el-pagination .btn-prev{
+    background: rgba(255, 255, 255, 0);
+  }
+
 </style>

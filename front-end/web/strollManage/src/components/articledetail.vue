@@ -6,20 +6,18 @@
     <div class="row">
       <p>文章标题:<span style="margin-left: 30px;">{{data.title}}</span></p>
     </div>
-    <div class="row">
-      <p>文章作者:<span style="margin-left: 30px;">{{data.autor.nickname}}</span></p>
+    <div class="row" v-if="data.author">
+      <p>文章作者:<span style="margin-left: 30px;">{{data.author.nickname}}</span></p>
     </div>
     <div class="row">
       <p>文章分类:<span style="margin-left: 30px;">{{data.classifyName}}</span></p>
-    </div>
-    <div class="row">
-      <p>文章标签:<span style="margin-left: 30px;">{{data.labels}}</span></p>
     </div>
 		<div class="row">
 			<p>发布时间:<span style="margin-left: 30px;">{{data.dateTime}}</span></p>
     </div>
     <div class="row">
-      <p>文章简介:<span style="margin-left: 30px;">{{data.introduction}}</span></p>
+      <p style="float:left;">文章简介:</p>
+      <span style="margin-left: 30px;display:block;float:left;width:700px;">{{data.introduction}}</span>
     </div>
     <div class="row">
       <p>点赞数量:<span style="margin-left: 30px;">{{data.likeNum}}</span></p>
@@ -37,79 +35,36 @@
 	export default {
 		data() {
 			return {
-        "data": {
-          "autor": {
-            "id": "^^lM",
-            "nickname": "lqy",
-            "avatar": "eMTC"
-          },
-          "title": "论母猪养殖",
-          "introduction": "这是一个由专业饲养员的自白",
-          "fileUrl": "http://bai111111.oss-cn-beijing.aliyuncs.com/test.md",
-          "likeNum": 50,
-          "labels": [
-            "畜牧业",
-            "经验"
-          ],
-          "type": 0,
-          "dateTime": "2020/11/23",
-          "status": "上架",
-          "classifyName": "科普"
-        },
         htmlMD:'',
 			}
 		},
-		props: ["id"],
+		props: ["data","id"],
     components: {
       VueMarkdown,
     },
+    mounted(){
+      this.getlist()
+    },
 		created() {
 			this.getlist()
-      const url = this.data.fileUrl;
-      this.$http.get(url).then((response) => {
-        this.htmlMD = response.data;
-      });
 		},
-		filters: {
-			filters1: function(arg) {
-				if(arg == 0) {
-					return "其他"
-				} else if(arg == 1) {
-					return "书籍"
-				}
-			},
-		},
+		filters: {},
 		methods: {
-			//订单详情
 			getlist() {
-
+        let url = this.data.fileUrl;
+        this.getArticleContent(url)
 			},
-      //下架
-      offshelf(){
-			  let _this = this
-        this._postData('/admin/order/detail', {
-            id: this.showlist.orderId,
-          shelf:'off'
-          }, data => {
-          this.$message({
-            message: '下架成功',
-            type: 'success'
-          })
-          _this.getlist()
-        })
-      },
-      //上架
-      onshelf(){
-        let _this = this
-        this._postData('/admin/order/detail', {
-          id: this.showlist.orderId,
-          shelf:'off'
-        }, data => {
-          this.$message({
-            message: '上架成功',
-            type: 'success'
-          })
-          _this.getlist()
+      getArticleContent(url){
+        let that = this;
+        fetch(url,{
+          method:'GET',
+          mode:'cors'
+        }).then(function (response) {
+          let text = response.text();
+          return text;
+        }).then(function (data) {
+          // console.log(data)
+          that.htmlMD = data;
         })
       }
 		}

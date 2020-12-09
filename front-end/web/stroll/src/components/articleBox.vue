@@ -9,12 +9,12 @@
           <span class="authorName">{{item.nickname}}</span>
           <span class="articleTime">{{item.dateTime}}</span>
         </div>
-        <div class="msgRight">
-          <span>{{item.likeNum}}</span>
-          <i class="el-icon-location"></i>
-          <span>{{item.comment}}</span>
-          <i class="el-icon-star-on"></i>
-        </div>
+      </div>
+      <div class="msgRight">
+        <span>{{item.likeNum}}</span>
+        <img src = "../assets/icon/notLike.png" class="icon"/>
+        <span>{{item.comment}}</span>
+        <img src = "../assets/icon/comment.png" class="icon"/>
       </div>
     </li>
   </ul>
@@ -59,7 +59,7 @@
     watch:{
       articleList: {
         handler(newval, old) {
-          console.log("erzi: " +newval, old);
+          // console.log("erzi: " +newval, old);
         },
         immediate: true,
         deep: true,
@@ -69,24 +69,25 @@
 </script>
 
 <style scoped>
-  /*ul{*/
-  /*  padding-left: 5px;*/
-  /*}*/
+  ul{
+    padding-left: 0;
+  }
+
   .articleBox{
     height: 100px;
+    width:95%;
     position: relative;
     /*background: #fff;*/
     background-color: #ffffffa8;
     box-shadow: 1px 3px 10px #65626285;
     cursor: pointer;
     list-style-type: none;
-    margin: 45px 20px 45px 0;
-    /*-webkit-transform: rotateX(30deg);*/
-    /*-webkit-transition-duration: 1s;*/
+    margin: 45px auto;
+    -webkit-transition-duration: 1s;
   }
-  /*.articleBox:hover{*/
-  /*  -webkit-transform: rotateX(0deg);*/
-  /*}*/
+  .articleBox:hover{
+    height: 120px;
+  }
   .articleCover{
     height: 100%;
     /*margin-left: 5px;*/
@@ -121,7 +122,13 @@
     margin-left: 10px;
   }
   .msgRight{
-    float: right;
-    margin-right: 10px;
+    position:absolute;
+    right:10px;
+    bottom:10px;
+  }
+  .icon{
+    width: 17px;
+    height: 17px;
+    margin-bottom: -3px;
   }
 </style>

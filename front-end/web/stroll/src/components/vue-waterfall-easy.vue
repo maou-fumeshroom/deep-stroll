@@ -155,6 +155,9 @@
           this.reset()
         }
         this.preload()
+        if (this.imgsArr.length===0) {
+          this.waterfallOver()
+        }
       },
       isBottom(newV, oldV){
         if (newV){
@@ -274,6 +277,9 @@
       setOverTipPos() {
         console.log(2)
         var maxHeight = Math.max.apply(null, this.colsHeightArr)
+        if (this.imgsArr.length===0) {
+          maxHeight = 30
+        }
         this.$nextTick(() => {
           this.$refs.over.style.top = maxHeight + 'px'
         })

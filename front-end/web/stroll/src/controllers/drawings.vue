@@ -12,6 +12,7 @@
 
 <script>
   import vueWaterfallEasy from '../components/vue-waterfall-easy'
+  import bus from '../utils/bus'
   export default {
     data () {
       return {
@@ -19,6 +20,7 @@
         fetchImgsArr: [],    //存放每次滚动时下一批要加载的图片的数组
         isbottom:false,
         page:1,
+        key:''
       }
     },
     components: {
@@ -34,23 +36,33 @@
         }).catch(function(){
         console.log("服务器异常");
       });
-
       this.getlist()
+      bus.$on('search', res=>{
+        this.key = res
+        that.getlist()
+      })
+    },
+    mounted() {
+      this.getlist();
     },
     methods: {
       getlist(){
         let _this = this
         this.page = 1
         this.imgsArr = []
+        //获取手绘列表
         this.$http.get('/api/drawing/search',{
           params:{
-            key:"",
+            key:_this.key,
             classify:"",
             page:1,
             status:0,
           }
         }).then(function(res){
           _this.imgsArr = res.data.drawing
+          if (res.data.drawing.length===0){
+            _this.isbottom=false
+          }
         }).catch(function(){
           console.log("服务器异常");
         });
@@ -60,7 +72,7 @@
         this.page ++
         this.$http.get('/api/drawing/search',{
           params:{
-            key:"",
+            key:_this.key,
             classify:"",
             page:this.page,
             status:0,
@@ -85,9 +97,6 @@
         })
       }
     },
-    mounted() {
-      this.getlist();
-    }
   }
 </script>
 
@@ -120,6 +129,6 @@
     float:right;
     margin:0 15px 5px 0;
     font-size:0.5em;
-    color: #bfbfbf;
+    color: #515151;
   }
 </style>

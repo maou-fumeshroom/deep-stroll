@@ -1,21 +1,22 @@
 <template>
   <nav>
     <div class="logo" @click="$router.push('/')">
-      <slot name="logo-icon"><img src="../../static/logo.png"></slot>
-      <slot name="logo-title">闲亭</slot>
+      <img class="logoImg" src="../../static/logo.png">
+      <img class="name" src="../../static/name.png">
     </div>
     <el-row class="nav-menu">
       <div class="search">
         <el-input
           placeholder="请输入内容"
+          v-model="key"
           size="small"
-          class="input_search">
+          class="input_search"
+          @keyup.enter.native="search">
           <i slot="prefix" class="el-input__icon el-icon-search"></i>
         </el-input>
       </div>
-      <router-link to="/article" exact tag="li" class="header-item">文章</router-link>
-      <router-link to="/drawings" tag="li" class="header-item">手绘</router-link>
-      <div class="avatarBox" @click="$router.push('/mine')">
+      <router-link v-for="(route,index) in menus" :key="index" :to=route.path exact tag="li" class="header-item">{{route.name}}</router-link>
+      <div v-if="user" class="avatarBox" @click="$router.push('/mine')">
         <img :src="user.avatar"/>
       </div>
       <img :src="setIcon" @click="$router.push('/set')" class="setIcon"/>
@@ -30,11 +31,13 @@
 </template>
 
 <script>
+  import bus from '@/utils/bus'
   export default {
     data(){
       return{
         setIcon: require('../../static/set.png'),
         logoutIcon: require('../../static/logout.png'),
+        key:''
       }
     },
     props: {
@@ -46,6 +49,14 @@
             nickname:'baozilong',
           }
         }
+      },
+      menus:{
+        type: Array,
+        default: () => [{
+          id: 1,
+          name: '文章',
+          path: '/article'
+        }]
       }
     },
     methods:{
@@ -63,25 +74,13 @@
           path:'/'
         })
       },
-      getUserMsg(){
-        let that = this;
-        //得到个人信息
-        this.$http.get('/api/person/basic')
-          .then(function(res){
-            console.log("信息： "+JSON.stringify(res));
-            that.user = res.data;
-          }).catch(function(){
-          console.log("服务器异常");
-        });
+      search(){
+        bus.$emit('search',this.key)
       }
     },
     created() {
-      let that = this;
-      that.getUserMsg();
+
     },
-    mounted() {
-      this.getUserMsg()
-    }
   }
 </script>
 
@@ -115,11 +114,21 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     cursor:pointer;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
   }
-  .logo img{
+  .logoImg{
     width:30px;
     height:30px;
     border-radius: 5px;
+    flex: 1;
+    vertical-align: center;
+    margin-right:5px;
+  }
+  .name{
+    width:auto;
+    height:30px;
     flex: 1;
     vertical-align: center;
   }

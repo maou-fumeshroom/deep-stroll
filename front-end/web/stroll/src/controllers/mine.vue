@@ -40,24 +40,36 @@
       <!--子组件，显示我的作品-文章-->
       <!--我的作品-->
       <div id="Scroll" >
-        <article-box v-if="tagPath === '1-1'" :articleList="articleList" :page="page"/>
-        <vue-waterfall-easy v-if="tagPath  === '1-2'" style="width: 98%;" :imgsArr="imgsArr" :isBottom="isbottom" :page="page" @scrollReachBottom="fetchImgsData" @clickItem="gotoDetail">
-          <template slot-scope="props">
-            <img :src="props.value.avatar" class="avatarImg"/>
-            <div class="titleP">{{props.value.title}}</div>
-            <div class="time">{{props.value.dateTime}}</div>
-          </template>
-        </vue-waterfall-easy>
+        <div v-if="tagPath === '1-1'">
+          <article-box :articleList="articleList" :page="page"/>
+
+          <div class="pagination">
+            <el-pagination layout="prev, pager, next" :total=totalLenth  @current-change="currentChange" />
+          </div>
+        </div>
+
+        <div v-if="tagPath  === '1-2'" class="waterfall_box">
+          <vue-waterfall-easy :imgsArr="imgsArr" :isBottom="isbottom" :page="page" @scrollReachBottom="fetchImgsData" @clickItem="gotoDetail">
+            <template slot-scope="props">
+              <img :src="props.value.avatar" class="avatarImg"/>
+              <div class="titleP">{{props.value.title}}</div>
+              <div class="time">{{props.value.dateTime}}</div>
+            </template>
+          </vue-waterfall-easy>
+        </div>
 
         <!--我的收藏-->
         <article-box v-if="tagPath === '2-1'" :articleList="articleList" :page="page"/>
-        <vue-waterfall-easy v-if="tagPath  === '2-2'" style="width: 98%;" :imgsArr="imgsArr" :isBottom="isbottom" :page="page" @scrollReachBottom="fetchImgsData" @clickItem="gotoDetail">
+        <div v-if="tagPath  === '2-2'" class="waterfall_box">
+          <vue-waterfall-easy :imgsArr="imgsArr" :isBottom="isbottom" :page="page" @scrollReachBottom="fetchImgsData" @clickItem="gotoDetail">
           <template slot-scope="props">
             <img :src="props.value.avatar" class="avatarImg"/>
             <div class="titleP">{{props.value.title}}</div>
             <div class="time">{{props.value.dateTime}}</div>
           </template>
         </vue-waterfall-easy>
+        </div>
+
 
         <!--消息-->
         <message-box v-if="tag === '3'" :messageList="messageList"/>
@@ -74,6 +86,8 @@
   import articleBox from "../components/articleBox";
   import messageBox from "../components/messageBox";
   import vueWaterfallEasy from '../components/vue-waterfall-easy'
+  import { Loading } from 'element-ui';
+
   export default {
     name: 'mine',
     components:{
@@ -87,7 +101,8 @@
         msg:{},
         activeIndex: '1',
         articleList:[],
-        len: 8,
+        totalLenth:1,
+        currentPage:1,
         tag: 1,
         tagPath: "1-1",
         messageList:[
@@ -171,16 +186,29 @@
         })
       },
       getArticleList(){
+        //加个遮罩层至加载完成
+        let loadingInstance = Loading.service({
+          fullscreen:true,
+          lock:true,
+          text:"加载一下马上就好😊",
+          spinner:'el-icon-loading',
+          background:'rgba(0, 0, 0, 0.8)'
+        });
+
         let that = this;
         //获取我的文章列表
         this.$http.get('/api/person/article',{
           params:{
             key:"",
             classify:"",
-            page:1,
+            page:that.currentPage,
           }
         }).then(function(res){
           that.articleList = res.data.articles;
+          that.totalLenth = res.data.totalPage;
+          that.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+            loadingInstance.close();
+          });
         }).catch(function(){
           console.log("服务器异常");
         });
@@ -194,9 +222,15 @@
           }).catch(function(){
           console.log("服务器异常");
         });
-      }
+      },
+      //当前页
+      currentChange(val){
+        this.currentPage = val;
+        this.getArticleList();
+      },
     },
     created() {
+
       let that = this;
       that.getUserMsg();
       that.getArticleList();
@@ -206,7 +240,6 @@
       this.getUserMsg();
       this.getArticleList();
       this.getlist();
-
       $("#Scroll").scroll(function(event){
         console.log("!!!!!!Scroll")
         var scrollTop = document.getElementById("Scroll").scrollTop;
@@ -221,15 +254,14 @@
         }
       });
     },
-
   }
 </script>
 
 <style scoped>
   #myPage{
-    height: 99.9%;
-    width: 76%;
-    margin: 0 12% 0 12%;
+    height:calc(100% - 62px);
+    min-width: 76%;
+    margin: 62px 12% 0 12%;
     /*background-color: #fff;*/
     background-color: #ffffff87;
     position: absolute;
@@ -238,7 +270,7 @@
   #myInformation{
     float: left;
     /*height: 100%;*/
-    width: 30%;
+    width: 33%;
     text-align: center;
     position:relative;
     padding-top: 8%;
@@ -252,8 +284,8 @@
   .myAvatar{
     border-radius: 100%;
     border: 1px solid #000;
-    width: 280px;
-    height: 280px;
+    width: 250px;
+    height: 250px;
   }
   .myName{
     font-size: 1.5em;
@@ -269,7 +301,7 @@
     margin-top: 10px;
   }
   .edit{
-    width: 280px;
+    width: 250px;
     cursor: pointer;
     /*background: #f8f9fa;*/
     background: #f8f9fa91;
@@ -279,7 +311,6 @@
     float: right;
     width: 67%;
     /*margin-right: 5%;*/
-    padding-top: 5%;
   }
 
   /deep/ .el-menu{
@@ -303,6 +334,10 @@
     bottom: 5%;
     right: 15%;
     background: #ffffff8c;
+  }
+
+  #addButton:hover{
+    border: 1px solid #00a0e9;
   }
 
   /deep/ #articleUl{
@@ -333,5 +368,77 @@
     font-size:0.5em;
     color: #bfbfbf;
   }
+  .waterfall_box{
+    width:98%;
+  }
+
+  /deep/ #articleUl{
+    padding-left: 5px;
+  }
+
+  /*手绘部分*/
+  .avatarImg{
+    margin:5px 5px 5px 15px;
+    width:30px;
+    height:30px;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    float:left;
+  }
+  .titleP{
+    font-size:0.8em;
+    line-height:30px;
+    margin:5px 0 5px 5px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+    width:calc(100% - 65px);
+  }
+  .time{
+    float:right;
+    margin:0 15px 5px 0;
+    font-size:0.5em;
+    color: #bfbfbf;
+  }
+
+  .pagination{
+    margin-left: 40%;
+    margin-top: -10px;
+  }
+
+  /deep/ .el-pager li{
+    background: rgba(255, 255, 255, 0);
+  }
+
+  /deep/ .el-pagination button:disabled{
+    background: rgba(255, 255, 255, 0);
+  }
+
+  /deep/ .el-pagination .btn-next, .el-pagination .btn-prev{
+    background: rgba(255, 255, 255, 0);
+  }
+
+  /deep/ .el-pagination .btn-prev{
+    background: rgba(255, 255, 255, 0);
+  }
+
+  #Scroll::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+    scrollbar-arrow-color:red;
+
+  }
+  #Scroll::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+    scrollbar-arrow-color:red;
+  }
+  #Scroll::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+  }
+
 
 </style>

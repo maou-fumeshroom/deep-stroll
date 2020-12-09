@@ -59,15 +59,16 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
     // if (sessionStorage.getItem('managetoken')) { //判断本地是否存在token
     if (localStorage.getItem('token')) { //判断本地是否存在token
-      // console.log("存在啦！")
-      // console.log(localStorage.getItem('token'))
       next();
     } else {
-      // console.log("不存在！")
-      // console.log(localStorage.getItem('token'))
-      next({
-        path: '/'
-      })
+      if (to.path === '/login') {
+        next();
+      } else {
+        Vue.prototype.$message.warning("请先登录")
+        next({
+          path: '/login'
+        })
+      }
     }
   } else {
     next();

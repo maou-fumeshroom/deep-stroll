@@ -14,28 +14,42 @@ import qs from 'qs'
 Vue.use(VueRouter)
 
 Vue.prototype.$http = axios
-axios.defaults.baseURL = '' // 关键步骤–填写后台请求统一的地址
-axios.defaults.headers.post['token'] = localStorage.getItem('managetoken')
 axios.defaults.withCredentials = false
+axios.defaults.headers['Access-Control-Allow-Origin'] = '*'
+axios.defaults.baseURL = 'http://39.97.169.97:8080' // 关键步骤–填写后台请求统一的地址
 Vue.config.productionTip = false
 
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
 
 let vm = new Vue()
+
 axios.interceptors.request.use((config) => {
-  if (config.method === 'post') {
-    config.data = qs.stringify(config.data)
+  const MANAGE_TOKEN = sessionStorage.getItem('managetoken')
+  //不需要传token的情况
+  if(MANAGE_TOKEN && !config.url.includes('login')){
+    config.headers.Authorization = 'Bearer ' + MANAGE_TOKEN
   }
+  // if (config.method === 'get') {
+  //   config.params = config.data
+  // }
   return config
 }, (error) => {
   return Promise.reject(error)
 })
+
+
 axios.interceptors.response.use(
   res => {
-
-    return res
+    if (res.data && res.data.result.code === 1){
+      return res.data
+    } else if (res.data && res.data.result.code === 0){
+      Vue.prototype.$message.error(res.data.result.message)
+    } else {
+      Vue.prototype.$message.error('系统出错')
+    }
   }, err => {
-
+    console.log(err)
+    Vue.prototype.$message.error('请求失败，请稍后重试');
     return Promise.resolve(err)
   })
 

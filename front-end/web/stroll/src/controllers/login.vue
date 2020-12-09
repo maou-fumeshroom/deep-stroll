@@ -8,8 +8,10 @@
             .choose_item.register_choose(@click="toRegister()") 注册
           .container
             el-form.form_box(ref="loginForm" :model="loginForm" :rules="rules" label-width="60px")
-              el-form-item(label="账号")
-                el-input(v-model="loginForm.account" placeholder="请输入手机号")
+              el-form-item(label="昵称" v-if="islogin!==1")
+                el-input(v-model="loginForm.account" placeholder="请输入昵称")
+              el-form-item(label="账号" v-else)
+                el-input(v-model="loginForm.phone" placeholder="请输入手机号")
               el-form-item(label="密码")
                 el-input(type="password" v-model="loginForm.password" placeholder="请输入密码")
               el-form-item(label="手机号" v-if="islogin!==1")
@@ -36,8 +38,7 @@
         islogin:1,
         CodeStatus: false,
         CodeBtn: '获取验证码',
-        a:null,
-        b:'1',
+        menus:[],
       }
     },
     methods:{
@@ -57,10 +58,7 @@
             })
             .then(res => {
               _this.timeOut();
-              _this.$message({
-                title: '获取验证码成功',
-                icon: 'none'
-              });
+              _this.$message('获取验证码成功');
             })
             .catch(err => {
               console.log(err);
@@ -89,29 +87,37 @@
         //登录接口
         // console.log(this.loginForm)
         this.$http.post('/api/login',{
-          telephone:this.loginForm.account,
-          // telephone:this.loginForm.phone,
+          telephone:this.loginForm.phone,
           pwd:this.loginForm.password,
         },{emulateJSON: true})
           .then(function(res){
             console.log(res)
             const token = res.data.token;
             localStorage.setItem("token",token)
-            that.$http.get(`/api/config/themeList`).then(res => {
-              if (res.result.code === 1){
-                let theme = res.data.default
-                that.$emit('onSetTheme',theme);
-                that.$router.push({
-                  path:'/article'
-                })
-              }
-            }).catch(err =>{})
+            that.menus = res.data.menus;
+            that.$emit('onSetMenus',that.menus);
+            localStorage.setItem("userId",res.data.id)
+            // if(!localStorage.getItem("bg")){
+              that.getDefaultTheme();
+            // }
+            that.$router.push({
+              path:that.menus[0].path
+            })
           })
-
+      },
+      getDefaultTheme(){
+        let that = this
+        this.$http.get(`/api/config/themeList`).then(res => {
+          if (res.result.code === 1){
+            let theme = res.data.default
+            that.$emit('onSetTheme',theme);
+          }
+        }).catch(err =>{})
       },
       submitRegister(){
         //注册
         console.log(this.loginForm)
+        let _this = this
         this.$http.post('/api/register',{
           nickname:this.loginForm.account,
           pwd:this.loginForm.password,
@@ -119,7 +125,10 @@
           code:this.loginForm.sms,
         },{emulateJSON: true})
           .then(function(res){
-            console.log("！！： "+JSON.stringify(res));
+            if (res.result.code === 1) {
+              _this.$message.success('注册成功');
+              _this.islogin = 1
+            }
           });
       }
     }
