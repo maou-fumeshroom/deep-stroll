@@ -31,8 +31,9 @@
       //获取手绘分类
       this.$http.get('/api/drawing/classify')
         .then(function(res){
-          // console.log("！！： "+JSON.stringify(res));
-          that.msg = res.data;
+          if (res.result.code === 1) {
+            that.msg = res.data;
+          }
         }).catch(function(){
         console.log("服务器异常");
       });
@@ -50,7 +51,6 @@
         let _this = this
         this.page = 1
         this.imgsArr = []
-        //获取手绘列表
         this.$http.get('/api/drawing/search',{
           params:{
             key:_this.key,
@@ -59,9 +59,11 @@
             status:0,
           }
         }).then(function(res){
-          _this.imgsArr = res.data.drawing
-          if (res.data.drawing.length===0){
-            _this.isbottom=false
+          if (res.result.code === 1) {
+            _this.imgsArr = res.data.drawing
+            if (res.data.drawing.length === 0) {
+              _this.isbottom = false
+            }
           }
         }).catch(function(){
           console.log("服务器异常");
@@ -78,11 +80,13 @@
             status:0,
           }
         }).then(function(res){
-          _this.fetchImgsArr = res.data.drawing
-          if (_this.fetchImgsArr.length === 0){
-            _this.isbottom=false
+          if (res.result.code === 1) {
+            _this.fetchImgsArr = res.data.drawing
+            if (_this.fetchImgsArr.length === 0) {
+              _this.isbottom = false
+            }
+            _this.imgsArr = _this.imgsArr.concat(_this.fetchImgsArr)   //数组拼接，把下一批要加载的图片放入所有图片的数组中
           }
-          _this.imgsArr = _this.imgsArr.concat(_this.fetchImgsArr)   //数组拼接，把下一批要加载的图片放入所有图片的数组中
         }).catch(function(){
           console.log("服务器异常");
         });
@@ -103,7 +107,7 @@
 <style scoped>
   .waterfall_box{
     max-width:800px;
-    height:calc(100vh - 62px);
+    min-height:calc(100vh - 62px);
     margin-top:62px;
     margin-right:auto;
     margin-left:auto;

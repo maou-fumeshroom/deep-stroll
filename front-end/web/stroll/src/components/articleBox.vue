@@ -59,7 +59,6 @@
     watch:{
       articleList: {
         handler(newval, old) {
-          // console.log("erzi: " +newval, old);
         },
         immediate: true,
         deep: true,
@@ -72,7 +71,6 @@
   ul{
     padding-left: 0;
   }
-
   .articleBox{
     height: 100px;
     width:95%;

@@ -93,6 +93,7 @@
     <div id="Button">
       <el-button class="relButton" type="primary" @click="release">发布</el-button>
       <el-button class="canButton" @click="cancel">取消</el-button>
+      <div style="clear: both;"></div>
     </div>
 
   </div>
@@ -111,8 +112,7 @@
             title:"",
             introduction:"",
             fileUrl:"",
-            classify:null,
-            labels:[],
+            classify:'',
         },
         drawingOptions: [],
         articleOptions:[],
@@ -131,8 +131,7 @@
         ],
         drawingMsg:{
             title:"",
-            classify:null,
-            labels:[],
+            classify:"",
             introduction:"",
             image:[]
         },
@@ -161,85 +160,58 @@
       },
       release(){
         let _this = this
-
-        //文章上传
         if (this.tag === '1'){
-          //先判断有无未填信息
-          if(this.articleMsg.cover !== "" &&
-            this.articleMsg.title !== "" &&
-            this.articleMsg.classify !== null &&
-            this.articleMsg.introduction !== "" &&
-            this.articleMsg.fileUrl !== ""){
-            this.isComplete = true;
-          }
-
-          //如果全部填写，才能发布成功
-          if(this.isComplete){
-            // console.log("文章： "+ JSON.stringify(this.articleMsg));
-            //发布文章
-            this.$http.post('/api/person/article/add',{
-              cover:this.articleMsg.cover,
-              title:this.articleMsg.title,
-              classify:this.articleMsg.classify,
-              labels:this.articleMsg.labels,
-              introduction:this.articleMsg.introduction,
-              fileUrl:this.articleMsg.fileUrl
-            },{emulateJSON: true})
-              .then(function(res){
-                if (res.result.code === 1){
+          //发布文章
+          if (this.articleMsg.cover!=''&&this.articleMsg.title!=''&&this.articleMsg.classify!=''&&this.articleMsg.introduction!=''&&this.articleMsg.fileUrl!='') {
+            this.$http.post('/api/person/article/add', {
+              cover: this.articleMsg.cover,
+              title: this.articleMsg.title,
+              classify: this.articleMsg.classify,
+              introduction: this.articleMsg.introduction,
+              fileUrl: this.articleMsg.fileUrl
+            }, {emulateJSON: true})
+              .then(function (res) {
+                if (res.result.code === 1) {
                   _this.$message.success("发布成功")
                   _this.$router.push({
-                    path:'/mine',
+                    path: '/mine',
                   })
                 }
-              }).catch(err =>{});
-          }else{
+              }).catch(err => {
+            });
+          } else {
             this.$notify({
               title: '警告',
-              message: '请完整填写文章信息后再上传',
+              message: '请完整填写信息后再发布',
               type: 'warning',
-              duration:1000
+              duration:1500
             });
           }
-
         }else{
-          //手绘上传
-
-          //先判断有无未填信息
-          if(this.drawingMsg.title !== "" &&
-            this.drawingMsg.classify !== null &&
-            this.drawingMsg.introduction !== "" &&
-            this.drawingMsg.image.length !== 0){
-            this.isComplete = true;
-          }
-
-          //如果全部填写，才能发布成功
-          if(this.isComplete){
-            console.log("手绘： "+JSON.stringify(this.drawingMsg));
-            this.$http.post('/api/person/drawing/add',{
-              title:this.drawingMsg.title,
-              classify:this.drawingMsg.classify,
-              labels:this.drawingMsg.labels,
-              introduction:this.drawingMsg.introduction,
-              image:this.drawingMsg.image
-            },{emulateJSON: true})
-              .then(function(res){
-                if (res.result.code === 1){
+          if (this.drawingMsg.title!=''&&this.drawingMsg.classify!=''&&this.drawingMsg.introduction!=''&&this.drawingMsg.image.length!=0) {
+            this.$http.post('/api/person/drawing/add', {
+              title: this.drawingMsg.title,
+              classify: this.drawingMsg.classify,
+              introduction: this.drawingMsg.introduction,
+              image: this.drawingMsg.image
+            }, {emulateJSON: true})
+              .then(function (res) {
+                if (res.result.code === 1) {
                   _this.$message.success("发布成功")
                   _this.$router.push({
-                    path:'/mine',
+                    path: '/mine',
                   })
                 }
-              }).catch(err =>{});
-          }else{
+              }).catch(err => {
+            });
+          } else {
             this.$notify({
               title: '警告',
-              message: '请完整填写手绘信息后再上传',
+              message: '请完整填写信息后再发布',
               type: 'warning',
-              duration:1000
+              duration:1500
             });
           }
-
         }
       },
       cancel(){
@@ -257,7 +229,7 @@
               title: '成功',
               message: '您已成功上传文件😊！',
               type: 'success',
-              duration: 1000
+              duration: 1500
             });
           })
       },
@@ -315,7 +287,7 @@
 
 <style scoped>
   #release{
-    height:calc(100% - 62px);
+    min-height:calc(100% - 62px);
     width: 76%;
     margin: 62px 12% 0 12%;
     /*background-color: #fff;*/
@@ -333,11 +305,13 @@
     width:100%;
     display:flex;
     justify-content: center;
+    padding-bottom:40px;
   }
   #drawingRel{
     width:100%;
     display:flex;
     justify-content: center;
+    padding-bottom:10px;
   }
   /*页面左半*/
   .pageLeft{
@@ -454,8 +428,9 @@
   }
 
   #Button{
-    position: absolute;
-    bottom: 10%;
+    position: relative;
+    padding-bottom:40px;
+    top: 0;
     width: 550px;
     left: 50%;
     transform: translateX(-50%);
@@ -474,7 +449,6 @@
   }
   .drawRight p{
     font-size: 10px;
-    /*color: #c0c4cc;*/
-    color: #84878b;
+    color: #c0c4cc;
   }
 </style>

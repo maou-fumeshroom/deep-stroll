@@ -40,40 +40,41 @@
         this.$router.go(-1)
       },
       deleteDraw(){
-        let that = this;
         //删除手绘
+        let _this = this
         console.log("idididi: "+ this.drawingsId)
         this.$http.post('/api/person/works/delete',{
-          id:that.drawingsId,
+          id:this.drawingsId,
           type:1,
         },{emulateJSON: true})
           .then(function(res){
-            if(res.result.code === 1){
-              that.$notify({
+            if (res.result.code === 1) {
+              //删除所有手绘链接
+              let len = _this.drawingsMsg.images.length;
+              for(let i=0;i<len;i++){
+                let temp = _this.drawingsMsg.images[i].split("/");
+                console.log(temp[3])
+                let urlName = temp[3];
+                client().delete(urlName).then(
+                  result=>{
+                    console.log("2"+result)
+                  }
+                )
+              }
+              _this.$notify({
                 title: '成功',
                 message: '删除手绘成功！',
                 type: 'success',
-                duration:1000
+                duration:1500
               });
+              _this.$router.go(-1)
             }
-          }).catch(err =>{});
-        //删除所有手绘链接
-        let len = this.drawingsMsg.images.length;
-        for(let i=0;i<len;i++){
-          let temp = this.drawingsMsg.images[i].split("/");
-          console.log(temp[3])
-          let urlName = temp[3];
-          client().delete(urlName).then(
-            result=>{
-              console.log("2"+result)
-            }
-          )
-        }
-        this.$router.go(-1);
+          }).catch(function(){
+          console.log("服务器异常");
+        });
       },
     },
     created() {
-      //加个遮罩层至加载完成
       let loadingInstance = Loading.service({
         fullscreen:true,
         lock:true,
@@ -81,7 +82,6 @@
         spinner:'el-icon-loading',
         background:'rgba(0, 0, 0, 0.8)'
       });
-
       let that = this;
       if (localStorage.getItem("userId")){
         this.userId = localStorage.getItem("userId")
@@ -92,12 +92,14 @@
           id:this.drawingsId,
         }
       }).then(function(res){
-        that.drawingsMsg = res.data;
-        console.log(res.data)
-        that.loadingOK = true;
-        that.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
-          loadingInstance.close();
-        });
+        if (res.result.code === 1) {
+          that.drawingsMsg = res.data;
+          console.log(res.data)
+          that.loadingOK = true;
+          that.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+            loadingInstance.close();
+          });
+        }
       }).catch(function(){
         console.log("服务器异常");
       });

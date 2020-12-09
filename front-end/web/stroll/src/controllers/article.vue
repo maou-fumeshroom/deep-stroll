@@ -50,9 +50,8 @@
 
 <script>
   import articleBox from "../components/articleBox";
-  import bus from '../utils/bus';
+  import bus from '../utils/bus'
   import { Loading } from 'element-ui';
-
   export default {
     name: 'Article',
     components:{
@@ -88,7 +87,6 @@
         this.getArticles();
       },
       getArticles(){
-        //加个遮罩层至加载完成
         let loadingInstance = Loading.service({
           fullscreen:true,
           lock:true,
@@ -96,7 +94,6 @@
           spinner:'el-icon-loading',
           background:'rgba(0, 0, 0, 0.8)'
         });
-
         let that = this;
         //获取文章列表
         this.$http.get('/api/article/search',{
@@ -107,15 +104,14 @@
             status:0,
           }
         }).then(function(res){
-          that.articleList = res.data.articles;
-          that.totalLenth = res.data.totalPage;
-          console.log("！！： "+that.articleList.length);
-          that.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
-            loadingInstance.close();
-          });
-          }).catch(function(){
-          console.log("服务器异常");
-        });
+          if (res.result.code === 1) {
+            that.articleList = res.data.articles;
+            that.totalLenth = res.data.totalPage
+            that.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+              loadingInstance.close();
+            });
+          }
+        }).catch(function(){});
       }
     },
     created() {
@@ -123,13 +119,13 @@
       //获取文章分类
       this.$http.get('/api/article/classify')
         .then(function(res){
-          that.msg = res.data;
-        }).catch(function(){
-        console.log("服务器异常");
-      });
+          if (res.result.code === 1) {
+            that.msg = res.data;
+          }
+        }).catch(function(){});
       this.getArticles();
       bus.$on('search', res=>{
-        this.key = res;
+        this.key = res
         that.getArticles()
       })
     },
@@ -160,31 +156,30 @@
         // console.log("=========================");
       })
     },
-    // watch:{
-    //   testList: {
-    //     handler(newValue, oldValue) {
-    //       console.log("baba1: "+newValue)
-    //       for (let i = 0; i < newValue.length; i++) {
-    //         if (oldValue[i] !== newValue[i]) {
-    //           console.log("baba2: "+newValue)
-    //         }
-    //       }
-    //     },
-    //   },
-    // }
+    watch:{
+      testList: {
+        handler(newValue, oldValue) {
+          console.log("baba1: "+newValue)
+          for (let i = 0; i < newValue.length; i++) {
+            if (oldValue[i] !== newValue[i]) {
+              console.log("baba2: "+newValue)
+            }
+          }
+        },
+      },
+    }
   }
 </script>
 
 <style scoped>
   #article{
-    /*height:calc(100vh - 62px);*/
+    min-height:calc(100vh - 62px);
     width: 64%;
     margin: 62px 18% 0 18%;
+    padding:0;
     /*background-color: #fff;*/
     background-color: #ffffff87;
     position: absolute;
-    /*overflow-y: auto;*/
-    /*overflow-x: hidden;*/
   }
   /*左侧分类选择菜单*/
   #articleTags{
@@ -205,11 +200,10 @@
     margin:0 auto;
     list-style-type: none;
   }
-   .pagination{
+  .pagination{
     position: absolute;
     /* top: 800px; */
     left: 45%;
-    /*bottom: 10px;*/
     bottom: 5px;
   }
 
@@ -224,7 +218,6 @@
   /deep/ .el-pagination .btn-next, .el-pagination .btn-prev{
     background: rgba(255, 255, 255, 0);
   }
-
   /deep/ .el-pagination .btn-prev{
     background: rgba(255, 255, 255, 0);
   }

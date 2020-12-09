@@ -83,8 +83,6 @@ export default {
       this.$http.get('/api/person/basic')
         .then(function(res){
           if (res.result.code === 1) {
-            // console.log("我的信息")
-            // console.log(res.data)
             that.user = res.data;
           }
         }).catch(function(){

@@ -80,17 +80,20 @@
           email: this.msg.email
         },{emulateJSON: true})
           .then(function(res){
-          }).catch(err =>{});
+            if (res.result.code === 1) {
+              that.$notify({
+                title: '成功',
+                message: '个人信息修改成功！',
+                type: 'success',
+                duration: 1500
+              });
+            }
+          }).catch(function(){
+          console.log("服务器异常");
+        });
         this.$router.push({
           path:'/mine',
-        });
-
-        this.$notify({
-          title: '成功',
-          message: '个人信息修改成功！',
-          type: 'success',
-          duration: 1000
-        });
+        })
       },
       cancel(){
         this.$router.push({
@@ -106,20 +109,15 @@
         mask.style.display = "none";
       },
       UploadAvatar(file) {
-        //先判断是新用户还是老用户，新用户则不用删除旧头像
-        if(this.msg.avatar !== null){
-          console.log("我是老用户")
-          //先删除旧头像
-          let temp = this.msg.avatar.split("/");
-          console.log(temp[3]);
-          let urlName = temp[3];
-          client().delete(urlName).then(
-            result=>{
-              console.log("2"+result)
-            }
-          );
-        }
-
+        //先删除旧头像
+        let temp = this.msg.avatar.split("/");
+        console.log(temp[3]);
+        let urlName = temp[3];
+        client().delete(urlName).then(
+          result=>{
+            console.log("2"+result)
+          }
+        );
         //再上传新头像
         var fileName = 'avatar' + `${Date.parse(new Date())}`;  //定义唯一的文件名
         //定义唯一的文件名，打印出来的uid其实就是时间戳
@@ -153,11 +151,10 @@
       //得到个人全部信息
       this.$http.get('/api/person/totalInfo')
         .then(function(res){
-          // console.log("！！： "+JSON.stringify(res));
-          that.msg = res.data;
-        }).catch(function(){
-        console.log("服务器异常");
-      });
+          if (res.result.code === 1) {
+            that.msg = res.data;
+          }
+        }).catch(function(){});
     },
   }
 </script>
@@ -190,7 +187,7 @@
     /* margin: -175px 0 0 -150px; */
     background: #ffffffeb;
     text-align: center;
-    margin-top: -50px;
+    margin-top:-50px;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
   }

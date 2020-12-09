@@ -98,12 +98,9 @@
             that.$emit('onSetMenus',that.menus);
             localStorage.setItem("userId",res.data.id)
             // if(!localStorage.getItem("bg")){
-              that.getDefaultTheme();
+            that.getDefaultTheme()
             // }
-            that.$router.push({
-              path:that.menus[0].path
-            })
-          })
+          }).catch(err =>{})
       },
       getDefaultTheme(){
         let that = this
@@ -111,6 +108,9 @@
           if (res.result.code === 1){
             let theme = res.data.default
             that.$emit('onSetTheme',theme);
+            that.$router.push({
+              path:that.menus[0].path
+            })
           }
         }).catch(err =>{})
       },
@@ -129,7 +129,7 @@
               _this.$message.success('注册成功');
               _this.islogin = 1
             }
-          });
+          }).catch(err =>{});
       }
     }
   }

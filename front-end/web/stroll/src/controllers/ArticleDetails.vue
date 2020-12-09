@@ -32,7 +32,6 @@
   const axios = require('axios');
   import VueMarkdown from "vue-markdown";
   import { Loading } from 'element-ui';
-
   export default {
     name: "ArticleDetails",
     components:{
@@ -59,50 +58,49 @@
         })
       },
       deleteArticle(){
-        let that = this;
         //只有作者本人才能删除
+        let _this = this
           //删除文章
           console.log("idididi: "+ this.articleID)
           this.$http.post('/api/person/works/delete',{
-            id:that.articleID,
+            id:this.articleID,
             type:0,
           },{emulateJSON: true})
             .then(function(res){
-              if(res.result.code === 1){
-                that.$notify({
+              if (res.result.code === 1) {
+                //删除文章链接
+                let temp1 = _this.articleMsg.fileUrl.split("/");
+                console.log(temp1[3])
+                let urlName1 = temp1[3];
+                client().delete(urlName1).then(
+                  result=>{
+                    console.log("1"+result)
+                  }
+                );
+
+                //删除封面链接
+                let temp2 = _this.articleMsg.cover.split("/");
+                console.log(temp2[3])
+                let urlName2 = temp2[3];
+                client().delete(urlName2).then(
+                  result=>{
+                    console.log("2"+result)
+                  }
+                );
+                _this.$notify({
                   title: '成功',
                   message: '删除文章成功！',
                   type: 'success',
-                  duration:1000
+                  duration:1500
                 });
+                _this.$router.push({
+                  // 返回点入的父页面
+                  path:'/' + _this.backPage,
+                })
               }
-            }).catch(err =>{});
-
-          //删除文章链接
-          let temp1 = this.articleMsg.fileUrl.split("/");
-          console.log(temp1[3])
-          let urlName1 = temp1[3];
-          client().delete(urlName1).then(
-            result=>{
-              console.log("1"+result)
-            }
-          );
-
-          //删除封面链接
-          let temp2 = this.articleMsg.cover.split("/");
-          console.log(temp2[3])
-          let urlName2 = temp2[3];
-          client().delete(urlName2).then(
-            result=>{
-              console.log("2"+result)
-            }
-          );
-
-          this.$router.push({
-            // 返回点入的父页面
-            path:'/' + this.backPage,
+            }).catch(function(){
+            console.log("服务器异常");
           });
-
       },
       getArticleContent(){
         let that = this;
@@ -119,7 +117,7 @@
             that.htmlMD = data;
             that.loadingOK = true;
           })
-      },
+      }
     },
     created() {
       //因为加载云上文章太慢所以加个遮罩层至加载完成
@@ -130,7 +128,6 @@
         spinner:'el-icon-loading',
         background:'rgba(0, 0, 0, 0.8)'
       });
-
       //接收到传来的文章详情信息
       this.articleID = this.$route.query.id;
       //接收到传来的返回路径
@@ -145,11 +142,13 @@
           id:that.articleID,
         }
       }).then(function(res){
-        that.articleMsg = res.data;
-        that.getArticleContent();
-        that.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
-          loadingInstance.close();
-        });
+        if (res.result.code === 1) {
+          that.articleMsg = res.data;
+          that.getArticleContent();
+          that.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+            loadingInstance.close();
+          });
+        }
       }).catch(function(){
         console.log("服务器异常");
       });

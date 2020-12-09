@@ -52,8 +52,9 @@
       getTheme(){
         let _this = this
         this.$http.get('/api/config/themeList').then(function(res){
-          console.log(res);
-          _this.themes = res.data.themes
+          if (res.result.code === 1) {
+            _this.themes = res.data.themes
+          }
         }).catch(function(){
           console.log("服务器异常");
         });
@@ -69,11 +70,13 @@
             id:id
           }
         }).then(function(res){
-          let theme = {
-            bgm:res.data.bgmUrl,
-            background:res.data.background
+          if (res.result.code === 1) {
+            let theme = {
+              bgm: res.data.bgmUrl,
+              background: res.data.background
+            }
+            that.$emit('onSetTheme', theme);
           }
-          that.$emit('onSetTheme',theme);
         }).catch(function(){
           console.log("服务器异常");
         });

@@ -70,6 +70,7 @@
       },
       logout(){
         localStorage.clear()
+        this.$message.success("登出成功")
         this.$router.push({
           path:'/'
         })
