@@ -13,5 +13,4 @@ public class AdminBO {
     private Integer id;
     private String password;
     private String roleName;
-
 }

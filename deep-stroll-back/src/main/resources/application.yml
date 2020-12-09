@@ -11,8 +11,8 @@ spring:
       max-request-size: 100MB
   datasource:  
     url : jdbc:mysql://localhost:3306/deep_stroll?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2b8&allowMultiQueries=true
-    username : root
-    password : rootaliyun
+    username : 
+    password : 
     driverClassName : com.mysql.cj.jdbc.Driver
     
 #Mybatis
@@ -22,11 +22,11 @@ mybatis:
 
 # JWT
 jwt:
-  header: Authorization
-  secret: mySecret
-  expiration: 604800
-  tokenHead: "Bearer "
-  supercode: "99999"
+  header: 
+  secret: 
+  expiration: 
+  tokenHead: 
+  supercode: 
   route:
     authentication:
       path: /api/login/
@@ -35,14 +35,14 @@ jwt:
 # Tencent Cos
 tencent:
   cos:
-    secretId: "AKIDlHvyxiLXdVBfyUgDTdcWJxPcaJn4upL0"
-    secretKey: "jfaHky2pMdexzpQWOSEl11lEPN7fxvf9"
-    region: "ap-beijing"
-    bucket:  "deep-stroll-1303131952"
+    secretId: 
+    secretKey: 
+    region: 
+    bucket:  
 
 # 
 aliyun:
-  access-key-id: "LTAI4G6FyZvxaLiCy4bcKhte"
-  access-key-secret: "lRW9PP5WzmZcgpX9BPEwkblH8wcFPm"
-  sign-name: "闲亭社区"
-  template-code: "SMS_206547566"
+  access-key-id: 
+  access-key-secret: 
+  sign-name: 
+  template-code: 

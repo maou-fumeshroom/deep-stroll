@@ -32,7 +32,7 @@ public class OperationLogAspect {
      * 设置操作日志切入点   在注解的位置切入代码
      */
     @Pointcut("@annotation(ap.deepstroll.annotation.OperationLogAnnotation)")
-    public void operLogPoinCut() {    }
+    public void operLogPoinCut() {}
 
 
     @AfterReturning(returning  /**
