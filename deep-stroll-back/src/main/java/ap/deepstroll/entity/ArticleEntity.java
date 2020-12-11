@@ -28,6 +28,6 @@ public class ArticleEntity extends Work {
     private Integer likeNum;
     private Integer state;
     private Timestamp createTime;
-    private Timestamp updateTIme;
+    private Timestamp updateTime;
 
 }

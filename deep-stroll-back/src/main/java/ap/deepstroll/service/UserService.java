@@ -16,6 +16,16 @@ import ap.deepstroll.vo.request.UserVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ap.deepstroll.entity.ArticleEntity;
+import ap.deepstroll.entity.DrawingEntity;
+import ap.deepstroll.entity.UserEntity;
+import ap.deepstroll.mapper.ArticleMapper;
+import ap.deepstroll.mapper.DrawingMapper;
+import ap.deepstroll.mapper.UserMapper;
+import ap.deepstroll.vo.request.UserVo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service("userService")
 public class UserService {
@@ -35,7 +45,7 @@ public class UserService {
       public Result updateUser(UserVo req,long id){
 
           UserEntity userEntity = UserEntity.builder().id(id)
-                                                        .eMail(req.getE_mail()==""? null:req.getE_mail())
+                                                        .eMail(req.getEmail()==""? null:req.getEmail())
                                                         .nickname(req.getNickName()==""? null:req.getNickName())
                                                         .gender(req.getSex())
                                                         .sign(req.getSign()==""?null:req.getSign())
@@ -45,6 +55,7 @@ public class UserService {
               Result result = new Result();
               return result;
           }catch (Exception e){
+              e.printStackTrace();
               Result result = new Result(e.getMessage());
               return result;
           }
@@ -86,7 +97,7 @@ public class UserService {
             data.put("nickname",userEntity.getNickname());
             data.put("sex",userEntity.getGender());
             data.put("telephone",userEntity.getTelephone());
-            data.put("e_mail",userEntity.getEMail());
+            data.put("email",userEntity.getEMail());
             data.put("sign",userEntity.getSign());
             data.put("avatar",userEntity.getAvatar());
             response.put("data",data);
@@ -111,15 +122,17 @@ public class UserService {
             data.put("nickname",userEntity.getNickname());
             data.put("avatar",userEntity.getAvatar());
             List<ArticleEntity> articleEntityList = articleMapper.queryArticleByAuthorId(id,null,null,null,0,0,10);
-            data.put("article",articleEntityList);
+            data.put("article",articleEntityList.size());
             List<DrawingEntity> drawingEntityList = drawingMapper.queryDrawingByAuthorId(id,null,null,null,0,0,10);
-            data.put("drawing",drawingEntityList);
-            Integer likeNum = articleMapper.queryArticleNumByAuthorId(id,null,null,null,0)+drawingMapper.queryDrawingNumByAuthorId(id,null,null,null,0);
+            data.put("drawing",drawingEntityList.size());
+            Integer likeNum = articleMapper.queryArticleNumByAuthorId(id,null,null,null,0);
+            likeNum += drawingMapper.queryDrawingNumByAuthorId(id,null,null,null,0);
             data.put("likeNum",likeNum);
             data.put("sign",userEntity.getSign());
             response.put("data",data);
             response.put("result",new Result());
         }catch (Exception e){
+            e.printStackTrace();
             response.put("data",null);
             response.put("result",new Result(e.getMessage()));
         }

@@ -26,7 +26,6 @@ import ap.deepstroll.mapper.RoleMenuMapper;
 // import ap.deepstroll.mapper.RoleMapper;
 import ap.deepstroll.mapper.UserMapper;
 import ap.deepstroll.utils.JwtTokenUtil;
-import ap.deepstroll.utils.SMSMessageUtil;
 import ap.deepstroll.vo.request.AdminLogInRequestVO;
 import ap.deepstroll.vo.request.AdminRegisterRequestVO;
 import ap.deepstroll.vo.request.GetVerificationCodeRequestVO;
@@ -49,7 +48,7 @@ public class IdentityService {
     AdminRoleMapper adminRoleMapper;
 
     @Autowired
-    SMSMessageUtil sMSMessageUtil;
+    SMSService sMSService;
 
     @Autowired
     RoleMenuMapper roleMenuMapper;
@@ -66,8 +65,6 @@ public class IdentityService {
     /**
      * 用户登录 返回token id
      * @author mxf
-     * @param telephone
-     * @param pwd
      * @return
      */
     public ResponseVO userLogin(UserLogInRequestVO userLogInRequestVO) {
@@ -144,11 +141,21 @@ public class IdentityService {
     /**
      * 为指定手机号发送验证码
      * @author mxf
-     * @param telephone
+     * @param
      * @return
      */
     public ResponseVO getVerificationCode(GetVerificationCodeRequestVO getVerificationCodeRequestVO) {
         String telephone = getVerificationCodeRequestVO.getTelephone();
+        if (telephone == null) {
+            return ResponseVO.builder()
+                             .result(
+                                 Result.builder()
+                                       .code(0)
+                                       .message("no telephone")
+                                       .build()
+                             )
+                             .build();
+        }
         if (userMapper.queryUserByTel(telephone) == null) {
             String letterTable = Global.letterTable;
             String code = "";
@@ -156,11 +163,10 @@ public class IdentityService {
                 int index = (int)(Math.random()*letterTable.length());
                 code += letterTable.charAt(index);
             }
-            code = "123456";
-            VerificationCodeMap verificationCodeMap = VerificationCodeMap.getInstance();
-            verificationCodeMap.put(telephone, code);
-            if (sMSMessageUtil.sendSMSMessage(telephone, code)) {
-                System.out.println(code);
+            String result = sMSService.sendSMS(telephone, code);
+            if (result.equals("OK")) {
+                VerificationCodeMap verificationCodeMap = VerificationCodeMap.getInstance();
+                verificationCodeMap.put(telephone, code);
                 return ResponseVO.builder()
                                  .result(
                                      Result.builder()
@@ -174,7 +180,7 @@ public class IdentityService {
                                  .result(
                                      Result.builder()
                                          .code(0)
-                                         .message("SMSMessage server error")
+                                         .message(result)
                                          .build()
                                  )
                                  .build();
@@ -207,6 +213,26 @@ public class IdentityService {
         String nickname = registerRequestVO.getNickname();
         String code = registerRequestVO.getCode();
         String pwd = registerRequestVO.getPwd();
+        if (telephone == null) {
+            return ResponseVO.builder()
+                             .result(
+                                 Result.builder()
+                                       .code(0)
+                                       .message("no telephone")
+                                       .build()
+                             )
+                             .build();
+        }
+        if (pwd == null) {
+            return ResponseVO.builder()
+                             .result(
+                                 Result.builder()
+                                       .code(0)
+                                       .message("no pwd")
+                                       .build()
+                             )
+                             .build();
+        }
         VerificationCodeMap verificationCodeMap = VerificationCodeMap.getInstance();
         VerificationCode verificationCode = verificationCodeMap.get(telephone);
         if (verificationCode != null) {
@@ -382,7 +408,7 @@ public class IdentityService {
      */
     public ResponseVO adminRegister(AdminRegisterRequestVO adminRegisterRequestVO) {
         String account = adminRegisterRequestVO.getAccount();
-        String password = adminRegisterRequestVO.getAccount();
+        String password = adminRegisterRequestVO.getPassword();
         Integer roleId = adminRegisterRequestVO.getRoleId();
         
         final Log logger = LogFactory.getLog(getClass());

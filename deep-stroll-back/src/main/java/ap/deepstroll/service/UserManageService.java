@@ -35,7 +35,7 @@ public class UserManageService {
         try {
             //获取请求数据
             if(page<1){
-                data.put("totalPage", new Integer("0"));
+                data.put("totalPage", Integer.valueOf(0));
                 response.put("data",data);
                 Result result = new Result("Invalid Page");
                 response.put("result",result);
@@ -69,7 +69,7 @@ public class UserManageService {
 //            }
             List<UserEntity> preusers = userMapper.queryUser(telephone, nickname, status, vip, page, PAGE_SIZE);
             List< UserBO>  users = UserBO.transToVo(preusers);
-            Integer totalPage = (userMapper.queryUserNum(telephone,nickname,status,vip)/PAGE_SIZE)+1;
+            Integer totalPage = userMapper.queryUserNum(telephone,nickname,status,vip);
             Result result = new Result();
             data.put("totalPage",totalPage);
             data.put("users",users);
@@ -93,7 +93,7 @@ public class UserManageService {
      * @return
      */
     public Map<String,Result> changeUserState(Map<String,Object> req)  {
-        Long userId = (Long) req.get("id");
+        Long userId = ((Integer)req.get("id")).longValue();
         HashMap<String,Result> response = new HashMap<>();
         //不合法则删除
         if(userId==null){

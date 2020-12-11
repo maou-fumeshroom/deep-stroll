@@ -35,24 +35,4 @@ public interface LogMapper {
 
     public Integer queryLogNum();
 
-    /**
-     * 根据条件查询log
-     * @author mxf
-     * @param adminId
-     * @param type
-     * @param tableName
-     * @param startTime
-     * @param endTime
-     * @return
-     */
-    public List<LogEntity> queryLogByAdminIdTypeTableNameTime(
-        @Param("adminId")Integer adminId,
-        @Param("type")Integer type,
-        @Param("tableName")String tableName,
-        @Param("startTime")Timestamp startTime,
-        @Param("endTime")Timestamp endTime,
-        @Param("startIndex")Integer startIndex,
-        @Param("pageSize")Integer pageSize
-    );
-
 }

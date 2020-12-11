@@ -1,13 +1,17 @@
 package ap.deepstroll.controller;
 
+import ap.deepstroll.annotation.OperationLogAnnotation;
 import ap.deepstroll.bo.Result;
 import ap.deepstroll.service.AdminThemeService;
-import ap.deepstroll.vo.request.ThemeVO;
+import ap.deepstroll.vo.response.ResponseVO;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 public class AdminThemeController {
     @Autowired
@@ -18,7 +22,8 @@ public class AdminThemeController {
      * @return
      */
     @GetMapping("/api/admin/theme")
-    public Map<String,Object> browserThemeList(){
+    @PreAuthorize("hasAnyRole('chiefAdmin','themeAdmin')")
+    public ResponseVO browserThemeList(){
         return adminThemeService.browserThemeList();
     }
 
@@ -38,6 +43,8 @@ public class AdminThemeController {
      * @return
      */
     @PostMapping("/api/admin/theme/delete")
+    @PreAuthorize("hasAnyRole('chiefAdmin','themeAdmin')")
+    @OperationLogAnnotation(operName = "删除主题")
     public Map<String, Result> deleteThemeById(@RequestBody Map<String,Integer> id){
         Integer Id = id.get("id");
         return adminThemeService.deleteThemeById(Id);
@@ -49,6 +56,7 @@ public class AdminThemeController {
      * @return
      */
     @PostMapping("/api/admin/theme/default")
+    @PreAuthorize("hasAnyRole('chiefAdmin','themeAdmin')")
     public Map<String, Result> setDefaultTheme(@RequestBody Map<String,Integer> id){
         Integer Id = id.get("id");
         return adminThemeService.setDefaultTheme(Id);
@@ -61,8 +69,9 @@ public class AdminThemeController {
      * @return
      */
     @PostMapping("/api/admin/theme/add")
-    public Map<String, Result> insertNewTheme(@RequestBody ThemeVO themeVO){
-        return adminThemeService.insertNewTheme(themeVO);
+    @PreAuthorize("hasAnyRole('chiefAdmin','themeAdmin')")
+    @OperationLogAnnotation(operName = "添加主题")
+    public Map<String, Result> insertNewTheme(@RequestBody Map<String, String> body){
+        return adminThemeService.insertNewTheme(body.get("name"), body.get("bg"), body.get("bgm"));
     }
-
 }

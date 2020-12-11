@@ -1,7 +1,7 @@
 package ap.deepstroll.controller;
 
+import ap.deepstroll.annotation.OperationLogAnnotation;
 import ap.deepstroll.bo.Result;
-import ap.deepstroll.entity.AdminEntity;
 import ap.deepstroll.service.AdminService;
 import ap.deepstroll.service.UserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 public class AdminController {//管理员管理
     @Autowired
@@ -23,7 +24,7 @@ public class AdminController {//管理员管理
      * @return
      */
     @GetMapping("/api/admin/role")
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasAnyRole('chiefAdmin','rightAdim')")
     public Map<String,Object> getAdminRoleList(){
         return  adminService.getAdminRoleList();
     }
@@ -35,7 +36,7 @@ public class AdminController {//管理员管理
      * @return
      */
     @GetMapping("/api/admin/list")
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasAnyRole('chiefAdmin','rightAdim')")
     public Map<String,Object>getAdminList(@RequestParam Integer page){
         return adminService.getAdminList(page);
     }
@@ -58,7 +59,8 @@ public class AdminController {//管理员管理
      * @return
      */
     @PostMapping("/api/admin/delete")
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasAnyRole('chiefAdmin','rightAdim')")
+    @OperationLogAnnotation(operName = "删除管理员")
     public Map<String,Result> deleteAdmin(@RequestBody Map<String,Integer> id){
         return adminService.deleteAdmin(id);
     }

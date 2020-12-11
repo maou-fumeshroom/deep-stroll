@@ -8,7 +8,6 @@ import java.util.Map;
 import ap.deepstroll.bo.Result;
 import ap.deepstroll.entity.ThemeEntity;
 import ap.deepstroll.mapper.ThemeMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +30,11 @@ public class ThemeService {
             ArrayList themes = new ArrayList();
             Map<String,Object> defaultTheme = new HashMap<>();
             for (int i = 0;i < theme.size(); i ++){
-                if(theme.get(i).getIsDefault() == 0){
-                    Map<String,Object> notDefaultThemes = new HashMap<>();
-                    notDefaultThemes.put("id",theme.get(i).getId());
-                    notDefaultThemes.put("name",theme.get(i).getName());
-                    themes.add(notDefaultThemes);
-                }
-                else {
+                Map<String,Object> notDefaultThemes = new HashMap<>();
+                notDefaultThemes.put("id",theme.get(i).getId());
+                notDefaultThemes.put("name",theme.get(i).getName());
+                themes.add(notDefaultThemes);
+                if (theme.get(i).getIsDefault() == 1) {
                     defaultTheme.put("id",theme.get(i).getId());
                     defaultTheme.put("name",theme.get(i).getName());
                     defaultTheme.put("background",theme.get(i).getBackgroundUrl());

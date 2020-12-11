@@ -1,15 +1,16 @@
 package ap.deepstroll.controller;
-
-import ap.deepstroll.bo.Result;
-import ap.deepstroll.entity.DrawingEntity;
 import ap.deepstroll.service.DrawingService;
 import ap.deepstroll.utils.JwtTokenUtil;
 import ap.deepstroll.vo.request.DrawingVO;
+import ap.deepstroll.vo.response.ResponseVO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 public class DrawingController {
     @Autowired
@@ -24,35 +25,45 @@ public class DrawingController {
 //    }
 
     //获取详情
-    @GetMapping("/api/drawing/detial")
-    public Map<String,Object> getDetail(@RequestParam Long id){return drawingService.getDetail(id);}
+    @GetMapping("/api/drawing/detail")
+    @PreAuthorize("hasAnyRole('common','chiefAdmin','workAdmin')")
+    public ResponseVO getDetail(@RequestParam Long id){return drawingService.getDetail(id);}
 
     //分类浏览
     @GetMapping("/api/drawing/search")
-    public Map<String,Object> searchWork(@RequestParam Integer page,
-                                         @RequestParam String key,
-                                         @RequestParam Integer classify,
-                                         @RequestParam Integer status){
+    @PreAuthorize("hasAnyRole('common','chiefAdmin','workAdmin')")
+    public ResponseVO searchWork(@RequestParam Integer page,
+                                         @RequestParam(required = false) String key,
+                                         @RequestParam(required = false) Integer classify,
+                                         @RequestParam(required = false) Integer status){
         return drawingService.searchWork(key, key,classify, status, page);
     }
 
     @PostMapping("/api/person/drawing/add")
+    @PreAuthorize("hasRole('common')")
     public Map Publish(@RequestBody DrawingVO req, @RequestHeader HttpHeaders headers){
         String token = headers.get("Authorization").get(0).substring("Bearer ".length());
         String id = jwtTokenUtil.getIdFromToken(token);
         Long Id = Long.valueOf(id);
-        return drawingService.Publish(req,Id);
+            return drawingService.Publish(req,Id);
     }
 
     ///article/classify
     @GetMapping("/api/drawing/classify")
+    @PreAuthorize("hasAnyRole('common','chiefAdmin','workAdmin')")
     public Map<String,Object> getClassify(){
         return drawingService.getClassify();
     }
 
-    //mywork /api/person/drawing
+
     @GetMapping("/api/person/drawing")
-    public Map<String,Object> myworks(@RequestParam String key,@RequestParam Integer classify,@RequestParam Integer page,@RequestHeader HttpHeaders headers){
+    @PreAuthorize("hasRole('common')")
+    public ResponseVO myworks(
+        @RequestParam(required = false) String key,
+        @RequestParam(required = false) Integer classify,
+        @RequestParam Integer page,
+        @RequestHeader HttpHeaders headers
+    ){
         String token = headers.get("Authorization").get(0).substring("Bearer ".length());
         String id = jwtTokenUtil.getIdFromToken(token);
         Long Id = Long.valueOf(id);

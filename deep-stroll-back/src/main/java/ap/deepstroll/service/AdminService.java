@@ -52,7 +52,6 @@ public class AdminService {
             //map 用来存放id name 和rights
             ArrayList<Map> roles = new ArrayList<>();
             for (RoleEntity preRole : primRole) {
-                System.out.println("roleId"+preRole.getId());
                 HashMap<String,Object> realRole = new HashMap<>();
                 realRole.put("id",preRole.getId());
                 realRole.put("name",preRole.getName());
@@ -60,10 +59,9 @@ public class AdminService {
                 List<Integer> roleIds = Arrays.asList(preRole.getId());
                 //查询某个role 对应的menuid
                 List<Integer> menuIds = roleMenuMapper.queryMenuIdByRoleIds(roleIds);
-                System.out.println("menuid"+menuIds);
+                // System.out.println("menuid"+menuIds);
                 //如果role_menu 表没有找到
                 if(menuIds.size()==0){
-                    System.out.println(preRole.getId());
                     realRole.put("rights",null);
                     roles.add(realRole);
                     continue;
@@ -71,7 +69,7 @@ public class AdminService {
                 List<BackMenuEntity> menuEntitys = backMenuMapper.queryById(menuIds);
                 //如果menu 没有找到
                 if(menuEntitys.size()==0){
-                    System.out.println(preRole.getId());
+                    // System.out.println(preRole.getId());
                     realRole.put("rights",null);
                     roles.add(realRole);
                     continue;
@@ -109,7 +107,7 @@ public class AdminService {
         HashMap<String,Object> data = new HashMap<>();
         response.put("data",data);
         if (page<1){
-            Integer totalPage =new Integer("0");
+            Integer totalPage =Integer.valueOf(0);
             Result result = new Result("Invalid page");
             data.put("admins",null);
             data.put("totalPage",totalPage);
@@ -122,12 +120,12 @@ public class AdminService {
             List<AdminBO> admins= new ArrayList<>();
             for (AdminEntity a:preAdmins){
                 List<Integer> roleIds = adminRoleMapper.queryRoleIdsByAdminId(a.getId());
-                List<RoleEntity> roleEntityList = roleMapper.queryRoleByIds(roleIds,ROLE_VALID_STATE);
-                ArrayList<String> roleNameList = new ArrayList<>();
-                for(RoleEntity re :roleEntityList){
-                    roleNameList.add(re.getName());
-                }
-                AdminBO bo = AdminBO.builder().id(a.getId()).account(a.getAccount()).password(a.getPassword()).roleName(roleNameList).build();
+                List<RoleEntity> roleEntityList = roleMapper.queryRoleByIds(roleIds,ROLE_VALID_STATE);          
+                // ArrayList<String> roleNameList = new ArrayList<>();
+                // for(RoleEntity re :roleEntityList){
+                //     roleNameList.add(re.getName());
+                // }
+                AdminBO bo = AdminBO.builder().id(a.getId()).account(a.getAccount()).password(a.getPassword()).roleName(roleEntityList.get(0).getName()).build();
                 admins.add(bo);
             }
             data.put("admins",admins);
@@ -135,7 +133,7 @@ public class AdminService {
             Result result = new Result();
             response.put("result",result);
         }catch (Exception e ){
-            Integer totalPage =new Integer("0");
+            Integer totalPage = Integer.valueOf(0);
             Result result = new Result(e.getMessage());
             data.put("admins",null);
             data.put("totalPage",totalPage);
@@ -178,8 +176,12 @@ public class AdminService {
      */
     public Map<String,Result> deleteAdmin(Map<String,Integer> req){
         Map<String,Result> response = new HashMap<>();
+        if (req.get("id") == Integer.valueOf(1)) {
+            Result result =  new Result("forbidden");
+                response.put("result",result);
+        }
         try{
-            int ans =  adminMapper.updateAdminState(req.get("id"),Admin_INVALID_STATE);
+            int ans = adminMapper.deleteAdmin(req.get("id"));
             if(ans==1){
                 Result result =  new Result();
                 response.put("result",result);

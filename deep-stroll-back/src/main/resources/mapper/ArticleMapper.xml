@@ -15,9 +15,14 @@
         <result property="likeNum" column="like_num"/>
         <result property="state" column="state"/>
         <result property="createTime" column="create_time"/>
-        <result property="updateTIme" column="update_time"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <delete id="realDelete">
+        DELETE FROM article
+        WHERE id = #{id} 
+    </delete>
+    
     <insert id="insertArticle" parameterType="ap.deepstroll.entity.ArticleEntity">
         INSERT INTO
         article(
@@ -58,10 +63,8 @@
         <where>
             author_id = #{authorId}
             <if test="title != null">
-                OR title = #{title}
-            </if>
-            <if test="label != null">
-                OR labels like concat('%', #{label}, '%')
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
             </if>
             <if test="classifyId != null">
                 AND classify_id = #{classifyId}
@@ -80,10 +83,8 @@
         <where>
             author_id = #{authorId}
             <if test="title != null">
-                OR title = #{title}
-            </if>
-            <if test="label != null">
-                OR labels like concat('%', #{label}, '%')
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
             </if>
             <if test="classifyId != null">
                 AND classify_id = #{classifyId}
@@ -129,10 +130,8 @@
         FROM article
         <where>
             <if test="title != null">
-                OR title = #{title}
-            </if>
-            <if test="label != null">
-                OR labels like concat('%', #{label}, '%')
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
             </if>
             <if test="classifyId != null">
                 AND classify_id = #{classifyId}
@@ -153,10 +152,8 @@
         FROM article
         <where>
             <if test="title != null">
-                OR title = #{title}
-            </if>
-            <if test="label != null">
-                OR labels like concat('%', #{label}, '%')
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
             </if>
             <if test="classifyId != null">
                 AND classify_id = #{classifyId}

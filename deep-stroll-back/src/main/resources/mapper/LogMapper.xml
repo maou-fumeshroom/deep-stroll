@@ -6,8 +6,6 @@
     <resultMap id="LogMap" type="ap.deepstroll.entity.LogEntity">
         <result property="id" column="id"/>
         <result property="adminId" column="admin_id"/>
-        <result property="type" column="type"/>
-        <result property="tableName" column="table_name"/>
         <result property="content" column="content"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
@@ -16,14 +14,10 @@
         INSERT INTO 
         log(
             admin_id,
-            type,
-            table_name,
             content 
         )
         VALUES(
             #{adminId},
-            #{type},
-            #{tableName},
             #{content} 
         )
     </insert>
@@ -32,11 +26,10 @@
         SELECT
             id,
             admin_id,
-            type,
-            table_name,
             content,
             create_time
         FROM log
+        ORDER BY id DESC
         LIMIT #{startIndex}, #{pageSize}
     </select>
 
@@ -44,35 +37,6 @@
         SELECT
         count(*)
         FROM log
-    </select>
-
-    <select id="queryLogByAdminIdTypeTableNameTime" resultMap="LogMap">
-        SELECT
-            id,
-            admin_id,
-            type,
-            table_name,
-            content,
-            create_time
-        FROM log
-        <where>
-            <if test="adminId != null">
-                AND admin_id = #{adminId} 
-            </if>
-            <if test="type != null">
-                AND type = #{type} 
-            </if>
-            <if test="tableName != null">
-                AND table_name = #{tableName} 
-            </if>
-            <if test="startTime != null">
-                AND create_time &gt;= #{startTime}
-            </if>
-            <if test="endTime != null">
-                AND create_time &lt;= #{endTime} 
-            </if>
-        </where>
-        LIMIT #{startIndex}, #{pageSize} 
     </select>
 
 </mapper>

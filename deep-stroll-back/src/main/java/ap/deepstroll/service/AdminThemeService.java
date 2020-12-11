@@ -1,10 +1,11 @@
 package ap.deepstroll.service;
 
 import ap.deepstroll.bo.Result;
+import ap.deepstroll.bo.ThemeListBO;
 import ap.deepstroll.entity.ThemeEntity;
 import ap.deepstroll.mapper.ThemeMapper;
-import ap.deepstroll.vo.request.ThemeVO;
-import ap.deepstroll.vo.response.ThemeVo;
+import ap.deepstroll.vo.response.ResponseVO;
+import ap.deepstroll.vo.response.ThemeListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,30 +23,31 @@ public class AdminThemeService {
      * 获取主题列表
      * @return
      */
-    public Map<String,Object> browserThemeList(){
-        HashMap<String,Object> response = new HashMap<>();
-        HashMap<String,Object> data = new HashMap<>();
+    public ResponseVO browserThemeList(){
         try {
-            List<ThemeEntity> theme = themeMapper.queryTheme();
-            ArrayList<ThemeVo> themeVOList = new ArrayList<>();
-            for (int i = 0; i < theme.size();i++){
-                ThemeVo themeVO = ThemeVo.builder()
-                        .id(theme.get(i).getId())
-                        .name(theme.get(i).getName())
-                        .bg(theme.get(i).getBackgroundUrl())
-                        .bgm(theme.get(i).getBgmUrl())
-                        .isDefault(theme.get(i).getIsDefault())
-                        .build();
-                themeVOList.add(themeVO);
+            List<ThemeEntity> themeEntities = themeMapper.queryTheme();
+            List<ThemeListBO> themeListBOs = new ArrayList<ThemeListBO>();
+            for (ThemeEntity themeEntity: themeEntities) {
+                themeListBOs.add(
+                    ThemeListBO.builder()
+                               .id(themeEntity.getId())
+                               .name(themeEntity.getName())
+                               .bg(themeEntity.getBackgroundUrl())
+                               .bgm(themeEntity.getBgmUrl())
+                               .isdefault(themeEntity.getIsDefault())
+                               .build()
+                );
             }
-            data.put("themes",themeVOList);
-            response.put("data",data);
-            response.put("result",new Result());
-        }catch (Exception e){
-            response.put("data",null);
-            response.put("result",new Result(e.getMessage()));
+            ThemeListVO vo = ThemeListVO.builder().themes(themeListBOs.toArray(new ThemeListBO[themeListBOs.size()])).build();
+            return ResponseVO.builder()
+                             .data(vo)
+                             .result(new Result())
+                             .build();
+        } catch(Exception e) {
+            return ResponseVO.builder()
+                             .result(new Result("server error"))
+                             .build();
         }
-        return response;
     }
 
     /***
@@ -106,14 +108,13 @@ public class AdminThemeService {
      * @param
      * @return
      */
-    public Map<String, Result> insertNewTheme(ThemeVO themeVo){
+    public Map<String, Result> insertNewTheme(String name, String bg, String bgm){
         HashMap<String,Result> response = new HashMap<>();
         try {
-            ThemeEntity themeEntity = ThemeEntity.builder()
-                    .name(themeVo.getName())
-                    .backgroundUrl(themeVo.getBg())
-                    .bgmUrl(themeVo.getBgm())
-                    .build();
+            ThemeEntity themeEntity = new ThemeEntity();
+            themeEntity.setName(name);
+            themeEntity.setBackgroundUrl(bg);
+            themeEntity.setBgmUrl(bgm);
             themeMapper.insertNewTheme(themeEntity);
             Result result=new Result();
             response.put("result",result);

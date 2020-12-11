@@ -1,11 +1,15 @@
 package ap.deepstroll.controller;
 
+import ap.deepstroll.annotation.OperationLogAnnotation;
 import ap.deepstroll.bo.Result;
 import ap.deepstroll.service.UserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+
+@CrossOrigin
 @RestController
 public class UserManagerController {
 
@@ -18,9 +22,10 @@ public class UserManagerController {
      * @return
      */
     @GetMapping("/api/admin/user")
-    public Map<String,Object> getUsersList(@RequestParam String key,
-                                           @RequestParam Integer status,
-                                           @RequestParam Integer vip,
+    @PreAuthorize("hasAnyRole('chiefAdmin','userAdmin')")
+    public Map<String,Object> getUsersList(@RequestParam(required = false) String key,
+                                           @RequestParam(required = false) Integer status,
+                                           @RequestParam(required = false) Integer vip,
                                            @RequestParam Integer page){
         return userManageService.getUserList(key,status,vip,page);
     }
@@ -32,6 +37,8 @@ public class UserManagerController {
      * @return
      */
     @PostMapping("/api/admin/user/status")
+    @PreAuthorize("hasAnyRole('chiefAdmin','userAdmin')")
+    @OperationLogAnnotation(operName = "更改用户状态")
     public Map<String, Result>updateUserState(@RequestBody Map<String,Object> req){
         return userManageService.changeUserState(req);
     }

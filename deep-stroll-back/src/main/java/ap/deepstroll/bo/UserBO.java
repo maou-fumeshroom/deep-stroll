@@ -2,9 +2,7 @@ package ap.deepstroll.bo;
 
 import ap.deepstroll.entity.UserEntity;
 import lombok.*;
-import org.apache.catalina.User;
-
-import java.lang.reflect.Array;
+import ap.deepstroll.utils.DateFormatUtil;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +34,7 @@ public class UserBO {
                                         .email(ue.getEMail())
                                         .status(ue.getState())
                                         .vip(ue.getVip())
-                                        .createTime(ue.getCreateTime().toString()).build();
+                                        .createTime(DateFormatUtil.getDate(ue.getCreateTime())).build();
             userBo.add(ubo);
         }
         return userBo;

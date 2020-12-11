@@ -17,6 +17,11 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <delete id="realDelete">
+        DELETE FROM drawing
+        WHERE id = #{id} 
+    </delete>
+    
     <insert id="insertDrawing" parameterType="ap.deepstroll.entity.DrawingEntity">
         INSERT INTO
         drawing(
@@ -54,10 +59,10 @@
         <where>
             AND author_id = #{authorId}
             <if test="title != null">
-                OR title = #{title}
+                (title like concat('%', #{title}, '%')
             </if>
             <if test="label != null">
-                OR labels like concat('%', #{label}, '%')
+                OR labels like concat('%', #{label}, '%'))
             </if>
             <if test="classifyId != null">
                 AND classify_id = #{classifyId}
@@ -76,10 +81,9 @@
         <where>
             AND author_id = #{authorId}
             <if test="title != null">
-                OR title = #{title}
-            </if>
-            <if test="label != null">
-                OR labels like concat('%', #{label}, '%')
+
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
             </if>
             <if test="classifyId != null">
                 AND classify_id = #{classifyId}
@@ -123,10 +127,8 @@
         FROM drawing
         <where>
             <if test="title != null">
-                OR title = #{title}
-            </if>
-            <if test="label != null">
-                OR labels like concat('%', #{label}, '%')
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
             </if>
             <if test="classifyId != null">
                 AND classify_id = #{classifyId}
@@ -147,10 +149,8 @@
         FROM drawing
         <where>
             <if test="title != null">
-                OR title = #{title}
-            </if>
-            <if test="label != null">
-                OR labels like concat('%', #{label}, '%')
+                (title like concat('%', #{title}, '%')
+                OR labels like concat('%', #{label}, '%'))
             </if>
             <if test="classifyId != null">
                 AND classify_id = #{classifyId}

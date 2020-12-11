@@ -20,6 +20,8 @@ public interface ClassifyDrawingMapper {
      */
     public Integer insertClassifyDrawing(@Param("name")String name);
 
+    public Integer queryClassifyDrawingByName(@Param("name")String name);
+
     public ClassifyDrawingEntity queryClassifyById(@Param("id")Integer id);
     
     /**
@@ -29,6 +31,16 @@ public interface ClassifyDrawingMapper {
      * @return
      */
     public List<ClassifyDrawingEntity> queryAllClassifyDrawing(@Param("state")Integer state);
+
+    public List<ClassifyDrawingEntity> queryClassifyDrawingByPage(
+        @Param("startIndex")Integer startIndex,
+        @Param("pageSize")Integer pageSize,
+        @Param("state")Integer state
+    );
+
+    public Integer queryClassifyNumDrawingByPage(
+        @Param("state")Integer state
+    );
 
     public Integer updateClassifyDrawingState(@Param("id")Integer id, @Param("state")Integer state);
 }

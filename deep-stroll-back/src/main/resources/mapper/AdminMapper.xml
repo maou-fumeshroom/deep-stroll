@@ -24,6 +24,11 @@
         )
     </insert>
 
+    <delete id="deleteAdmin">
+        DELETE FROM admin
+        WHERE id = #{id}
+    </delete>
+
     <select id="queryAdminByAccount" resultMap="AdminMap">
         SELECT
             id,

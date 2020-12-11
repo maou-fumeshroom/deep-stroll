@@ -2,11 +2,13 @@ package ap.deepstroll.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import ap.deepstroll.annotation.OperationLogAnnotation;
 import ap.deepstroll.service.FileService;
 import ap.deepstroll.service.IdentityService;
 import ap.deepstroll.utils.JwtTokenUtil;
@@ -17,6 +19,7 @@ import ap.deepstroll.vo.request.RegisterRequestVO;
 import ap.deepstroll.vo.request.UserLogInRequestVO;
 import ap.deepstroll.vo.response.ResponseVO;
 
+@CrossOrigin
 @RestController
 public class TestController {
 
@@ -45,7 +48,7 @@ public class TestController {
     }
     
     @PostMapping("/api/file")
-    @PreAuthorize("hasRole('common')")
+    @PreAuthorize("hasAnyRole('common','chiefAdmin','themeAdmin')")
     public ResponseVO uploadFile(@RequestParam MultipartFile file) {
         return fileService.uploadFile(file);
     }
@@ -56,7 +59,8 @@ public class TestController {
     }
 
     @PostMapping("/api/admin/add")
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasAnyRole('chiefAdmin','rightAdmin')")
+    @OperationLogAnnotation(operName = "添加管理员")
     public ResponseVO adminRegister(@RequestBody AdminRegisterRequestVO adminRegisterRequestVO) {
         return identityService.adminRegister(adminRegisterRequestVO);
     }

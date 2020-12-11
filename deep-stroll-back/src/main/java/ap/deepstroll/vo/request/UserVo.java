@@ -12,7 +12,7 @@ import lombok.*;
 public class UserVo {
     private String nickName;
     private Integer sex;
-    private String e_mail;
+    private String email;
     private String sign;
     private String avatar;
     private Long id;
