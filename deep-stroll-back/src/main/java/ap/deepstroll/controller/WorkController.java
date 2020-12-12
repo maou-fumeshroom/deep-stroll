@@ -23,11 +23,7 @@ import java.util.Map;
 public class WorkController {
 
     @Autowired
-    WorkService workService;
-    @Autowired
     ArticleService articleService;
-    @Autowired
-    DrawingService drawingService;
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 //    /**

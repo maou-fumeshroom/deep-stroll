@@ -35,6 +35,12 @@ public class OperationLogAspect {
     public void operLogPoinCut() {}
 
 
+    /**
+     * 写入日志
+     * @param joinPoint
+     * @param result
+     * @throws Throwable
+     */
     @AfterReturning(returning  /**
      * 记录操作日志
      * @param joinPoint 方法的执行点
