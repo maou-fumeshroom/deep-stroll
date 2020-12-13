@@ -7,7 +7,7 @@ import drawings from '../controllers/drawings'
 import drawingsDetail from "../controllers/drawingsDetail";
 import set from "../controllers/set";
 import Article from '../controllers/Article';
-import ArticleDetails from "../controllers/ArticleDetails";
+import ArticleDetails from "../controllers/ArticleDetail xhzlzxhs";
 import EditInformation from "../controllers/EditInformation";
 import Release from "../controllers/Release";
 

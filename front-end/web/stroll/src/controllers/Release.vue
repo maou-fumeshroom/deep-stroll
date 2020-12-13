@@ -252,7 +252,7 @@
         client().multipartUpload(fileName, file.file).then(
           result => {
             this.articleMsg.fileUrl = 'http://bai111111.oss-cn-beijing.aliyuncs.com/'+fileName;
-            $('.uploadOK').css('display', 'block');
+            this.$('.uploadOK').css('display', 'block');
             this.$notify({
               title: '成功',
               message: '您已成功上传文件😊！',
